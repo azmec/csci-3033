@@ -13,5 +13,9 @@ public class Tag implements Serializable {
     @PrimaryKey(autoGenerate = true)
     public int uid;
     @ColumnInfo(name = "tag")
-    public String tag;
+    public final String tag;
+
+    public Tag(String tagName) {
+        this.tag = tagName;
+    }
 }

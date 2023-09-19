@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
 @Entity(
-        tableName = "recipe_by_tags",
+        tableName = "recipe_tag_join",
         primaryKeys = { "recipe_id", "tag_id" },
         foreignKeys = {
                 @ForeignKey(
@@ -23,7 +23,7 @@ import androidx.room.ForeignKey;
                 )
         }
 )
-public class RecipeByTags {
+public class RecipeTagJoin {
     public int recipe_id;
     public String tag_id;
 }

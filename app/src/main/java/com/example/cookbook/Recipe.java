@@ -11,9 +11,17 @@ import java.io.Serializable;
 
 @Entity(tableName = "recipe")
 public class Recipe implements Serializable {
+    // `autoGenerate` forces the database to assign the next available
+    // uniquely-identifying integer to the recipe.
+    //
+    // NOTE: How do this work with the below initialization function?
     @PrimaryKey(autoGenerate = true)
     public int uid;
 
     @ColumnInfo(name = "name")
-    public String name;
+    public final String name;
+
+    public Recipe(String name) {
+        this.name = name;
+    }
 }

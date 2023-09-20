@@ -21,10 +21,20 @@ public abstract class RecipeDatabase extends RoomDatabase {
     }
 
     private static RecipeDatabase create(final Context appContext) {
+        /*
+        // We use this when we're doing real-deal runs.
         return Room.databaseBuilder(
                 appContext,
                 RecipeDatabase.class,
                 DB_FILENAME
+        ).build();
+        */
+        // Nothing is set in stone, we initialize a database in-memory.
+        // It will disappear when the application closes, meaning changes
+        // are impermanent.
+        return Room.inMemoryDatabaseBuilder(
+                appContext,
+                RecipeDatabase.class
         ).build();
     }
 

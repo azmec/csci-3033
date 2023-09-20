@@ -27,4 +27,8 @@ public abstract class RecipeDatabase extends RoomDatabase {
                 DB_FILENAME
         ).build();
     }
+
+    public abstract RecipeDao getRecipeDao();
+    public abstract TagDao getTagDao();
+    public abstract RecipeTagJoinDao getRecipeTagJoinDao();
 }

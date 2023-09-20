@@ -25,5 +25,5 @@ import androidx.room.ForeignKey;
 )
 public class RecipeTagJoin {
     public int recipe_id;
-    public String tag_id;
+    public int tag_id;
 }

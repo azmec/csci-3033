@@ -15,7 +15,7 @@ public class Tag implements Serializable {
     @ColumnInfo(name = "tag")
     public final String tag;
 
-    public Tag(String tagName) {
-        this.tag = tagName;
+    public Tag(String tag) {
+        this.tag = tag;
     }
 }

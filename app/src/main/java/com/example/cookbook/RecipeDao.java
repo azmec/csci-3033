@@ -8,17 +8,20 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+
 @Dao
 public interface RecipeDao {
     @Insert
-    void insert(Recipe... recipes);
+    Completable insert(Recipe... recipes);
 
     @Update
-    void update(Recipe... recipes);
+    Completable update(Recipe... recipes);
 
     @Delete
-    void delete(Recipe... recipes);
+    Completable delete(Recipe... recipes);
 
     @Query("SELECT * FROM recipe")
-    List<Recipe> getAll();
+    Single<List<Recipe>> getAll();
 }

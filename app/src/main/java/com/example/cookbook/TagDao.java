@@ -8,17 +8,20 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+
 @Dao
 public interface TagDao {
     @Insert
-    void insert(Tag... tags);
+    Completable insert(Tag... tags);
 
     @Update
-    void update(Tag... tags);
+    Completable update(Tag... tags);
 
     @Delete
-    void delete(Tag... tags);
+    Completable delete(Tag... tags);
 
     @Query("SELECT * FROM tag")
-    List<Tag> getAll();
+    Single<List<Tag>> getAll();
 }

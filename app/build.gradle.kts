@@ -72,4 +72,12 @@ dependencies {
     val roomVersion = "2.5.2"
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
+
+    val rxJavaVersion = "3.1.7";
+    val rxJavaAndroidVersion = "3.0.2"
+    implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
+    implementation("io.reactivex.rxjava3:rxandroid:$rxJavaAndroidVersion")
+
+    val roomRxJavaVersion = "2.5.2"
+    implementation("androidx.room:room-rxjava3:$roomRxJavaVersion")
 }

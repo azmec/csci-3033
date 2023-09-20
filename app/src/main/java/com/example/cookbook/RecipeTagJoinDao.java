@@ -7,23 +7,26 @@ import androidx.room.Query;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+
 @Dao
 public interface RecipeTagJoinDao {
     @Insert
-    void insert(RecipeTagJoin... recipeTagJoins);
+    Completable insert(RecipeTagJoin... recipeTagJoins);
 
     @Delete
-    void delete(RecipeTagJoin... recipeTagJoins);
+    Completable delete(RecipeTagJoin... recipeTagJoins);
 
     @Query("SELECT * FROM recipe " +
             "INNER JOIN recipe_tag_join " +
             " ON recipe.uid = recipe_tag_join.recipe_id " +
             "WHERE recipe_tag_join.tag_id = :tagId")
-    List<Recipe> getRecipesWithTag(final int tagId);
+    Single<List<Recipe>> getRecipesWithTag(final int tagId);
 
     @Query("SELECT * FROM tag " +
             "INNER JOIN recipe_tag_join " +
             "ON tag.uid = recipe_tag_join.tag_id " +
             "WHERE recipe_tag_join.recipe_id = :recipeId")
-    List<Tag> getTagsWithRecipe(final int recipeId);
+    Single<List<Tag>> getTagsWithRecipe(final int recipeId);
 }

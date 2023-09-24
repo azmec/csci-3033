@@ -16,6 +16,9 @@ public interface RecipeTagJoinDao {
     @Delete
     void delete(RecipeTagJoin... recipeTagJoins);
 
+    @Query("DELETE FROM recipe_tag_join")
+    void deleteAll();
+
     @Query("SELECT * FROM recipe " +
             "INNER JOIN recipe_tag_join " +
             " ON recipe.uid = recipe_tag_join.recipe_id " +

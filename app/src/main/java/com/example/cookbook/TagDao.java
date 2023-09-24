@@ -20,6 +20,9 @@ public interface TagDao {
     @Delete
     void delete(Tag... tags);
 
+    @Query("DELETE FROM tag")
+    void deleteAll();
+
     @Query("SELECT * FROM tag")
     LiveData<List<Tag>> getAll();
 }

@@ -24,4 +24,9 @@ public class Recipe implements Serializable {
     public Recipe(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{ id: %d, name: \"%s\" }", uid, name);
+    }
 }

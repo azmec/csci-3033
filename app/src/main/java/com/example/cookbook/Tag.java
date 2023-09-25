@@ -18,4 +18,9 @@ public class Tag implements Serializable {
     public Tag(String tag) {
         this.tag = tag;
     }
+
+    @Override
+    public String toString() {
+        return String.format("{ id: %d, tag: \"%s\" }", uid, tag);
+    }
 }

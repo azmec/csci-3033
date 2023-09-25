@@ -23,6 +23,9 @@ public interface TagDao {
     @Query("DELETE FROM tag")
     void deleteAll();
 
+    @Query("SELECT * FROM tag WHERE uid=:uid")
+    LiveData<Tag> getByUID(int uid);
+
     @Query("SELECT * FROM tag")
     LiveData<List<Tag>> getAll();
 }

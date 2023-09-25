@@ -23,6 +23,9 @@ public interface RecipeDao {
     @Query("DELETE FROM recipe")
     void deleteAll();
 
+    @Query("SELECT * FROM recipe WHERE uid=:uid")
+    LiveData<Recipe> getByUID(int uid);
+
     @Query("SELECT * FROM recipe")
     LiveData<List<Recipe>> getAll();
 }

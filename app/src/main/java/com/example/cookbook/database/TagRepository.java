@@ -1,4 +1,4 @@
-package com.example.cookbook;
+package com.example.cookbook.database;
 
 import android.content.Context;
 

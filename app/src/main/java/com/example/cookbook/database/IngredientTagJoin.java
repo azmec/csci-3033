@@ -1,4 +1,4 @@
-package com.example.cookbook;
+package com.example.cookbook.database;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;

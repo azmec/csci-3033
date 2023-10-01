@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = { Recipe.class, Tag.class, RecipeTagJoin.class}, version = 1)
+@Database(entities = { Recipe.class, Tag.class, RecipeTagJoin.class, Ingredient.class, IngredientTagJoin.class}, version = 1)
 public abstract class RecipeDatabase extends RoomDatabase {
     private static final String DB_FILENAME = "recipe-database.db";
     private static volatile RecipeDatabase instance;
@@ -103,4 +103,8 @@ public abstract class RecipeDatabase extends RoomDatabase {
     public abstract RecipeDao getRecipeDao();
     public abstract TagDao getTagDao();
     public abstract RecipeTagJoinDao getRecipeTagJoinDao();
+
+    public abstract IngredientDao getIngredientDao();
+
+    public abstract IngredientTagJoinDao getIngredientTagJoinDao();
 }

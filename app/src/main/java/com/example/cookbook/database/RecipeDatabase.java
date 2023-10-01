@@ -12,7 +12,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = { Recipe.class, Tag.class, RecipeTagJoin.class, Ingredient.class, IngredientTagJoin.class}, version = 1)
+@Database(entities = {
+        Recipe.class,
+        Tag.class,
+        RecipeTagJoin.class,
+        Ingredient.class,
+        IngredientTagJoin.class,
+        Category.class,
+        CategoryTagJoin.class
+}, version = 1)
 public abstract class RecipeDatabase extends RoomDatabase {
     private static final String DB_FILENAME = "recipe-database.db";
     private static volatile RecipeDatabase instance;
@@ -69,6 +77,17 @@ public abstract class RecipeDatabase extends RoomDatabase {
                 recipeTagJoinDao.insert(new RecipeTagJoin(7, 3));
 
                 recipeTagJoinDao.insert(new RecipeTagJoin(8, 4));
+
+                CategoryDao categoryDao = instance.getCategoryDao();
+                categoryDao.deleteAll();
+
+                categoryDao.insert(new Category("Ethnicity"));
+
+                CategoryTagJoinDao categoryTagJoinDao = instance.getCategoryTagJoinDao();
+                categoryTagJoinDao.deleteAll();
+
+                // Relate "Ethnicity" and "Guatemalan".
+                categoryTagJoinDao.insert(new CategoryTagJoin(1, 1));
             });
         }
     };
@@ -107,4 +126,8 @@ public abstract class RecipeDatabase extends RoomDatabase {
     public abstract IngredientDao getIngredientDao();
 
     public abstract IngredientTagJoinDao getIngredientTagJoinDao();
+
+    public abstract CategoryDao getCategoryDao();
+
+    public abstract CategoryTagJoinDao getCategoryTagJoinDao();
 }

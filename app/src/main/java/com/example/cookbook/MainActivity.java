@@ -16,6 +16,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.annotation.NonNull;
+import android.content.Intent;
+
 
 
 import com.example.cookbook.databinding.ActivityMainBinding;
@@ -51,13 +53,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
+                //Intent needs a reference context
 
                 if (id == R.id.action_recipe_list) {
 
                 } else if (id == R.id.action_grocery_list) {
 
                 } else if (id == R.id.action_pantry_list) {
-
+                    //Redirect to the pantry list UI
+                    Intent intent = new Intent(MainActivity.this, PantryListActivity.class);
+                    startActivity(intent);
                 } else if (id == R.id.action_liked_recipes) {
 
                 } else if (id == R.id.action_add_recipes) {

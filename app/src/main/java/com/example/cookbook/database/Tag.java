@@ -1,6 +1,6 @@
 // Generic table of tags able to be associated with recipes.
 
-package com.example.cookbook;
+package com.example.cookbook.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

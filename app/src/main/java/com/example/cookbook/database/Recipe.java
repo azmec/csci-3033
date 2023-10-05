@@ -1,7 +1,7 @@
 // Entity model for recipes. Each instance of `Recipe` represents a row in the
 // table `recipe` in the SQLite database.
 
-package com.example.cookbook;
+package com.example.cookbook.database;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

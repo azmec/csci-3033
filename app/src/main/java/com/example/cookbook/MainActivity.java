@@ -66,7 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.action_liked_recipes) {
 
                 } else if (id == R.id.action_add_recipes) {
-
+                    //Redirect to the add_recipe UI
+                    Intent intent = new Intent(MainActivity.this, AddRecipeActivity.class);
+                    startActivity(intent);
                 }
 
                 return true;

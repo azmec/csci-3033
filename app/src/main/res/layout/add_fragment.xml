@@ -1,13 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add" />
+        android:text="Enter Recipe Information"
+        android:textSize="24sp"/>
 
-    <!-- Add other UI elements here -->
+    <EditText
+        android:id="@+id/editTextRecipeName"
+        android:layout_width="200dp"
+        android:layout_height="64dp"
+        android:hint="Recipe Name" />
 
+    <LinearLayout
+        android:id="@+id/ingredientsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/editTextIngredients"
+            android:layout_width="200dp"
+            android:layout_height="64dp"
+            android:hint="Ingredient"
+            android:inputType="textLongMessage" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonAddIngredient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="More Ingredients?"/>
+
+    <Button
+        android:id="@+id/buttonSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"/>
 </LinearLayout>

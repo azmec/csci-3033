@@ -1,5 +1,6 @@
 package com.example.cookbook;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -53,30 +54,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialize BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // Set up BottomNavigationView item selection listener
-//        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-//            RecipeFragment selectedFragment = null;
-//            int id = item.getItemId();
-//
-//            if (id == R.id.action_recipe_list) {
-//                selectedFragment = new RecipeFragment();
-//            } else if (id == R.id.action_grocery_list) {
-//                selectedFragment = new GroceryFragment();
-//            } else if (id == R.id.action_pantry_list) {
-//                selectedFragment = new PantryFragment();
-//            } else if (id == R.id.action_liked_recipes) {
-//                selectedFragment = new LikedFragment();
-//            } else if (id == R.id.action_add_recipes) {
-//                selectedFragment = new AddFragment();
-//            }
-//
-//            if (selectedFragment != null) {
-//                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_content_main, selectedFragment).commit();
-//            }
-//
-//            return true;
-//        });
-
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
             Fragment selectedFragment = null; // Use the generic Fragment type
             int id = item.getItemId();
@@ -122,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        // Remove the mail icon
+        MenuItem item = menu.findItem(R.id.action_settings);
+        if (item != null) item.setVisible(false);
+
         return true;
     }
 

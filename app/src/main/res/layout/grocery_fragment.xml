@@ -3,17 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/categorySpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
-
     <SearchView
         android:id="@+id/grocerySearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="Search for groceries"
+        android:layout_below="@id/categorySpinner"/>
+
+    <Spinner
+        android:id="@+id/categorySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"/>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -31,4 +31,5 @@
         android:layout_margin="16dp"
         android:src="@drawable/ic_add"
         app:fabSize="normal"/>
+
 </RelativeLayout>

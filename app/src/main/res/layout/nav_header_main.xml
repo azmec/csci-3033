@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#009688"
-    android:backgroundTint="#009688"
-    android:gravity="bottom"
+    android:layout_height="match_parent"
+    android:background="#1A781E"
+    android:backgroundTint="#054908"
+    android:gravity="top"
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -35,7 +35,7 @@
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cuisine"
         android:layout_width="match_parent"
-        android:layout_height="127dp">
+        android:layout_height="147dp">
 
         <CheckBox
             android:id="@+id/checkBox2"
@@ -107,19 +107,5 @@
             android:text="CheckBox" />
 
     </com.google.android.material.chip.ChipGroup>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:includeFontPadding="true"
-        android:text="Time"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <SeekBar
-        android:id="@+id/seekBar3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>

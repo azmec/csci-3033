@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_cuisine">
+
+    <fragment
+        android:id="@+id/RecipeFragment"
+        android:name="com.example.cookbook.ui.home.RecipeFragment"
+    android:label="Recipe"
+    tools:layout="@layout/recipe_fragment" />
+
+    <fragment
+        android:id="@+id/GroceryFragment"
+        android:name="com.example.cookbook.ui.home.GroceryFragment"
+    android:label="Grocery"
+    tools:layout="@layout/grocery_fragment" />
+
+    <fragment
+        android:id="@+id/pantryFragment"
+        android:name="com.example.cookbook.ui.home.PantryFragment"
+    android:label="Pantry"
+    tools:layout="@layout/pantry_fragment" />
+
+    <fragment
+        android:id="@+id/likedFragment"
+        android:name="com.example.cookbook.ui.home.LikedFragment"
+    android:label="Liked"
+    tools:layout="@layout/liked_fragment" />
+
+    <fragment
+        android:id="@+id/addFragment"
+        android:name="com.example.cookbook.ui.home.AddFragment"
+    android:label="Add"
+    tools:layout="@layout/add_fragment" />
+
+</navigation>

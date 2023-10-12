@@ -15,4 +15,14 @@
     <string name="menu_liked_recipes">Liked</string>
     <string name="menu_add_recipes">Add</string>
 
+    <string-array name="grocery_categories">
+        <item>All</item>
+        <item>Vegetables</item>
+        <item>Fruits</item>
+        <item>Dairy</item>
+        <item>Meat</item>
+        <item>Spices</item>
+        <!-- Add more categories as needed -->
+    </string-array>
+
 </resources>

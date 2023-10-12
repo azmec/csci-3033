@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Title at the top -->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Recipe Information"
+        android:textSize="24sp"
+        android:layout_gravity="center_horizontal"
+        android:padding="16dp"/>
+
+    <!-- Center Content with ScrollView for ingredients -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/ingredientsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <!-- Recipe Name EditText -->
+            <EditText
+                android:id="@+id/editTextRecipeName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Recipe Name"
+                android:inputType="text"/>
+
+            <!-- First Ingredient EditText -->
+            <EditText
+                android:id="@+id/editTextIngredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingredient"
+                android:inputType="text"/>
+
+            <!-- Other dynamically added ingredient EditText views will be here -->
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Buttons at the bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp">
+
+        <!-- Add Ingredient Button -->
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/buttonAddIngredient"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Add Ingredient" />
+
+        <Button
+            android:id="@+id/buttonSubmit"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Submit" />
+    </LinearLayout>
+</LinearLayout>
+

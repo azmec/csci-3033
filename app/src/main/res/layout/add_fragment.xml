@@ -15,6 +15,15 @@
         android:layout_gravity="center_horizontal"
         android:padding="16dp"/>
 
+        <!-- Recipe Name EditText -->
+    <EditText
+        android:id="@+id/editTextRecipeName"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:hint="Recipe Name"
+        android:inputType="text"
+        android:layout_gravity="center_horizontal"/>
+
     <!-- Center Content with ScrollView for ingredients -->
     <ScrollView
         android:layout_width="match_parent"
@@ -29,13 +38,15 @@
             android:orientation="vertical"
             android:gravity="center">
 
-            <!-- Recipe Name EditText -->
-            <EditText
-                android:id="@+id/editTextRecipeName"
-                android:layout_width="match_parent"
+            <!-- Instruction TextView -->
+            <TextView
+                android:id="@+id/textViewInstruction"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Recipe Name"
-                android:inputType="text"/>
+                android:text="Enter up to 15 ingredients"
+                android:textSize="16sp"
+                android:layout_gravity="center_horizontal"
+                android:paddingBottom="8dp"/>
 
             <!-- First Ingredient EditText -->
             <EditText

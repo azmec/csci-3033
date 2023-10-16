@@ -45,7 +45,7 @@ public class GroceryFragment extends Fragment {
         categorySpinner = view.findViewById(R.id.categorySpinner);  // Initialize Spinner
         grocerySearchView = view.findViewById(R.id.grocerySearchView);
         groceryRecyclerView = view.findViewById(R.id.groceryRecyclerView);
-        addGroceryButton = view.findViewById(R.id.addGroceryButton);
+        //addGroceryButton = view.findViewById(R.id.addGroceryButton);
 
         // Initialize grocery list
         groceryList = new ArrayList<>(); // Populate this list with your data
@@ -90,13 +90,13 @@ public class GroceryFragment extends Fragment {
         });
 
         // Setup FloatingActionButton
-        addGroceryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle add grocery
-                // For example, open a dialog to add a new grocery item
-            }
-        });
+//        addGroceryButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Handle add grocery
+//                // For example, open a dialog to add a new grocery item
+//            }
+//        });
 
         return view;
     }

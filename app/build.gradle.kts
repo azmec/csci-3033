@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
 }
@@ -12,6 +14,9 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
+
+        val apiKey = gradleLocalProperties(rootDir).getProperty("API_KEY");
+        buildConfigField("String", "API_KEY", apiKey);
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,6 +33,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -80,4 +86,10 @@ dependencies {
 
     val roomRxJavaVersion = "2.5.2"
     implementation("androidx.room:room-rxjava3:$roomRxJavaVersion")
+
+    val retroFitVersion = "2.9.0"
+    implementation("com.squareup.retrofit2:retrofit:$retroFitVersion")
+    implementation("com.squareup.retrofit2:converter-gson:$retroFitVersion")
+
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }

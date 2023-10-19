@@ -15,7 +15,7 @@ public class WordViewModel extends AndroidViewModel {
     public WordViewModel (Application application) {
         super(application);
         mRepository = new RecipeRepository(application);
-        mAllRecipes = mRepository.getAll();
+        mAllRecipes = mRepository.getAllCached();
     }
 
     LiveData<List<Recipe>> getAllRecipes() { return mAllRecipes; }

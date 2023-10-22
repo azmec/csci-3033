@@ -1,6 +1,3 @@
-// Entity model for recipes. Each instance of `Recipe` represents a row in the
-// table `recipe` in the SQLite database.
-
 package com.example.cookbook.database;
 
 import androidx.room.ColumnInfo;
@@ -9,24 +6,36 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+/**
+ * Model class for recipes <i>and</i> definition for the <code>recipe</code>
+ * table in the SQLite database.
+ *
+ * @author {Carlos Aldana Lira}
+ */
 @Entity(tableName = "recipe")
 public class Recipe implements Serializable {
-    // `autoGenerate` forces the database to assign the next available
-    // uniquely-identifying integer to the recipe.
-    //
-    // NOTE: How do this work with the below initialization function?
-    @PrimaryKey(autoGenerate = true)
-    public int uid;
+	/**
+	 * Unique identifier for the recipe. It is automatically generated and
+	 * assigned by the SQLite database.
+	 */
+	@PrimaryKey(autoGenerate = true)
+	public int uid;
 
-    @ColumnInfo(name = "name")
-    public final String name;
+	/**
+	 * The name of the recipe.
+	 */
+	@ColumnInfo(name = "name")
+	public final String name;
 
-    public Recipe(String name) {
-        this.name = name;
-    }
+	/**
+	 * Construct a named recipe.
+	 */
+	public Recipe(String name) {
+		this.name = name;
+	}
 
-    @Override
-    public String toString() {
-        return String.format("{ id: %d, name: \"%s\" }", uid, name);
-    }
+	@Override
+	public String toString() {
+		return String.format("{ id: %d, name: \"%s\" }", uid, name);
+	}
 }

@@ -2,6 +2,14 @@ package com.example.cookbook.database;
 
 import com.example.cookbook.network.model.SpoonacularRecipe;
 
+/**
+ * Mapper of <code>network.model.SpoonacularRecipe</code> objects to
+ * <code>database.Recipe</code> objects.
+ *
+ * @see SpoonacularRecipe
+ * @see Recipe
+ * @author {Carlos Aldana Lira}
+ */
 public class RecipeMapper {
 	/**
 	 * Map a `SpoonacularRecipe` to a local, serializable `Recipe`.

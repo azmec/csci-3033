@@ -9,6 +9,12 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
+/**
+ * Java interface to the spoonacular web API. Implemented automatically by the
+ * Retrofit2 library on compilation.
+ *
+ * @author {Carlos Aldana Lira}
+ */
 public interface SpoonacularAPI {
 	/**
 	 * Return a list of randomly selected recipes.

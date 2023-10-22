@@ -3,6 +3,12 @@ package com.example.cookbook.database;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
+/**
+ * Model for a relationship between a ingredient and a tag <i>and</i> the
+ * definition for corresponding SQLite table in the database.
+ *
+ * @author {Carlos Aldana Lira}
+ */
 @Entity(
         tableName = "ingredient_tag_join",
         primaryKeys = { "ingredient_id", "tag_id" },
@@ -22,16 +28,26 @@ import androidx.room.ForeignKey;
         }
 )
 public class IngredientTagJoin {
-    public int ingredient_id;
-    public int tag_id;
+	/**
+	 * The UID of the related ingredient.
+	 */
+	public int ingredient_id;
 
-    public IngredientTagJoin(int ingredient_id, int tag_id) {
-        this.ingredient_id = ingredient_id;
-        this.tag_id = tag_id;
-    }
+	/**
+	 * The UID of the related tag.
+	 */
+	public int tag_id;
 
-    @Override
-    public String toString() {
-        return String.format("{ ingredient_id: %d, tag_id: %d }", ingredient_id, tag_id);
-    }
+	/**
+	 * Construct a new relation between a ingredient and a tag.
+	 */
+	public IngredientTagJoin(int ingredient_id, int tag_id) {
+		this.ingredient_id = ingredient_id;
+		this.tag_id = tag_id;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("{ ingredient_id: %d, tag_id: %d }", ingredient_id, tag_id);
+	}
 }

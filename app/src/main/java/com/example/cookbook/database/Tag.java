@@ -1,5 +1,3 @@
-// Generic table of tags able to be associated with recipes.
-
 package com.example.cookbook.database;
 
 import androidx.room.ColumnInfo;
@@ -8,19 +6,36 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+/**
+ * Model class for tags <i>and</i> definition for the <code>tag</code>
+ * table in the SQLite database.
+ *
+ * @author {Carlos Aldana Lira}
+ */
 @Entity(tableName = "tag")
 public class Tag implements Serializable {
-    @PrimaryKey(autoGenerate = true)
-    public int uid;
-    @ColumnInfo(name = "tag")
-    public final String tag;
+	/**
+	 * Unique identifier for the tag. It is automatically generated and
+	 * assigned by the SQLite database.
+	 */
+	@PrimaryKey(autoGenerate = true)
+	public int uid;
 
-    public Tag(String tag) {
-        this.tag = tag;
-    }
+	/**
+	 * The name of the tag.
+	 */
+	@ColumnInfo(name = "tag")
+	public final String tag;
 
-    @Override
-    public String toString() {
-        return String.format("{ id: %d, tag: \"%s\" }", uid, tag);
-    }
+	/**
+	 * Construct a named tag.
+	 */
+	public Tag(String tag) {
+		this.tag = tag;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("{ id: %d, tag: \"%s\" }", uid, tag);
+	}
 }

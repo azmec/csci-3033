@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -32,7 +35,29 @@ public class PantryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize your UI components here, for example:
-        // TextView pantryTitle = view.findViewById(R.id.pantryTitle);
+        LinearLayout currentIngredientsLayout = view.findViewById(R.id.currentIngredientsLayout);
+        LinearLayout addIngredientsLayout = view.findViewById(R.id.addIngredientsLayout);
+        Button buttonAddToPantry = view.findViewById(R.id.buttonAddToPantry);
+        Button buttonViewPantry = view.findViewById(R.id.buttonViewPantry);
+        Button buttonSaveIngredient = view.findViewById(R.id.buttonSaveIngredient);
+
+        buttonAddToPantry.setOnClickListener(v -> {
+            currentIngredientsLayout.setVisibility(View.GONE);
+            addIngredientsLayout.setVisibility(View.VISIBLE);
+        });
+
+        buttonViewPantry.setOnClickListener(v -> {
+            currentIngredientsLayout.setVisibility(View.VISIBLE);
+            addIngredientsLayout.setVisibility(View.GONE);
+        });
+
+        buttonSaveIngredient.setOnClickListener(v -> {
+            // Retrieve data from EditText
+            // Save to data source
+            // Update the currentIngredientsLayout with new ingredient
+            // Switch back to viewing mode
+            currentIngredientsLayout.setVisibility(View.VISIBLE);
+            addIngredientsLayout.setVisibility(View.GONE);
+        });
     }
 }

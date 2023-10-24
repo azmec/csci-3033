@@ -43,7 +43,7 @@ public class GroceryFragment extends Fragment {
         View view = inflater.inflate(R.layout.grocery_fragment, container, false);
 
         categorySpinner = view.findViewById(R.id.categorySpinner);  // Initialize Spinner
-        grocerySearchView = view.findViewById(R.id.grocerySearchView);
+        //grocerySearchView = view.findViewById(R.id.grocerySearchView);
         groceryRecyclerView = view.findViewById(R.id.groceryRecyclerView);
         //addGroceryButton = view.findViewById(R.id.addGroceryButton);
 
@@ -75,7 +75,7 @@ public class GroceryFragment extends Fragment {
         });
 
         // Setup SearchView
-        grocerySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        /*grocerySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Handle search submit
@@ -87,7 +87,7 @@ public class GroceryFragment extends Fragment {
                 // Handle text change
                 return false;
             }
-        });
+        });*/
 
         // Setup FloatingActionButton
 //        addGroceryButton.setOnClickListener(new View.OnClickListener() {

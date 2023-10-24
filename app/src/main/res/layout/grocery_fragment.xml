@@ -37,7 +37,7 @@
         <!-- Button to View Groceries -->
         <Button
             android:id="@+id/buttonViewGroceries"
-            android:layout_width="0dp"
+            android:layout_width="1dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
@@ -46,7 +46,7 @@
         <!-- Button to Add Groceries -->
         <Button
             android:id="@+id/buttonAddGroceries"
-            android:layout_width="0dp"
+            android:layout_width="1dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"

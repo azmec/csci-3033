@@ -6,31 +6,63 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+/**
+ * Repository or general-purpose store for category and tag relations.
+ *
+ * @author {Carlos Aldana Lira}
+ */
 public class CategoryTagJoinRepository {
-    private CategoryTagJoinDao categoryTagJoinDao;
+	private CategoryTagJoinDao categoryTagJoinDao;
 
-    CategoryTagJoinRepository(Context appContext) {
-        RecipeDatabase db = RecipeDatabase.getInstance(appContext);
-        this.categoryTagJoinDao = db.getCategoryTagJoinDao();
-    }
+	/**
+	 * Return a repository connected to the database.
+	 *
+	 * @param appContext The application's current, global context.
+	 */
+	CategoryTagJoinRepository(Context appContext) {
+		RecipeDatabase db = RecipeDatabase.getInstance(appContext);
+		this.categoryTagJoinDao = db.getCategoryTagJoinDao();
+	}
 
-    void add(CategoryTagJoin categoryTagJoin) {
-        RecipeDatabase.databaseWriteExecutor.execute(() -> {
-            categoryTagJoinDao.insert(categoryTagJoin);
-        });
-    }
+	/**
+	 * Add a category and tag relation to the repository.
+	 *
+	 * @param categoryTagJoin The relation to add.
+	 */
+	void add(CategoryTagJoin categoryTagJoin) {
+		RecipeDatabase.databaseWriteExecutor.execute(() -> {
+			categoryTagJoinDao.insert(categoryTagJoin);
+		});
+	}
 
-    LiveData<List<Category>> getCategoriesWIthTag(final int tagUID) {
-        return categoryTagJoinDao.getCategoriesWithTag(tagUID);
-    }
+	/**
+	 * Return the categories related to the tag corresponding to the given UID.
+	 *
+	 * @return The list of categories related to the tag with the given UID.
+	 * @see LiveData
+	 */
+	LiveData<List<Category>> getCategoriesWIthTag(final int tagUID) {
+		return categoryTagJoinDao.getCategoriesWithTag(tagUID);
+	}
 
-    LiveData<List<Tag>> getTagsWithCategory(final int categoryUID) {
-        return categoryTagJoinDao.getTagsWithCategory(categoryUID);
-    }
+	/**
+	 * Return the tags related to the category corresponding to the given UID.
+	 *
+	 * @return The list of tags related to the category with the given UID.
+	 * @see LiveData
+	 */
+	LiveData<List<Tag>> getTagsWithCategory(final int categoryUID) {
+		return categoryTagJoinDao.getTagsWithCategory(categoryUID);
+	}
 
-    void delete(CategoryTagJoin categoryTagJoin) {
-        RecipeDatabase.databaseWriteExecutor.execute(() -> {
-            categoryTagJoinDao.delete(categoryTagJoin);
-        });
-    }
+	/**
+	 * Remove a category and tag relation from the repository.
+	 *
+	 * @param categoryTagJoin The relation to remove.
+	 */
+	void delete(CategoryTagJoin categoryTagJoin) {
+		RecipeDatabase.databaseWriteExecutor.execute(() -> {
+			categoryTagJoinDao.delete(categoryTagJoin);
+		});
+	}
 }

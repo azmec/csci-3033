@@ -6,39 +6,80 @@ import androidx.lifecycle.LiveData;
 
 import java.util.List;
 
+/**
+ * Repository or general-purpose store for recipe categories.
+ *
+ * @author {Carlos Aldana Lira}
+ */
 public class CategoryRepository {
-    private CategoryDao categoryDao;
-    private LiveData<List<Category>> categories;
+	private CategoryDao categoryDao;
+	private LiveData<List<Category>> categories;
 
-    CategoryRepository(Context appContext) {
-        RecipeDatabase db = RecipeDatabase.getInstance(appContext);
-        this.categoryDao = db.getCategoryDao();
-        this.categories = categoryDao.getAll();
-    }
+	/**
+	 * Return a repository connected to the database.
+	 *
+	 * @param appContext The application's current, global context.
+	 */
+	CategoryRepository(Context appContext) {
+		RecipeDatabase db = RecipeDatabase.getInstance(appContext);
+		this.categoryDao = db.getCategoryDao();
+		this.categories = categoryDao.getAll();
+	}
 
-    void add(Category category) {
-        RecipeDatabase.databaseWriteExecutor.execute(() -> {
-            categoryDao.insert(category);
-        });
-    }
+	/**
+	 * Add a category to the repository.
+	 *
+	 * @param category The category to add.
+	 */
+	void add(Category category) {
+		RecipeDatabase.databaseWriteExecutor.execute(() -> {
+			categoryDao.insert(category);
+		});
+	}
 
-    LiveData<Category> getByUID(int uid) {
-        return categoryDao.getByUID(uid);
-    }
+	/**
+	 * Return the category with the specified UID.
+	 *
+	 * @see LiveData
+	 * @return The category with the specified UID in an observable container.
+	 */
+	LiveData<Category> getByUID(int uid) {
+		return categoryDao.getByUID(uid);
+	}
 
-    LiveData<List<Category>> getAll() {
-        return categoryDao.getAll();
-    }
+	/**
+	 * Return all categories in the repository.
+	 *
+	 * @see LiveData
+	 * @return All categories in the repository in an observable container.
+	 */
+	LiveData<List<Category>> getAll() {
+		return categoryDao.getAll();
+	}
 
-    void update(Category category) {
-        RecipeDatabase.databaseWriteExecutor.execute(() -> {
-            categoryDao.update(category);
-        });
-    }
+	/**
+	 * Update the values of a category in the repository. Only the category
+	 * with the UID matching that of the given category will be updated.
+	 *
+	 * @param category The category with which to update the category with
+	 *                 the matching UID.
+	 */
+	void update(Category category) {
+		RecipeDatabase.databaseWriteExecutor.execute(() -> {
+			categoryDao.update(category);
+		});
+	}
 
-    void delete(Category category) {
-        RecipeDatabase.databaseWriteExecutor.execute(() -> {
-            categoryDao.delete(category);
-        });
-    }
+	/**
+	 * Remove the category from the repository. Only the category with the
+	 * UID matching that of the given category will be updated.
+	 *
+	 * @param category The category with which to match UID of the
+	 *                 to-be-deleted category with.
+	 */
+	void delete(Category category) {
+		RecipeDatabase.databaseWriteExecutor.execute(() -> {
+			categoryDao.delete(category);
+		});
+	}
 }

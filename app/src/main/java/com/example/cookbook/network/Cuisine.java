@@ -1,5 +1,10 @@
 package com.example.cookbook.network;
 
+/**
+ * Container of constant definitions for spoonacular cuisines.
+ *
+ * @author {Carlos Aldana Lira}
+ */
 public class Cuisine {
     public static final String AFRICAN = "African";
     public static final String ASIAN = "Asian";

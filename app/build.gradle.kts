@@ -1,40 +1,61 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
+// Provides arguments to the Room database schema generator.
+class RoomSchemaArgProvider(
+	@get:InputDirectory
+	@get:PathSensitive(PathSensitivity.RELATIVE)
+	val schemaDir: File
+) : CommandLineArgumentProvider {
+	override fun asArguments(): Iterable<String> {
+		return listOf("-Aroom.schemaLocation=${schemaDir.path}")
+	}
+}
+
 plugins {
     id("com.android.application")
 }
 
 android {
-    namespace = "com.example.cookbook"
-    compileSdk = 33
+	namespace = "com.example.cookbook"
+		compileSdk = 33
 
-    defaultConfig {
-        applicationId = "com.example.cookbook"
-        minSdk = 24
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+		defaultConfig {
+			applicationId = "com.example.cookbook"
+				minSdk = 24
+				targetSdk = 33
+				versionCode = 1
+				versionName = "1.0"
 
-        val apiKey = gradleLocalProperties(rootDir).getProperty("API_KEY");
-        buildConfigField("String", "API_KEY", apiKey);
+				val apiKey = gradleLocalProperties(rootDir).getProperty("API_KEY");
+			buildConfigField("String", "API_KEY", apiKey);
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
+			testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    buildFeatures {
-        viewBinding = true
-        buildConfig = true
-    }
+			// Inform Room to write generated database schemas to the project
+			// directory's `schema/` folder.
+			javaCompileOptions {
+				annotationProcessorOptions {
+					compilerArgumentProviders(
+						RoomSchemaArgProvider(File(projectDir, "schemas"))
+					)
+				}
+			}
+		}
+
+	buildTypes {
+		release {
+			isMinifyEnabled = false
+				proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+		}
+	}
+	compileOptions {
+		sourceCompatibility = JavaVersion.VERSION_1_8
+			targetCompatibility = JavaVersion.VERSION_1_8
+	}
+	buildFeatures {
+		viewBinding = true
+			buildConfig = true
+	}
 }
 
 dependencies {

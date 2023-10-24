@@ -16,15 +16,18 @@ import java.util.concurrent.Executors;
  * Abstract definition of the database. Implemented automatically by the Room
  * library on compilation.
  */
-@Database(entities = {
-	Recipe.class,
-	Tag.class,
-	RecipeTagJoin.class,
-	Ingredient.class,
-	IngredientTagJoin.class,
-	Category.class,
-        CategoryTagJoin.class
-}, version = 1)
+@Database(
+	version = 1,
+	entities = {
+		Recipe.class,
+		Tag.class,
+		RecipeTagJoin.class,
+		Ingredient.class,
+		IngredientTagJoin.class,
+		Category.class,
+		CategoryTagJoin.class
+	}
+)
 public abstract class RecipeDatabase extends RoomDatabase {
 	private static final String DB_FILENAME = "recipe-database.db";
 	private static volatile RecipeDatabase instance;

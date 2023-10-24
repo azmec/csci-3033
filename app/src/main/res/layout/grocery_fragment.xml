@@ -1,35 +1,65 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <SearchView
-        android:id="@+id/grocerySearchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:queryHint="Search for groceries"
-        android:layout_below="@id/categorySpinner"/>
-
+    <!-- Spinner for Categories -->
     <Spinner
         android:id="@+id/categorySpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"/>
+        android:minHeight="32dp" />
 
+    <!-- SearchView for Groceries -->
+<!--    <SearchView
+        android:id="@+id/grocerySearchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="Search for groceries" />-->
+
+    <!-- RecyclerView for Groceries -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/groceryRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/grocerySearchView"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--        android:id="@+id/addGroceryButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentEnd="true"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:src="@drawable/ic_add"-->
-<!--        app:fabSize="normal"/>-->
+    <!-- Buttons at the bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="16dp">
 
-</RelativeLayout>
+        <!-- Button to View Groceries -->
+        <Button
+            android:id="@+id/buttonViewGroceries"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="View Groceries" />
+
+        <!-- Button to Add Groceries -->
+        <Button
+            android:id="@+id/buttonAddGroceries"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="Add Groceries" />
+
+        <!-- Button to Transfer to Pantry -->
+        <Button
+            android:id="@+id/buttonTransferToPantry"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Transfer to Pantry" />
+
+    </LinearLayout>
+</LinearLayout>
+

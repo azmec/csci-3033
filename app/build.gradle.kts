@@ -12,7 +12,7 @@ class RoomSchemaArgProvider(
 }
 
 plugins {
-    id("com.android.application")
+	id("com.android.application")
 }
 
 android {
@@ -59,58 +59,58 @@ android {
 }
 
 dependencies {
-    constraints {
-        val kotlinStdLibVersion = "1.8.0"
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinStdLibVersion") {
-            because("kotlin-stdlib-jdk8 is now part of kotlin-stdlib")
-        }
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinStdLibVersion") {
-            because("kotlin-stdlib-jdk7 is now part of kotlin-stdlib")
-        }
-    }
+	constraints {
+		val kotlinStdLibVersion = "1.8.0"
+			implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinStdLibVersion") {
+				because("kotlin-stdlib-jdk8 is now part of kotlin-stdlib")
+			}
+		implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinStdLibVersion") {
+			because("kotlin-stdlib-jdk7 is now part of kotlin-stdlib")
+		}
+	}
 
-    val appCompatVersion = "1.6.1"
-    implementation("androidx.appcompat:appcompat:$appCompatVersion")
+	val appCompatVersion = "1.6.1"
+	implementation("androidx.appcompat:appcompat:$appCompatVersion")
 
-    val materialVersion = "1.8.0"
-    implementation("com.google.android.material:material:$materialVersion")
+	val materialVersion = "1.8.0"
+	implementation("com.google.android.material:material:$materialVersion")
 
-    val constraintLayoutVersion = "2.1.4"
-    implementation("androidx.constraintlayout:constraintlayout:$constraintLayoutVersion")
+	val constraintLayoutVersion = "2.1.4"
+	implementation("androidx.constraintlayout:constraintlayout:$constraintLayoutVersion")
 
-    val liveCycleVersion = "2.6.1"
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$liveCycleVersion")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$liveCycleVersion")
+	val liveCycleVersion = "2.6.1"
+	implementation("androidx.lifecycle:lifecycle-livedata-ktx:$liveCycleVersion")
+	implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$liveCycleVersion")
 
-    val navigationVersion = "2.5.3"
-    implementation("androidx.navigation:navigation-fragment:$navigationVersion")
-    implementation("androidx.navigation:navigation-ui:$navigationVersion")
+	val navigationVersion = "2.5.3"
+	implementation("androidx.navigation:navigation-fragment:$navigationVersion")
+	implementation("androidx.navigation:navigation-ui:$navigationVersion")
 
-    val junitVersion = "4.13.2"
-    testImplementation("junit:junit:$junitVersion")
+	val junitVersion = "4.13.2"
+	testImplementation("junit:junit:$junitVersion")
 
-    val testJunitVersion = "1.1.5"
-    androidTestImplementation("androidx.test.ext:junit:$testJunitVersion")
+	val testJunitVersion = "1.1.5"
+	androidTestImplementation("androidx.test.ext:junit:$testJunitVersion")
 
-    val espressoVersion = "3.5.1"
-    androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
+	val espressoVersion = "3.5.1"
+	androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
 
-    // Dependencies for SQLite integration.
-    val roomVersion = "2.5.2"
-    implementation("androidx.room:room-runtime:$roomVersion")
-    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+	// Dependencies for SQLite integration.
+	val roomVersion = "2.5.2"
+	implementation("androidx.room:room-runtime:$roomVersion")
+	annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
-    val rxJavaVersion = "3.1.7";
-    val rxJavaAndroidVersion = "3.0.2"
-    implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
-    implementation("io.reactivex.rxjava3:rxandroid:$rxJavaAndroidVersion")
+	val rxJavaVersion = "3.1.7";
+	val rxJavaAndroidVersion = "3.0.2"
+	implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
+	implementation("io.reactivex.rxjava3:rxandroid:$rxJavaAndroidVersion")
 
-    val roomRxJavaVersion = "2.5.2"
-    implementation("androidx.room:room-rxjava3:$roomRxJavaVersion")
+	val roomRxJavaVersion = "2.5.2"
+	implementation("androidx.room:room-rxjava3:$roomRxJavaVersion")
 
-    val retroFitVersion = "2.9.0"
-    implementation("com.squareup.retrofit2:retrofit:$retroFitVersion")
-    implementation("com.squareup.retrofit2:converter-gson:$retroFitVersion")
+	val retroFitVersion = "2.9.0"
+	implementation("com.squareup.retrofit2:retrofit:$retroFitVersion")
+	implementation("com.squareup.retrofit2:converter-gson:$retroFitVersion")
 
-    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+	implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }

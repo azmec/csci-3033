@@ -54,6 +54,14 @@ public interface RecipeDao {
 	LiveData<Recipe> getByUID(int uid);
 
 	/**
+	 * Return the recipe with the specified UID.
+	 *
+	 * @return The recipe with the specified UID.
+	 */
+	@Query("SELECT * FROM recipe WHERE uid=:uid")
+	List<Recipe> getByUIDList(int uid);
+
+	/**
 	 * Return all recipes in the database.
 	 *
 	 * @see LiveData

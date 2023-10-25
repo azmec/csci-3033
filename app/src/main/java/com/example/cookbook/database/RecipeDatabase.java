@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +18,7 @@ import java.util.concurrent.Executors;
  * library on compilation.
  */
 @Database(
-	version = 1,
+	version = 2,
 	entities = {
 		Recipe.class,
 		Tag.class,
@@ -32,6 +33,19 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	private static final String DB_FILENAME = "recipe-database.db";
 	private static volatile RecipeDatabase instance;
 	private static final int NUMBER_OF_THREADS = 4;
+
+	/*
+	 * Manual migration from v. 1 to v. 2 of the database.
+	 */
+	public static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+		@Override
+		public void migrate(SupportSQLiteDatabase db) {
+			db.execSQL(
+				"ALTER TABLE recipe " +
+				"ADD COLUMN description TEXT"
+			);
+		}
+	};
 
 	private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
 		/**
@@ -129,9 +143,11 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	 */
 	private static RecipeDatabase create(final Context appContext) {
 		return Room.inMemoryDatabaseBuilder(
-				appContext,
-				RecipeDatabase.class
-				).addCallback(sRoomDatabaseCallback).build();
+			appContext,
+			RecipeDatabase.class
+			).addCallback(sRoomDatabaseCallback)
+			.addMigrations(MIGRATION_1_2)
+			.build();
 	}
 
 	/**

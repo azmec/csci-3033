@@ -104,7 +104,7 @@ dependencies {
 	val roomVersion = "2.5.2"
 	implementation("androidx.room:room-runtime:$roomVersion")
 	annotationProcessor("androidx.room:room-compiler:$roomVersion")
-	testImplementation("androidx.room:room-testing:$roomVersion")
+	androidTestImplementation("androidx.room:room-testing:$roomVersion")
 
 	val rxJavaVersion = "3.1.7";
 	val rxJavaAndroidVersion = "3.0.2"

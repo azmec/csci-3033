@@ -1,35 +1,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#AEA4A4">
+    android:padding="16dp">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:background="#F4F2F2"
         android:queryHint="Search for recipes..." />
 
     <!-- Title for the Recipe section -->
+
+    <!-- RecyclerView to display a list of recipes -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recipes"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="16dp"
-        android:textColor="#0353F4" />
+        android:text="Recipes"
+        android:textColor="#054908"
+        android:textSize="34sp"
+        android:textStyle="bold" />
 
-    <!-- RecyclerView to display a list of recipes -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recipeRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#4CAF50"
+        android:background="#EDF6ED"
         android:clipToPadding="false"
         android:padding="8dp"
         android:scrollbars="vertical" />

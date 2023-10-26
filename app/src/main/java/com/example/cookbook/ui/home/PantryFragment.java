@@ -12,7 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.cookbook.R;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.android.material.snackbar.Snackbar;
+
 
 public class PantryFragment extends Fragment {
 
@@ -63,8 +64,13 @@ public class PantryFragment extends Fragment {
         buttonSaveIngredient.setOnClickListener(v -> {
             // Retrieve data from EditText
             PantryList[listIdx] = editTextIngredientName.getText().toString();
-            listIdx += 1;
 
+            // Display some data back to the user
+            String message = "Ingredient added: " + PantryList[listIdx];
+            Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
+
+            //increment list index
+            listIdx += 1;
             currentIngredientsLayout.setVisibility(View.VISIBLE);
             addIngredientsLayout.setVisibility(View.GONE);
         });

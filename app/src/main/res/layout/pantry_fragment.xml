@@ -15,6 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:padding="16dp"/>
 
+    <!-- ScrollView for displaying ingredients -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -22,52 +23,38 @@
         android:padding="16dp">
 
         <LinearLayout
-            android:id="@+id/pantryLayout"
+            android:id="@+id/ingredientsDisplayLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <!-- List of Current Ingredients -->
-            <LinearLayout
-                android:id="@+id/currentIngredientsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible">
-                <!-- This will dynamically display the list of current ingredients. -->
-
-            </LinearLayout>
-
-            <!-- Add Ingredients Layout -->
-            <LinearLayout
-                android:id="@+id/addIngredientsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                android:gravity="center">
-
-                <EditText
-                    android:id="@+id/editTextIngredientName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Ingredient Name"
-                    android:inputType="text"/>
-
-                <!-- Add more fields if needed, like quantity, etc. -->
-
-                <Button
-                    android:id="@+id/buttonSaveIngredient"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Save Ingredient" />
-
-            </LinearLayout>
-
+            android:orientation="vertical">
+            <!-- This will dynamically display the list of current ingredients. -->
         </LinearLayout>
     </ScrollView>
 
+    <!-- Add Ingredients Layout -->
+    <LinearLayout
+        android:id="@+id/addIngredientsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/editTextIngredientName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingredient Name"
+            android:inputType="text"/>
+
+        <!-- Add more fields if needed, like quantity, etc. -->
+
+        <Button
+            android:id="@+id/buttonSaveIngredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Ingredient" />
+    </LinearLayout>
 
     <!-- Buttons at the bottom -->
     <LinearLayout
@@ -91,6 +78,5 @@
             android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:text="View Ingredients" />
-
     </LinearLayout>
 </LinearLayout>

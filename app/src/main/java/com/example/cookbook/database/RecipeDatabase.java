@@ -16,6 +16,8 @@ import com.example.cookbook.database.ingredient.Ingredient;
 import com.example.cookbook.database.ingredient.IngredientDao;
 import com.example.cookbook.database.ingredienttag.IngredientTagJoin;
 import com.example.cookbook.database.ingredienttag.IngredientTagJoinDao;
+import com.example.cookbook.database.recipe.Recipe;
+import com.example.cookbook.database.recipe.RecipeDao;
 
 import org.jetbrains.annotations.NotNull;
 

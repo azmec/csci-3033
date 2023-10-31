@@ -1,4 +1,4 @@
-package com.example.cookbook.database;
+package com.example.cookbook.database.recipe;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

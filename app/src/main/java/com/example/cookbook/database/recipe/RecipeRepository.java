@@ -1,12 +1,12 @@
-package com.example.cookbook.database;
+package com.example.cookbook.database.recipe;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.cookbook.BuildConfig;
+import com.example.cookbook.database.RecipeDatabase;
 import com.example.cookbook.network.SpoonacularAPI;
 import com.example.cookbook.network.SpoonacularClient;
 import com.example.cookbook.network.model.ComplexSearchResponse;

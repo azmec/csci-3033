@@ -3,6 +3,8 @@ package com.example.cookbook.database;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
+import com.example.cookbook.database.ingredient.Ingredient;
+
 /**
  * Model for a relationship between a ingredient and a tag <i>and</i> the
  * definition for corresponding SQLite table in the database.

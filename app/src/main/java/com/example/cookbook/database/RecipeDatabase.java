@@ -12,6 +12,8 @@ import com.example.cookbook.database.category.Category;
 import com.example.cookbook.database.category.CategoryDao;
 import com.example.cookbook.database.categorytagjoin.CategoryTagJoin;
 import com.example.cookbook.database.categorytagjoin.CategoryTagJoinDao;
+import com.example.cookbook.database.ingredient.Ingredient;
+import com.example.cookbook.database.ingredient.IngredientDao;
 
 import org.jetbrains.annotations.NotNull;
 

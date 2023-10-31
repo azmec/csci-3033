@@ -1,8 +1,10 @@
-package com.example.cookbook.database;
+package com.example.cookbook.database.ingredient;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+
+import com.example.cookbook.database.RecipeDatabase;
 
 import java.util.List;
 

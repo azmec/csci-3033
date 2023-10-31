@@ -6,6 +6,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.cookbook.database.ingredient.Ingredient;
+
 import java.util.List;
 
 /**
@@ -13,7 +15,7 @@ import java.util.List;
  * interface is implemented by the Room library on compilation.
  *
  * @see IngredientTagJoinDao
- * @see Ingredient 
+ * @see Ingredient
  * @see Tag
  * @author {Carlos Aldana Lira}
  */

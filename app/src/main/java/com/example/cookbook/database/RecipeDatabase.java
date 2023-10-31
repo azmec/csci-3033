@@ -20,6 +20,8 @@ import com.example.cookbook.database.recipe.Recipe;
 import com.example.cookbook.database.recipe.RecipeDao;
 import com.example.cookbook.database.recipetag.RecipeTagJoin;
 import com.example.cookbook.database.recipetag.RecipeTagJoinDao;
+import com.example.cookbook.database.tag.Tag;
+import com.example.cookbook.database.tag.TagDao;
 
 import org.jetbrains.annotations.NotNull;
 

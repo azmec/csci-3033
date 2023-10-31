@@ -5,7 +5,7 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 
 import com.example.cookbook.database.RecipeDatabase;
-import com.example.cookbook.database.Tag;
+import com.example.cookbook.database.tag.Tag;
 import com.example.cookbook.database.ingredient.Ingredient;
 
 import java.util.List;

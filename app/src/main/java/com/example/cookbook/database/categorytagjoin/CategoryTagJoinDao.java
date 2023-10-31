@@ -6,7 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.cookbook.database.Tag;
+import com.example.cookbook.database.tag.Tag;
 import com.example.cookbook.database.category.Category;
 
 import java.util.List;

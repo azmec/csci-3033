@@ -3,7 +3,7 @@ package com.example.cookbook.database.recipetag;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-import com.example.cookbook.database.Tag;
+import com.example.cookbook.database.tag.Tag;
 import com.example.cookbook.database.recipe.Recipe;
 
 /**

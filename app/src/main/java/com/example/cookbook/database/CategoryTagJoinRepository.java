@@ -4,6 +4,8 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.cookbook.database.category.Category;
+
 import java.util.List;
 
 /**

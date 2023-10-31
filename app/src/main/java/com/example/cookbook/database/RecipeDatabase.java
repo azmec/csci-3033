@@ -8,6 +8,9 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.example.cookbook.database.category.Category;
+import com.example.cookbook.database.category.CategoryDao;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ExecutorService;

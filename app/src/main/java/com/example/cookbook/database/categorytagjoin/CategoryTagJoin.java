@@ -1,8 +1,9 @@
-package com.example.cookbook.database;
+package com.example.cookbook.database.categorytagjoin;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
+import com.example.cookbook.database.Tag;
 import com.example.cookbook.database.category.Category;
 
 /**

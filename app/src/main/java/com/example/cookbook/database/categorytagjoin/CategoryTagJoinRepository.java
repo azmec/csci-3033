@@ -1,9 +1,11 @@
-package com.example.cookbook.database;
+package com.example.cookbook.database.categorytagjoin;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.cookbook.database.RecipeDatabase;
+import com.example.cookbook.database.Tag;
 import com.example.cookbook.database.category.Category;
 
 import java.util.List;

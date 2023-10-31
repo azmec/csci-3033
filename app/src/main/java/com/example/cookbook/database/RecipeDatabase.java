@@ -10,6 +10,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.cookbook.database.category.Category;
 import com.example.cookbook.database.category.CategoryDao;
+import com.example.cookbook.database.categorytagjoin.CategoryTagJoin;
+import com.example.cookbook.database.categorytagjoin.CategoryTagJoinDao;
 
 import org.jetbrains.annotations.NotNull;
 

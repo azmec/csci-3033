@@ -1,4 +1,4 @@
-package com.example.cookbook.database;
+package com.example.cookbook.database.recipetag;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.cookbook.database.Tag;
 import com.example.cookbook.database.recipe.Recipe;
 
 import java.util.List;

@@ -119,7 +119,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	/**
 	 * Thread-pool responsible for writing to the database.
 	 */
-	static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+	public static final ExecutorService databaseWriteExecutor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
 	/**
 	 * Retrieve a reference to the single database resource.
@@ -127,7 +127,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	 * @param  appContext The Android application's context.
 	 * @return            A reference to the single database resource.
 	 */
-	static synchronized RecipeDatabase getInstance(Context appContext) {
+	public static synchronized RecipeDatabase getInstance(Context appContext) {
 		if (instance == null)
 			instance = create(appContext);
 		return instance;

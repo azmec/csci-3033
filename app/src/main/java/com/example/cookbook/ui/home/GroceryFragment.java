@@ -10,6 +10,7 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,7 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GroceryFragment extends Fragment {
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+    }
     private RecyclerView groceryRecyclerView;
     private SearchView grocerySearchView;
     private FloatingActionButton addGroceryButton;

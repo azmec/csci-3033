@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.cookbook.R;
 import com.google.android.material.snackbar.Snackbar;
@@ -17,7 +18,16 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.HashMap;
 
 public class AddFragment extends Fragment {
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        ((AppCompatActivity)getActivity()).getSupportActionBar().show();
+    }
     public AddFragment() {
         // Required empty public constructor
     }

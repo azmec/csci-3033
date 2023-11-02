@@ -7,9 +7,21 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookbook.R;
+import com.example.cookbook.database.recipe.Recipe;
+import com.example.cookbook.database.recipe.RecipeRepository;
+import java.util.ArrayList;
 
 public class RecipeFragment extends Fragment {
+
+    private RecipeViewModel recipeViewModel;
+    private RecipeRepository recipeRepository;
+    private RecyclerView recyclerView;
+    private RecipeAdapter recipeAdapter;
+    private ArrayList<Recipe> recipeList;
 
     public RecipeFragment() {
         // Required empty public constructor
@@ -18,21 +30,26 @@ public class RecipeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        recipeRepository = new RecipeRepository(getContext());  // Pass the context here
     }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.recipe_fragment, container, false);
-    }
+        View view = inflater.inflate(R.layout.recipe_fragment, container, false);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        recyclerView = view.findViewById(R.id.recipeRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize your UI components here, for example:
-        // TextView recipeTitle = view.findViewById(R.id.recipeTitle);
+        recipeViewModel.getAllRecipes().observe(getViewLifecycleOwner(), recipes -> {
+            recipeList = new ArrayList<>(recipes);
+            recipeAdapter = new RecipeAdapter(recipeList);
+            recyclerView.setAdapter(recipeAdapter);
+        });
+
+        return view;
     }
 }

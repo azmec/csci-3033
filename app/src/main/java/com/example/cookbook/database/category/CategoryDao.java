@@ -22,27 +22,27 @@ public interface CategoryDao {
 	 * Insert one or more categories into the database.
 	 */
 	@Insert
-	void insert(Category... categories);
+	public void insert(Category... categories);
 
 	/**
 	 * Update the values of one or more categories in the database. Only
 	 * categories with the same UIDs as those given will be updated.
 	 */
 	@Update
-	void update(Category... categories);
+	public void update(Category... categories);
 
 	/**
 	 * Remove one or more categories from the database. Only categories with
 	 * the same UIDs as those given will be removed.
 	 */
 	@Delete
-	void delete(Category... categories);
+	public void delete(Category... categories);
 
 	/**
 	 * Remove all categories from the database.
 	 */
 	@Query("DELETE FROM category")
-	void deleteAll();
+	public void deleteAll();
 
 	/**
 	 * Return the category with the specified UID.
@@ -51,7 +51,7 @@ public interface CategoryDao {
 	 * @return The category with the specified UID in an observable container.
 	 */
 	@Query("SELECT * FROM category WHERE uid=:uid")
-	LiveData<Category> getByUID(int uid);
+	public LiveData<Category> getByUID(int uid);
 
 	/**
 	 * Return all categories in the database.
@@ -60,5 +60,5 @@ public interface CategoryDao {
 	 * @return All categories in the database in an observable container.
 	 */
 	@Query("SELECT * FROM category")
-	LiveData<List<Category>> getAll();
+	public LiveData<List<Category>> getAll();
 }

@@ -164,7 +164,7 @@ public class RecipeRepository {
 	 * @param recipe The recipe with which to update the recipe with
 	 *                 the matching UID.
 	 */
-	void update(Recipe recipe) {
+	public void update(Recipe recipe) {
 		RecipeDatabase.databaseWriteExecutor.execute(() -> {
 			recipeDao.update(recipe);
 		});
@@ -177,7 +177,7 @@ public class RecipeRepository {
 	 * @param recipe The recipe with which to match UID of the
 	 *                 to-be-deleted recipe with.
 	 */
-	void delete(Recipe recipe) {
+	public void delete(Recipe recipe) {
 		RecipeDatabase.databaseWriteExecutor.execute(() -> {
 			recipeDao.delete(recipe);
 		});

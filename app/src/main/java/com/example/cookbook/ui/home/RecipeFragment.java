@@ -1,5 +1,6 @@
 package com.example.cookbook.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +31,14 @@ public class RecipeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Context context = getContext();
+
+        // Initialize the view model.
         recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
-        recipeRepository = new RecipeRepository(getContext());  // Pass the context here
+        recipeViewModel.initRepository(context);
+
+        // Initialize our repository.
+        recipeRepository = new RecipeRepository(context);
     }
 
 

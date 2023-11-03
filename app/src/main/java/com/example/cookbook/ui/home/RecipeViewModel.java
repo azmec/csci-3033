@@ -10,12 +10,32 @@ import com.example.cookbook.network.Cuisine;
 import java.util.List;
 
 public class RecipeViewModel extends ViewModel {
-    private final RecipeRepository recipeRepository;
-    private final LiveData<List<Recipe>> allRecipes;
+    private RecipeRepository recipeRepository;
+    private LiveData<List<Recipe>> allRecipes;
 
+    /**
+     * Default, parameterless constructor.
+     */
+    public RecipeViewModel() {}
+
+    /**
+     * Construct and return a view model with an initialized data repository.
+     * @param context The application context necessary to initialize the repository.
+     * @see Context
+     */
     public RecipeViewModel(Context context) {
         recipeRepository = new RecipeRepository(context);
         allRecipes = recipeRepository.getAll(1, Cuisine.AFRICAN);
+    }
+
+    /**
+     * Initialize the view model's internal data repository.
+     * @param context The application context necessary to initialize the repository.
+     * @see Context
+     */
+    public void initRepository(Context context) {
+        this.recipeRepository = new RecipeRepository(context);
+        this.allRecipes = this.recipeRepository.getAll(1, Cuisine.AFRICAN);
     }
 
     public LiveData<List<Recipe>> getAllRecipes() {

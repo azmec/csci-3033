@@ -156,6 +156,30 @@ public class GroceryFragment extends Fragment {
 
                 //Update the pantry to include these groceries
                 ingredientViewModel.setData(newPantry);
+
+                // Show the confirmation dialog
+                ConfirmTransferDialogFragment dialogFragment = new ConfirmTransferDialogFragment();
+                dialogFragment.show(getParentFragmentManager(), "ConfirmTransferDialog");
+                /*MaterialButton buttonKeep = view.findViewById(R.id.buttonKeep);
+                MaterialButton buttonClear = view.findViewById(R.id.buttonClear);
+                buttonKeep.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // User wants to keep the groceries, handle the action
+                        dialogFragment.dismiss(); // Close the dialog
+                    }
+                });
+
+                buttonClear.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // User wants to clear the groceries, handle the action
+                        List<String> emptyList = new ArrayList<String>();
+                        groceryViewModel.setData(emptyList);
+                        dialogFragment.dismiss(); // Close the dialog
+                    }
+                });*/
+
             }
         });
         //

@@ -22,8 +22,9 @@
         android:minHeight="32dp" />
 
     <!-- SearchView for Groceries -->
-    <SearchView
-        android:id="@+id/grocerySearchView"
+    <androidx.appcompat.widget.SearchView
+
+     android:id="@+id/grocerySearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:queryHint="Search for groceries" />
@@ -70,5 +71,27 @@
             android:text="Transfer to Pantry" />
 
     </LinearLayout>
+     <!-- Add Groceries Layout -->
+     <LinearLayout
+         android:id="@+id/addGroceriesLayout"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:gravity="center"
+         android:orientation="vertical"
+         android:visibility="gone">
+
+         <EditText
+             android:id="@+id/editTextGroceryName"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:hint="Grocery Name"
+             android:inputType="text" />
+
+         <Button
+             android:id="@+id/buttonFinalizeAddGroceries"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Add Grocery" />
+     </LinearLayout>
 </LinearLayout>
 

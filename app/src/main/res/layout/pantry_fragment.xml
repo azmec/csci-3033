@@ -45,16 +45,16 @@
         android:id="@+id/addIngredientsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:gravity="center">
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/editTextIngredientName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Ingredient Name"
-            android:inputType="text"/>
+            android:inputType="text" />
 
         <!-- Add more fields if needed, like quantity, etc. -->
 

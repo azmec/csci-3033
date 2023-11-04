@@ -1,11 +1,14 @@
 package com.example.cookbook.ui.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import androidx.annotation.NonNull;
@@ -15,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookbook.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +36,10 @@ public class GroceryFragment extends Fragment {
     }
     private RecyclerView groceryRecyclerView;
     private SearchView grocerySearchView;
-    private FloatingActionButton addGroceryButton;
+    private MaterialButton addGroceryButton;
+    private MaterialButton finalizeAddGroceryButton;
     private Spinner categorySpinner;  // New Spinner for category selection
+
     private GroceryAdapter groceryAdapter;
     private List<String> groceryList; // Replace String with your Grocery model if you have one
 
@@ -51,11 +57,13 @@ public class GroceryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.grocery_fragment, container, false);
-
+        EditText editGroceryName = view.findViewById(R.id.editTextGroceryName);
+        LinearLayout addGroceriesLayout = view.findViewById(R.id.addGroceriesLayout);
         categorySpinner = view.findViewById(R.id.categorySpinner);  // Initialize Spinner
         //grocerySearchView = view.findViewById(R.id.grocerySearchView);
         groceryRecyclerView = view.findViewById(R.id.groceryRecyclerView);
-        //addGroceryButton = view.findViewById(R.id.addGroceryButton);
+        addGroceryButton = view.findViewById(R.id.buttonAddGroceries);
+        finalizeAddGroceryButton = view.findViewById(R.id.buttonFinalizeAddGroceries);
 
         // Initialize grocery list
         groceryList = new ArrayList<>(); // Populate this list with your data
@@ -85,7 +93,8 @@ public class GroceryFragment extends Fragment {
         });
 
         // Setup SearchView
-        /*grocerySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        /*
+        grocerySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 // Handle search submit
@@ -97,17 +106,33 @@ public class GroceryFragment extends Fragment {
                 // Handle text change
                 return false;
             }
-        });*/
-
+        });
+        */
         // Setup FloatingActionButton
-//        addGroceryButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Handle add grocery
-//                // For example, open a dialog to add a new grocery item
-//            }
-//        });
+        addGroceryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle add grocery
+                // For example, open a dialog to add a new grocery item
+                addGroceriesLayout.setVisibility(View.VISIBLE);
 
+            }
+        });
+        finalizeAddGroceryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Retrieve the grocery from EditText
+                String grocery = editGroceryName.getText().toString();
+                //Add to GroceryList list
+                groceryList.add(grocery);
+
+                //Add the grocery to the recycler view and then disable the visibility
+                editGroceryName.setText("");
+                addGroceriesLayout.setVisibility(View.GONE);
+            }
+        });
+        //
         return view;
+
     }
 }

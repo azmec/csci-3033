@@ -1,5 +1,6 @@
 package com.example.cookbook.network.model;
 
+
 import com.google.gson.annotations.SerializedName;
 
 /**

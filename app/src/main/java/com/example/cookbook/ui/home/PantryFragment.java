@@ -12,16 +12,22 @@ import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.example.cookbook.R;
+import com.example.cookbook.database.ingredient.Ingredient;
+import com.example.cookbook.database.ingredient.IngredientRepository;
 import com.google.android.material.snackbar.Snackbar;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 public class PantryFragment extends Fragment {
+    IngredientViewModel ingredientViewModel;
     @Override
     public void onResume() {
         super.onResume();
@@ -39,8 +45,8 @@ public class PantryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ingredientViewModel = new ViewModelProvider(requireActivity()).get(IngredientViewModel.class);
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -52,6 +58,7 @@ public class PantryFragment extends Fragment {
     //array to store ingredients
     private int listIdx = 0;
     String[] PantryList = new String[200];
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -72,6 +79,14 @@ public class PantryFragment extends Fragment {
         LinearLayout ingredientsDisplayLayout = view.findViewById(R.id.ingredientsDisplayLayout);
         buttonViewPantry.setOnClickListener(v -> {
             ingredientsDisplayLayout.removeAllViews(); // Clear previous views
+
+
+            //Retrieve the data stored in the view model and update the list accordingly
+            for (int i = 0; i < ingredientViewModel.getData().size(); i++) {
+                PantryList[i] = ingredientViewModel.getData().get(i);
+                listIdx = i + 1;
+            }
+
             for (int i = 0; i < listIdx; i++) {
                 TextView textView = new TextView(getContext());
                 textView.setText(PantryList[i]);
@@ -92,8 +107,19 @@ public class PantryFragment extends Fragment {
             String ingredient = editTextIngredientName.getText().toString();
 
             // Add the ingredient to your PantryList array
-            PantryList[listIdx] = ingredient;
+            /*
             listIdx += 1;
+            PantryList[listIdx] = ingredient;
+            */
+
+            // Get the current list of ingredients from the ViewModel
+            List<String> currentIngredients = ingredientViewModel.getData();
+
+            // Add the ingredient to the ViewModel's list
+            currentIngredients.add(ingredient);
+
+            // Update the list in the ViewModel
+            ingredientViewModel.setData(currentIngredients);
 
             // Display the ingredient in ingredientsDisplayLayout
             TextView ingredientTextView = new TextView(getContext());

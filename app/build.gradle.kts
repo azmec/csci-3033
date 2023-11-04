@@ -86,6 +86,7 @@ dependencies {
 	val liveCycleVersion = "2.6.1"
 	implementation("androidx.lifecycle:lifecycle-livedata-ktx:$liveCycleVersion")
 	implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$liveCycleVersion")
+	implementation("androidx.lifecycle:lifecycle-reactivestreams:$liveCycleVersion")
 
 	val navigationVersion = "2.5.3"
 	implementation("androidx.navigation:navigation-fragment:$navigationVersion")
@@ -117,6 +118,7 @@ dependencies {
 	val retroFitVersion = "2.9.0"
 	implementation("com.squareup.retrofit2:retrofit:$retroFitVersion")
 	implementation("com.squareup.retrofit2:converter-gson:$retroFitVersion")
+	implementation("com.squareup.retrofit2:adapter-rxjava3:$retroFitVersion")
 
 	implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }

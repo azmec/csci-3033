@@ -3,9 +3,8 @@ package com.example.cookbook.network;
 import com.example.cookbook.network.model.ComplexSearchResponse;
 import com.example.cookbook.network.model.RandomRecipeResponse;
 
-import java.util.List;
+import io.reactivex.rxjava3.core.Single;
 
-import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -15,7 +14,7 @@ import retrofit2.http.Query;
  *
  * @author {Carlos Aldana Lira}
  */
-public interface SpoonacularAPI {
+public interface SpoonacularService {
 	/**
 	 * Return a list of randomly selected recipes.
 	 * 
@@ -24,7 +23,7 @@ public interface SpoonacularAPI {
 	 * @return       A model class for the JSON response.
 	 */
 	@GET("recipes/random")
-	Call<RandomRecipeResponse> getRandomRecipes(
+	Single<RandomRecipeResponse> getRandomRecipes(
 		@Query(value = "apiKey") String apiKey,
 		@Query(value = "number") int number
 	);
@@ -40,7 +39,7 @@ public interface SpoonacularAPI {
 	 * @return         A model class for the JSON response.
 	 */
 	@GET("recipes/complexSearch")
-	Call<ComplexSearchResponse> getComplexSearch(
+	Single<ComplexSearchResponse> getComplexSearch(
 		@Query(value = "apiKey") String apiKey,
 		@Query(value = "cuisine", encoded = true) String cuisines,
 		@Query(value = "number") int number

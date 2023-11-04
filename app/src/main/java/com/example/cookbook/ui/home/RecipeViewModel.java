@@ -3,11 +3,15 @@ package com.example.cookbook.ui.home;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.ViewModel;
 import com.example.cookbook.database.recipe.Recipe;
 import com.example.cookbook.database.recipe.RecipeRepository;
 import com.example.cookbook.network.Cuisine;
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class RecipeViewModel extends ViewModel {
     private RecipeRepository recipeRepository;
@@ -25,7 +29,12 @@ public class RecipeViewModel extends ViewModel {
      */
     public RecipeViewModel(Context context) {
         recipeRepository = new RecipeRepository(context);
-        allRecipes = recipeRepository.getAll(1, Cuisine.AFRICAN);
+        allRecipes = LiveDataReactiveStreams.fromPublisher(
+                this.recipeRepository.getAll(1, Cuisine.AFRICAN)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .toFlowable()
+        );
     }
 
     /**
@@ -35,7 +44,12 @@ public class RecipeViewModel extends ViewModel {
      */
     public void initRepository(Context context) {
         this.recipeRepository = new RecipeRepository(context);
-        this.allRecipes = this.recipeRepository.getAll(1, Cuisine.AFRICAN);
+        allRecipes = LiveDataReactiveStreams.fromPublisher(
+                this.recipeRepository.getAll(1, Cuisine.AFRICAN)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .toFlowable()
+        );
     }
 
     public LiveData<List<Recipe>> getAllRecipes() {

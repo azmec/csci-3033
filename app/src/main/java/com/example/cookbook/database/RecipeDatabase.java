@@ -157,9 +157,10 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	 * @see               RoomDatabase
 	 */
 	private static RecipeDatabase create(final Context appContext) {
-		return Room.inMemoryDatabaseBuilder(
+		return Room.databaseBuilder(
 			appContext,
-			RecipeDatabase.class
+			RecipeDatabase.class,
+			DB_FILENAME
 			).addCallback(sRoomDatabaseCallback)
 			.addMigrations(MIGRATION_1_2)
 			.build();

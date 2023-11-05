@@ -2,11 +2,11 @@ package com.example.cookbook.database.ingredient;
 
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
-
 import com.example.cookbook.database.RecipeDatabase;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Repository or general-purpose store for recipe ingredients.
@@ -14,8 +14,8 @@ import java.util.List;
  * @author {Carlos Aldana Lira}
  */
 public class IngredientRepository {
-	private IngredientDao ingredientDao;
-	private LiveData<List<Ingredient>> ingredients;
+	private final IngredientDao ingredientDao;
+	private Single<List<Ingredient>> ingredients;
 
 	/**
 	 * Return a repository connected to the database.
@@ -42,22 +42,21 @@ public class IngredientRepository {
 	/**
 	 * Return the ingredient with the specified UID.
 	 *
-	 * @see LiveData
-	 * @return The ingredient with the specified UID in an observable
-	 *         container.
+	 * @see Single
+	 * @return The ingredient with the specified UID.
 	 */
-	LiveData<Ingredient> getByUID(int uid) {
+	Single<Ingredient> getByUID(int uid) {
 		return ingredientDao.getByUID(uid);
 	}
 
 	/**
 	 * Return all ingredients in the repository.
 	 *
-	 * @see LiveData
+	 * @see Single
 	 * @return All ingredients in the repository in an observable
 	 *         container.
 	 */
-	LiveData<List<Ingredient>> getAll() {
+	Single<List<Ingredient>> getAll() {
 		return ingredientDao.getAll();
 	}
 

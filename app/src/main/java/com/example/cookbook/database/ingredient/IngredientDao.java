@@ -1,6 +1,5 @@
 package com.example.cookbook.database.ingredient;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -8,6 +7,9 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Database access object for ingredients. The interface is implemented by the
@@ -22,44 +24,43 @@ public interface IngredientDao {
 	 * Insert one or more ingredients into the database.
 	 */
 	@Insert
-	void insert(Ingredient... ingredients);
+	Completable insert(Ingredient... ingredients);
 
 	/**
 	 * Update the values of one or more ingredients in the database. Only
 	 * ingredients with the same UIDs as those given will be updated.
 	 */
 	@Update
-	void update(Ingredient... ingredients);
+	Completable update(Ingredient... ingredients);
 
 	/**
 	 * Remove one or more ingredients from the database. Only ingredients
 	 * with the same UIDs as those given will be removed.
 	 */
 	@Delete
-	void delete(Ingredient... ingredients);
+	Completable delete(Ingredient... ingredients);
 
 	/**
 	 * Remove all ingredients from the database.
 	 */
 	@Query("DELETE FROM ingredient")
-	void deleteAll();
+	Completable deleteAll();
 
 	/**
 	 * Return the ingredient with the specified UID.
 	 *
-	 * @see LiveData
-	 * @return The ingredient with the specified UID in an observable
-	 *         container.
+	 * @see Single
+	 * @return The ingredient with the specified UID.
 	 */
 	@Query("SELECT * FROM ingredient WHERE uid=:uid")
-	LiveData<Ingredient> getByUID(int uid);
+	Single<Ingredient> getByUID(int uid);
 
 	/**
 	 * Return all ingredients in the database.
 	 *
-	 * @see LiveData
-	 * @return All ingredients in the database in an observable container.
+	 * @see Single
+	 * @return All ingredients in the database.
 	 */
 	@Query("SELECT * FROM ingredient")
-	LiveData<List<Ingredient>> getAll();
+	Single<List<Ingredient>> getAll();
 }

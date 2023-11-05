@@ -29,13 +29,13 @@ public class IngredientRepository {
 	}
 
 	/**
-	 * Add a ingredient to the repository.
+	 * Add one or more ingredients to the repository.
 	 *
-	 * @param ingredient The ingredient to add.
+	 * @param ingredients The ingredient(s) to add.
 	 */
-	void add(Ingredient ingredient) {
+	void add(Ingredient... ingredients) {
 		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			ingredientDao.insert(ingredient);
+			ingredientDao.insert(ingredients);
 		});
 	}
 

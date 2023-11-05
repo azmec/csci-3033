@@ -3,6 +3,7 @@ package com.example.cookbook.network;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -13,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SpoonacularClient {
 	private static final String BASE_URL = "https://api.spoonacular.com/";
 	private static SpoonacularClient instance;
-	private SpoonacularAPI api;
+	private final SpoonacularService api;
 
 	/**
 	 * Default, parameterless constructor.
@@ -29,9 +30,10 @@ public class SpoonacularClient {
 			.baseUrl(BASE_URL)
 			.addConverterFactory(GsonConverterFactory.create())
 			.client(client)
+			.addCallAdapterFactory(RxJava3CallAdapterFactory.create())
 			.build();
 
-		api = retrofit.create(SpoonacularAPI.class);
+		api = retrofit.create(SpoonacularService.class);
 	}
 
 	/**
@@ -49,10 +51,10 @@ public class SpoonacularClient {
 	/**
 	 * Return a reference to the API.
 	 *
-	 * @see SpoonacularAPI
+	 * @see SpoonacularService
 	 * @return A reference to the API.
 	 */
-	public SpoonacularAPI getApi() {
+	public SpoonacularService getApi() {
 		return api;
 	}
 }

@@ -24,6 +24,8 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+
 /**
  * Test suite for database migrations.
  *
@@ -69,7 +71,8 @@ public class DatabaseMigrationTest {
 
         // Retrieve the recipe we just created.
         RecipeDao recipeDao = migratedDb.getRecipeDao();
-        List<Recipe> recipes = recipeDao.getByUIDList(1);
+        Single<List<Recipe>> single = recipeDao.getByUIDList(1);
+        List<Recipe> recipes = single.blockingGet();
         Recipe recipe = recipes.get(0);
 
         // Check that the recipe's data survived migration and is what we

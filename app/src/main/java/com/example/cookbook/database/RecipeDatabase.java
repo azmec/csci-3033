@@ -73,14 +73,14 @@ public abstract class RecipeDatabase extends RoomDatabase {
 				RecipeDao recipeDao = instance.getRecipeDao();
 				recipeDao.deleteAll();
 
-				recipeDao.insert(new Recipe("Kak'ik"));
-				recipeDao.insert(new Recipe("Chuchito"));
-				recipeDao.insert(new Recipe("Tamalitos de masa"));
-				recipeDao.insert(new Recipe("Caldo de res"));
-				recipeDao.insert(new Recipe("Caldo de gallina"));
-				recipeDao.insert(new Recipe("Arroz con frijoles"));
-				recipeDao.insert(new Recipe("Arroz frito"));
-				recipeDao.insert(new Recipe("Tortitas de yuca"));
+				recipeDao.insert(new Recipe("Kak'ik")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Chuchito")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Tamalitos de masa")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Caldo de res")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Caldo de gallina")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Arroz con frijoles")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Arroz frito")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Tortitas de yuca")).blockingSubscribe();
 
 				TagDao tagDao = instance.getTagDao();
 				tagDao.deleteAll();

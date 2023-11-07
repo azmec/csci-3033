@@ -22,7 +22,7 @@ public class IngredientRepository {
 	 *
 	 * @param appContext The application's current, global context.
 	 */
-	IngredientRepository(Context appContext) {
+	public IngredientRepository(Context appContext) {
 		RecipeDatabase db = RecipeDatabase.getInstance(appContext);
 		this.ingredientDao = db.getIngredientDao();
 		this.ingredients = ingredientDao.getAll();
@@ -45,7 +45,7 @@ public class IngredientRepository {
 	 * @see Single
 	 * @return The ingredient with the specified UID.
 	 */
-	Single<Ingredient> getByUID(int uid) {
+	public Single<Ingredient> getByUID(int uid) {
 		return ingredientDao.getByUID(uid);
 	}
 
@@ -56,7 +56,7 @@ public class IngredientRepository {
 	 * @return All ingredients in the repository in an observable
 	 *         container.
 	 */
-	Single<List<Ingredient>> getAll() {
+	public Single<List<Ingredient>> getAll() {
 		return ingredientDao.getAll();
 	}
 

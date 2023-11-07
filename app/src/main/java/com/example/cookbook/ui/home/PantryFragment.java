@@ -22,12 +22,13 @@ import android.widget.ListView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class PantryFragment extends Fragment {
     IngredientViewModel ingredientViewModel;
+    private List<String> pantryList = new ArrayList<>();
     @Override
     public void onResume() {
         super.onResume();
@@ -45,7 +46,9 @@ public class PantryFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ingredientViewModel = new ViewModelProvider(requireActivity()).get(IngredientViewModel.class);
+        //Initialize the repository within the ViewModel
+        ingredientViewModel = new ViewModelProvider(this).get(IngredientViewModel.class);
+        ingredientViewModel.initRepository(getContext());
     }
     @Nullable
     @Override
@@ -70,6 +73,7 @@ public class PantryFragment extends Fragment {
         Button buttonViewPantry = view.findViewById(R.id.buttonViewPantry);
         Button buttonSaveIngredient = view.findViewById(R.id.buttonSaveIngredient);
 
+
         //Switching view window to 'add'
         buttonAddToPantry.setOnClickListener(v -> {
             currentIngredientsLayout.setVisibility(View.GONE);
@@ -77,6 +81,7 @@ public class PantryFragment extends Fragment {
         });
 
         LinearLayout ingredientsDisplayLayout = view.findViewById(R.id.ingredientsDisplayLayout);
+
         buttonViewPantry.setOnClickListener(v -> {
             ingredientsDisplayLayout.removeAllViews(); // Clear previous views
 
@@ -103,7 +108,6 @@ public class PantryFragment extends Fragment {
 
         //Save ingredient to list
         buttonSaveIngredient.setOnClickListener(v -> {
-            // Retrieve data from EditText
             String ingredient = editTextIngredientName.getText().toString();
 
             // Add the ingredient to your PantryList array
@@ -129,13 +133,6 @@ public class PantryFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT
             ));
             ingredientsDisplayLayout.addView(ingredientTextView);
-
-            // Clear the EditText
-            editTextIngredientName.setText("");
-
-            // Display some data back to the user
-            //String message = "Ingredient added: " + ingredient;
-            //Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
 
             // Switch views to display the list of ingredients
             currentIngredientsLayout.setVisibility(View.VISIBLE);

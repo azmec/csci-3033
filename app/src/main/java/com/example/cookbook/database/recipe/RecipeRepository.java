@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.cookbook.BuildConfig;
 import com.example.cookbook.database.RecipeDatabase;
+import com.example.cookbook.database.SpoonacularCache;
 import com.example.cookbook.network.SpoonacularService;
 import com.example.cookbook.network.SpoonacularClient;
 import com.example.cookbook.network.model.SpoonacularRecipe;
@@ -20,6 +21,7 @@ import io.reactivex.rxjava3.core.Single;
  */
 public class RecipeRepository {
 	private final RecipeDao recipeDao;
+	private final RecipeDao cacheRecipeDao;
 	private final SpoonacularService api;
 
 	private final String apiKey = BuildConfig.API_KEY;
@@ -32,7 +34,10 @@ public class RecipeRepository {
 	 */
 	public RecipeRepository(Context appContext) {
 		RecipeDatabase db = RecipeDatabase.getInstance(appContext);
+		SpoonacularCache cache = SpoonacularCache.getInstance(appContext);
+
 		this.recipeDao = db.getRecipeDao();
+		this.cacheRecipeDao = cache.getRecipeDao();
 		this.recipes = recipeDao.getAll();
 
 		SpoonacularClient client = SpoonacularClient.getInstance();
@@ -89,19 +94,50 @@ public class RecipeRepository {
 	}
 
 	/**
+	 * Return all recipes held by the repository.
+	 *
+	 * @return All recipes held by the repository.
+	 * @see Single
+	 */
+	public Single<List<Recipe>> getAll() {
+		Single<List<Recipe>> localRecipes = this.recipeDao.getAll();
+		Single<List<Recipe>> cachedRecipes = this.cacheRecipeDao.getAll();
+		//Single<List<Recipe>> webRecipes = getRandomRecipe(5);
+		Single<List<Recipe>> webRecipes = Single.just(new ArrayList<>());
+
+		// When all of the above computations complete, compose their results
+		// into a single list of recipes.
+		Single<List<Recipe>> allRecipes = Single.zip(localRecipes, cachedRecipes, webRecipes, (local, cached, web) -> {
+			List<Recipe> recipes = new ArrayList<>();
+			recipes.addAll(local);
+			recipes.addAll(cached);
+			recipes.addAll(web);
+
+			return recipes;
+		});
+
+		return allRecipes;
+	}
+
+	/**
 	 * Return a random recipe in the repository.
 	 *
 	 * @return A random recipe.
 	 * @see Single
 	 */
-	public Single<List<Recipe>> getRandomRecipe() {
-		return this.api.getRandomRecipes(apiKey, 1).map(response -> {
+	public Single<List<Recipe>> getRandomRecipe(int number) {
+		return this.api.getRandomRecipes(apiKey, number).map(response -> {
 			List<SpoonacularRecipe> spoonacularRecipeList = response.getRecipeList();
 			List<Recipe> recipeList = new ArrayList<>();
 			for (SpoonacularRecipe spoonacularRecipe : spoonacularRecipeList) {
 				Recipe recipe = RecipeMapper.mapSpoonacularRecipeToRecipe(spoonacularRecipe);
 				recipeList.add(recipe);
 			}
+
+			// This is the basic structure.
+			RecipeDatabase.databaseWriteExecutor.execute(() -> {
+				cacheRecipeDao.insert(recipeList.toArray(new Recipe[0]));
+			});
 
 			return recipeList;
 		});

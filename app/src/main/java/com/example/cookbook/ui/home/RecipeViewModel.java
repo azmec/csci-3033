@@ -30,7 +30,7 @@ public class RecipeViewModel extends ViewModel {
     public RecipeViewModel(Context context) {
         recipeRepository = new RecipeRepository(context);
         allRecipes = LiveDataReactiveStreams.fromPublisher(
-                this.recipeRepository.getAll(1, Cuisine.AFRICAN)
+                this.recipeRepository.getAll()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .toFlowable()
@@ -45,7 +45,7 @@ public class RecipeViewModel extends ViewModel {
     public void initRepository(Context context) {
         this.recipeRepository = new RecipeRepository(context);
         allRecipes = LiveDataReactiveStreams.fromPublisher(
-                this.recipeRepository.getAll(1, Cuisine.AFRICAN)
+                this.recipeRepository.getAll()
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .toFlowable()

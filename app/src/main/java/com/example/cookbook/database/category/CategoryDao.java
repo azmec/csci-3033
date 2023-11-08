@@ -54,6 +54,15 @@ public interface CategoryDao {
 	public LiveData<Category> getByUID(int uid);
 
 	/**
+	 * Return the category with the given name.
+	 *
+	 * @see LiveData
+	 * @return The category with the specified name in an observable container.
+	 */
+	@Query("SELECT * FROM category WHERE name=:name")
+	public LiveData<Category> getByName(String name);
+
+	/**
 	 * Return all categories in the database.
 	 *
 	 * @see LiveData

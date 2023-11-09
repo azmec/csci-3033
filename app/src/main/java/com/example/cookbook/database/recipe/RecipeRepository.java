@@ -1,6 +1,7 @@
 package com.example.cookbook.database.recipe;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.cookbook.BuildConfig;
 import com.example.cookbook.database.RecipeDatabase;
@@ -51,6 +52,7 @@ public class RecipeRepository {
 	 */
 	public void add(Recipe recipe) {
 		RecipeDatabase.databaseWriteExecutor.execute(() -> {
+			Log.d("RecipeRepository", "add: adding recipe " + recipe);
 			recipeDao.insert(recipe);
 		});
 	}

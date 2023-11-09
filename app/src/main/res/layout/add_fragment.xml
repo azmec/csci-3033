@@ -27,6 +27,7 @@
         android:padding="16dp"/>
 
         <!-- Recipe Name EditText -->
+
     <EditText
         android:id="@+id/editTextRecipeName"
         android:layout_width="350dp"
@@ -34,8 +35,17 @@
         android:hint="Recipe Name"
         android:inputType="text"
         android:layout_gravity="center_horizontal"/>
-
     <!-- Center Content with ScrollView for ingredients -->
+    <EditText
+        android:id="@+id/editTextRecipeDescription"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Description"
+        android:gravity="start|top"
+        android:layout_gravity="center_horizontal"
+    android:inputType="textMultiLine" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"

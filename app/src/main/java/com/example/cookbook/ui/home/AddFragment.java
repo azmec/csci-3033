@@ -1,5 +1,6 @@
 package com.example.cookbook.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -12,7 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+
 import com.example.cookbook.R;
+import com.example.cookbook.database.ingredient.Ingredient;
+import com.example.cookbook.database.ingredient.IngredientRepository;
+import com.example.cookbook.database.recipe.Recipe;
+import com.example.cookbook.database.recipe.RecipeRepository;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
@@ -52,6 +59,7 @@ public class AddFragment extends Fragment {
         // Initialize UI components
         EditText recipeNameEditText = view.findViewById(R.id.editTextRecipeName);
         EditText ingredientEditText = view.findViewById(R.id.editTextIngredients);
+        EditText recipeDescriptionEditText = view.findViewById(R.id.editTextRecipeDescription);
         LinearLayout ingredientsLayout = view.findViewById(R.id.ingredientsLayout);
         Button addIngredientButton = view.findViewById(R.id.buttonAddIngredient);
         Button submitButton = view.findViewById(R.id.buttonSubmit);
@@ -88,13 +96,21 @@ public class AddFragment extends Fragment {
                 HashMap<String, String> recipeData = new HashMap<>();
                 recipeData.put("Recipe Name", recipeNameEditText.getText().toString());
                 recipeData.put("Ingredient", ingredientEditText.getText().toString());
-                //... add other ingredients
 
+                // Create recipe and send to the repository
+                String name = recipeNameEditText.getText().toString();
+                String description = recipeDescriptionEditText.getText().toString();
+                String ingredientName = ingredientEditText.getText().toString();
+                Recipe recipe = new Recipe(name, description);
+                Ingredient ingredient = new Ingredient(ingredientName, 1);
+                RecipeRepository RecipeRepositoryObj = new RecipeRepository(getContext());
+                RecipeRepositoryObj.add(recipe);
+                IngredientRepository IngredientRepositoryObj = new IngredientRepository(getContext());
+                //... add other ingredients
                 // Display some data back to the user
                 String message = "Recipe Name: " + recipeData.get("Recipe Name") + "\n" +
                         "First Ingredient: " + recipeData.get("Ingredient");
                 Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
-
             }
         });
     }

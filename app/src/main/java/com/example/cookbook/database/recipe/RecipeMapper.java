@@ -18,7 +18,7 @@ public class RecipeMapper {
 	 * @return                  A local, serializable recipe.
 	 */
 	static public Recipe mapSpoonacularRecipeToRecipe(SpoonacularRecipe spoonacularRecipe) {
-		Recipe recipe = new Recipe(spoonacularRecipe.getTitle());
+		Recipe recipe = new Recipe(spoonacularRecipe.getTitle(), "");
 
 		return recipe;
     }

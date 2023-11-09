@@ -2,6 +2,7 @@ package com.example.cookbook.database.recipe;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -35,6 +36,15 @@ public class Recipe implements Serializable {
 	 */
 	public Recipe(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Construct a named, described recipe.
+	 */
+	@Ignore
+	public Recipe(String name, String description) {
+		this.name = name;
+		this.description = description;
 	}
 
 	@Override

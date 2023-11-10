@@ -14,9 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookbook.R;
 import com.example.cookbook.database.recipe.Recipe;
 import com.example.cookbook.database.recipe.RecipeRepository;
+
 import java.util.ArrayList;
 
-public class RecipeFragment extends Fragment {
+public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickListener {
 
     private RecipeViewModel recipeViewModel;
     private RecipeRepository recipeRepository;
@@ -41,7 +42,6 @@ public class RecipeFragment extends Fragment {
         recipeRepository = new RecipeRepository(context);
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -53,10 +53,18 @@ public class RecipeFragment extends Fragment {
 
         recipeViewModel.getAllRecipes().observe(getViewLifecycleOwner(), recipes -> {
             recipeList = new ArrayList<>(recipes);
-            recipeAdapter = new RecipeAdapter(recipeList);
+            recipeAdapter = new RecipeAdapter(getContext(), recipeList);
+            recipeAdapter.setClickListener(this); // Set the click listener
             recyclerView.setAdapter(recipeAdapter);
         });
 
         return view;
+    }
+
+    @Override
+    public void onItemClick(View view, Recipe recipe) {
+        // Handle the click event here
+        RecipeDetailDialogFragment dialogFragment = RecipeDetailDialogFragment.newInstance(recipe);
+        dialogFragment.show(getParentFragmentManager(), "recipe_details");
     }
 }

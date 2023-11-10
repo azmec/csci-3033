@@ -6,7 +6,9 @@ import com.example.cookbook.database.RecipeDatabase;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Repository or general-purpose store for recipe ingredients.
@@ -14,6 +16,8 @@ import io.reactivex.rxjava3.core.Single;
  * @author {Carlos Aldana Lira}
  */
 public class IngredientRepository {
+
+	private static final Scheduler SCHEDULER = Schedulers.io();
 	private final IngredientDao ingredientDao;
 	private Single<List<Ingredient>> ingredients;
 
@@ -34,9 +38,9 @@ public class IngredientRepository {
 	 * @param ingredients The ingredient(s) to add.
 	 */
 	void add(Ingredient... ingredients) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			ingredientDao.insert(ingredients);
-		});
+		ingredientDao.insert(ingredients)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 
 	/**
@@ -69,9 +73,9 @@ public class IngredientRepository {
 	 *                   with the matching UID.
 	 */
 	void update(Ingredient ingredient) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			ingredientDao.update(ingredient);
-		});
+		ingredientDao.update(ingredient)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 
 	/**
@@ -82,8 +86,8 @@ public class IngredientRepository {
 	 *                   to-be-deleted ingredient with.
 	 */
 	void delete(Ingredient ingredient) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			ingredientDao.delete(ingredient);
-		});
+		ingredientDao.delete(ingredient)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 }

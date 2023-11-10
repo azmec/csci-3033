@@ -1,7 +1,6 @@
 package com.example.cookbook.database.recipe;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.cookbook.BuildConfig;
 import com.example.cookbook.database.RecipeDatabase;
@@ -13,7 +12,9 @@ import com.example.cookbook.network.model.SpoonacularRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Repository or general-purpose store for recipes.
@@ -21,6 +22,8 @@ import io.reactivex.rxjava3.core.Single;
  * @author {Carlos Aldana Lira}
  */
 public class RecipeRepository {
+
+	private static final Scheduler SCHEDULER = Schedulers.io();
 	private final RecipeDao recipeDao;
 	private final RecipeDao cacheRecipeDao;
 	private final SpoonacularService api;
@@ -51,10 +54,9 @@ public class RecipeRepository {
 	 * @param recipe The recipe to add.
 	 */
 	public void add(Recipe recipe) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			Log.d("RecipeRepository", "add: adding recipe " + recipe);
-			recipeDao.insert(recipe);
-		});
+		recipeDao.insert(recipe)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 
 	/**
@@ -163,9 +165,9 @@ public class RecipeRepository {
 	 *                 the matching UID.
 	 */
 	public void update(Recipe recipe) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			recipeDao.update(recipe);
-		});
+		recipeDao.update(recipe)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 
 	/**
@@ -176,8 +178,8 @@ public class RecipeRepository {
 	 *                 to-be-deleted recipe with.
 	 */
 	public void delete(Recipe recipe) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			recipeDao.delete(recipe);
-		});
+		recipeDao.delete(recipe)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 }

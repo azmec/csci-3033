@@ -29,7 +29,7 @@ public class Recipe implements Serializable {
 	public final String name;
 
 	@ColumnInfo(name = "description")
-	public String description;
+	public String description = "";
 
 	/**
 	 * Construct a named recipe.
@@ -43,12 +43,13 @@ public class Recipe implements Serializable {
 	 */
 	@Ignore
 	public Recipe(String name, String description) {
-		this.name = name;
+		this(name);
+
 		this.description = description;
 	}
 
 	@Override
 	public String toString() {
-		return String.format("{ id: %d, name: \"%s\" }", uid, name);
+		return String.format("{ id: %d, name: \"%s\", description: \"%s\" }", uid, name, description);
 	}
 }

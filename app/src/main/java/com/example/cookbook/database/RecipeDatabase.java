@@ -73,14 +73,14 @@ public abstract class RecipeDatabase extends RoomDatabase {
 				RecipeDao recipeDao = instance.getRecipeDao();
 				recipeDao.deleteAll();
 
-				recipeDao.insert(new Recipe("Kak'ik")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Chuchito")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Tamalitos de masa")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Caldo de res")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Caldo de gallina")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Arroz con frijoles")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Arroz frito")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Tortitas de yuca")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Kak'ik", "A Guatemalan soup of Mayan origin.")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Chuchito", "A small, Guatemalan tamale. Often accompanied by salsa and traditional Zacapa cheese.")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Tamalitos de masa", "A small, plain dough tamale.")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Caldo de res", "Beef and vegetable soup.")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Caldo de gallina", "Hen soup.")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Arroz con frijoles", "Rice with black beans.")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Arroz frito", "Fried rice.")).blockingSubscribe();
+				recipeDao.insert(new Recipe("Tortitas de yuca", "A tortilla made of yuca, which is somehow related to Jewish cuisine.")).blockingSubscribe();
 
 				TagDao tagDao = instance.getTagDao();
 				tagDao.deleteAll();

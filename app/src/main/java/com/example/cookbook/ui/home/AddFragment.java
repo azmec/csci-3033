@@ -22,6 +22,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
 
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class AddFragment extends Fragment {
     @Override
     public void onResume() {
@@ -101,14 +103,18 @@ public class AddFragment extends Fragment {
                 String ingredientName = ingredientEditText.getText().toString();
                 Recipe recipe = new Recipe(name, description);
                 Ingredient ingredient = new Ingredient(ingredientName, 1);
+
                 RecipeRepository RecipeRepositoryObj = new RecipeRepository(getContext());
-                RecipeRepositoryObj.add(recipe);
-                IngredientRepository IngredientRepositoryObj = new IngredientRepository(getContext());
-                //... add other ingredients
-                // Display some data back to the user
-                String message = "Recipe Name: " + recipeData.get("Recipe Name") + "\n" +
-                        "First Ingredient: " + recipeData.get("Ingredient");
-                Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
+                RecipeRepositoryObj.add(recipe)
+                        .subscribeOn(Schedulers.io())
+                        .subscribe((recipeID) -> {
+                            IngredientRepository IngredientRepositoryObj = new IngredientRepository(getContext());
+                            //... add other ingredients
+                            // Display some data back to the user
+                            String message = "Recipe Name: " + recipeData.get("Recipe Name") + "\n" +
+                                    "First Ingredient: " + recipeData.get("Ingredient");
+                            Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
+                        });
             }
         });
     }

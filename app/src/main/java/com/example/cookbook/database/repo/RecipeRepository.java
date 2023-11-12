@@ -53,13 +53,22 @@ public class RecipeRepository {
 
 	/**
 	 * Add a recipe to the repository.
-	 *
 	 * @param recipe The recipe to add.
+	 * @return The `Single` emitting the recipe's unique identifier.
+	 * @see Single
 	 */
-	public void add(Recipe recipe) {
-		recipeDao.insert(recipe)
-				.subscribeOn(SCHEDULER)
-				.subscribe();
+	public Single<Long> add(Recipe recipe) {
+		return recipeDao.insert(recipe);
+	}
+
+	/**
+	 * Add multiple recipes to the repository
+	 * @param recipes The recipes to add.
+	 * @return The `Single` emitting the recipes' unique identifiers.
+	 * @see Single
+	 */
+	public Single<List<Long>> add(Recipe... recipes) {
+		return recipeDao.insert(recipes);
 	}
 
 	/**

@@ -23,10 +23,22 @@ import io.reactivex.rxjava3.core.Single;
 @Dao
 public interface RecipeDao {
 	/**
-	 * Insert one or more recipes into the database.
+	 * Insert a recipe into the database.
+	 * @param recipe The recipe to insert.
+	 * @return The `Single` emitting the unique identifier of the inserted recipe.
+	 * @see Single
 	 */
 	@Insert
-	Completable insert(Recipe... recipes);
+	Single<Long> insert(Recipe recipe);
+
+	/**
+	 * Insert multiple recipes into the database.
+	 * @param recipes The recipes to insert.
+	 * @return The `Single` emitting the unique identifiers of the inserted recipes.
+	 * @see Single
+	 */
+	@Insert
+	Single<List<Long>> insert(Recipe... recipes);
 
 	/**
 	 * Update the values of one or more recipes in the database. Only

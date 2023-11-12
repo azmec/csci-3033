@@ -10,11 +10,12 @@ import com.example.cookbook.database.ingredient.Ingredient;
 import com.example.cookbook.database.ingredient.IngredientRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class IngredientViewModel extends ViewModel {
 
-    private List<String> data;
+/*    private List<String> data;
     public List<String> getData() {
         if (data == null) {
             data = new ArrayList<String>();
@@ -23,7 +24,7 @@ public class IngredientViewModel extends ViewModel {
     }
     public void setData(List<String> newData) {
         data = newData;
-    }
+    }*/
 
     /** TODO: Link grocery list to be able to send to pantry
      *
@@ -58,6 +59,10 @@ public class IngredientViewModel extends ViewModel {
 
     public LiveData<List<Ingredient>> getAllIngredients() {
         return allIngredients;
+    }
+
+    public void insertIngredient(Ingredient ingredient){
+        ingredientRepository.add(ingredient);
     }
 }
 

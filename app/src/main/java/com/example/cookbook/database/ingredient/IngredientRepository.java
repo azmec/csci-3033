@@ -37,7 +37,7 @@ public class IngredientRepository {
 	 *
 	 * @param ingredients The ingredient(s) to add.
 	 */
-	void add(Ingredient... ingredients) {
+	public void add(Ingredient... ingredients) {
 		ingredientDao.insert(ingredients)
 				.subscribeOn(SCHEDULER)
 				.subscribe();
@@ -72,7 +72,7 @@ public class IngredientRepository {
 	 * @param ingredient The ingredient with which to update the ingredient
 	 *                   with the matching UID.
 	 */
-	void update(Ingredient ingredient) {
+	public void update(Ingredient ingredient) {
 		ingredientDao.update(ingredient)
 				.subscribeOn(SCHEDULER)
 				.subscribe();
@@ -85,7 +85,7 @@ public class IngredientRepository {
 	 * @param ingredient The ingredient with which to match UID of the
 	 *                   to-be-deleted ingredient with.
 	 */
-	void delete(Ingredient ingredient) {
+	public void delete(Ingredient ingredient) {
 		ingredientDao.delete(ingredient)
 				.subscribeOn(SCHEDULER)
 				.subscribe();

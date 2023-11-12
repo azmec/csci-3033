@@ -1,10 +1,13 @@
-package com.example.cookbook.database.recipe;
+package com.example.cookbook.database.repo;
 
 import android.content.Context;
 
 import com.example.cookbook.BuildConfig;
 import com.example.cookbook.database.RecipeDatabase;
 import com.example.cookbook.database.SpoonacularCache;
+import com.example.cookbook.database.dao.RecipeDao;
+import com.example.cookbook.database.model.Recipe;
+import com.example.cookbook.database.util.RecipeMapper;
 import com.example.cookbook.network.SpoonacularService;
 import com.example.cookbook.network.SpoonacularClient;
 import com.example.cookbook.network.model.SpoonacularRecipe;

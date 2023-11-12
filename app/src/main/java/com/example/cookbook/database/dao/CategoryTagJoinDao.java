@@ -1,4 +1,4 @@
-package com.example.cookbook.database.categorytagjoin;
+package com.example.cookbook.database.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -6,8 +6,9 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.example.cookbook.database.tag.Tag;
-import com.example.cookbook.database.category.Category;
+import com.example.cookbook.database.model.CategoryTagJoin;
+import com.example.cookbook.database.model.Tag;
+import com.example.cookbook.database.model.Category;
 
 import java.util.List;
 

@@ -3,8 +3,8 @@ import android.app.Application;
 
 import androidx.lifecycle.AndroidViewModel;
 
-import com.example.cookbook.database.recipe.Recipe;
-import com.example.cookbook.database.recipe.RecipeRepository;
+import com.example.cookbook.database.model.Recipe;
+import com.example.cookbook.database.repo.RecipeRepository;
 
 import java.util.List;
 

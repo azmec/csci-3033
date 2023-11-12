@@ -9,17 +9,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.widget.NestedScrollView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.cookbook.R;
-import com.example.cookbook.database.ingredient.Ingredient;
-import com.example.cookbook.database.ingredient.IngredientRepository;
-import com.google.android.material.snackbar.Snackbar;
-import android.widget.ListView;
-import android.widget.ArrayAdapter;
+
 import android.widget.TextView;
 
 import java.util.ArrayList;

@@ -1,10 +1,7 @@
-package com.example.cookbook.database.categorytagjoin;
+package com.example.cookbook.database.model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-
-import com.example.cookbook.database.tag.Tag;
-import com.example.cookbook.database.category.Category;
 
 /**
  * Model for a relationship between a category and a tag <i>and</i> the

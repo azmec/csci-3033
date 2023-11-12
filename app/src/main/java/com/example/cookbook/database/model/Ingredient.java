@@ -1,4 +1,4 @@
-package com.example.cookbook.database.ingredient;
+package com.example.cookbook.database.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

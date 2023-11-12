@@ -1,10 +1,12 @@
-package com.example.cookbook.database.recipe;
+package com.example.cookbook.database.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
+
+import com.example.cookbook.database.model.Recipe;
 
 import java.util.List;
 

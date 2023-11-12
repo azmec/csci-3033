@@ -1,10 +1,12 @@
-package com.example.cookbook.database.category;
+package com.example.cookbook.database.repo;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.cookbook.database.RecipeDatabase;
+import com.example.cookbook.database.dao.CategoryDao;
+import com.example.cookbook.database.model.Category;
 
 import java.util.List;
 

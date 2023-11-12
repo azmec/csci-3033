@@ -1,10 +1,7 @@
-package com.example.cookbook.database.ingredienttag;
+package com.example.cookbook.database.model;
 
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-
-import com.example.cookbook.database.tag.Tag;
-import com.example.cookbook.database.ingredient.Ingredient;
 
 /**
  * Model for a relationship between a ingredient and a tag <i>and</i> the

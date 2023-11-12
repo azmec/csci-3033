@@ -9,7 +9,7 @@ import android.view.View;
 import com.example.cookbook.R;
 import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
-import com.example.cookbook.database.recipe.Recipe; // Replace with your actual Recipe class import
+import com.example.cookbook.database.model.Recipe; // Replace with your actual Recipe class import
 
 public class RecipeDetailDialogFragment extends DialogFragment {
 

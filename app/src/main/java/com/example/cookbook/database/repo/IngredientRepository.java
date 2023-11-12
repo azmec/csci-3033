@@ -1,8 +1,10 @@
-package com.example.cookbook.database.ingredient;
+package com.example.cookbook.database.repo;
 
 import android.content.Context;
 
 import com.example.cookbook.database.RecipeDatabase;
+import com.example.cookbook.database.dao.IngredientDao;
+import com.example.cookbook.database.model.Ingredient;
 
 import java.util.List;
 

@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookbook.R;
-import com.example.cookbook.database.recipe.Recipe;
-import com.example.cookbook.database.recipe.RecipeRepository;
+import com.example.cookbook.database.model.Recipe;
+import com.example.cookbook.database.repo.RecipeRepository;
 
 import java.util.ArrayList;
 

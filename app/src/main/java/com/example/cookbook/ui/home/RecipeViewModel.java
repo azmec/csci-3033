@@ -5,9 +5,9 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.ViewModel;
-import com.example.cookbook.database.recipe.Recipe;
-import com.example.cookbook.database.recipe.RecipeRepository;
-import com.example.cookbook.network.Cuisine;
+import com.example.cookbook.database.model.Recipe;
+import com.example.cookbook.database.repo.RecipeRepository;
+
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;

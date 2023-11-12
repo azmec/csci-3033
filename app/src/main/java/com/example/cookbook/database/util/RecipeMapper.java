@@ -1,5 +1,6 @@
-package com.example.cookbook.database.recipe;
+package com.example.cookbook.database.util;
 
+import com.example.cookbook.database.model.Recipe;
 import com.example.cookbook.network.model.SpoonacularRecipe;
 
 /**

@@ -1,4 +1,4 @@
-package com.example.cookbook.database.tag;
+package com.example.cookbook.database.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,13 +7,15 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.cookbook.database.model.Tag;
+
 import java.util.List;
 
 /**
  * Database access object for tags. The interface is implemented by the
  * Room library on compilation.
  *
- * @see Tag 
+ * @see Tag
  * @author {Carlos Aldana Lira}
  */
 @Dao

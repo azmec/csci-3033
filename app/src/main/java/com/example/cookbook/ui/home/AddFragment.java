@@ -1,6 +1,5 @@
 package com.example.cookbook.ui.home;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -13,13 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 
 import com.example.cookbook.R;
-import com.example.cookbook.database.ingredient.Ingredient;
-import com.example.cookbook.database.ingredient.IngredientRepository;
-import com.example.cookbook.database.recipe.Recipe;
-import com.example.cookbook.database.recipe.RecipeRepository;
+import com.example.cookbook.database.model.Ingredient;
+import com.example.cookbook.database.repo.IngredientRepository;
+import com.example.cookbook.database.model.Recipe;
+import com.example.cookbook.database.repo.RecipeRepository;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;

@@ -1,12 +1,14 @@
-package com.example.cookbook.database.ingredienttag;
+package com.example.cookbook.database.repo;
 
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 
 import com.example.cookbook.database.RecipeDatabase;
-import com.example.cookbook.database.tag.Tag;
-import com.example.cookbook.database.ingredient.Ingredient;
+import com.example.cookbook.database.dao.IngredientTagJoinDao;
+import com.example.cookbook.database.model.IngredientTagJoin;
+import com.example.cookbook.database.model.Tag;
+import com.example.cookbook.database.model.Ingredient;
 
 import java.util.List;
 

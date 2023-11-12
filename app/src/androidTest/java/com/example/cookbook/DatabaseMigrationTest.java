@@ -12,8 +12,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
-import com.example.cookbook.database.recipe.Recipe;
-import com.example.cookbook.database.recipe.RecipeDao;
+import com.example.cookbook.database.model.Recipe;
+import com.example.cookbook.database.dao.RecipeDao;
 import com.example.cookbook.database.RecipeDatabase;
 
 import org.hamcrest.core.IsNull;

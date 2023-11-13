@@ -21,7 +21,7 @@ public class Ingredient implements Serializable {
 	 * and assigned by the SQLite database.
 	 */
 	@PrimaryKey(autoGenerate = true)
-	public int uid;
+	public long uid;
 
 	/**
 	 * The name of the ingredient.

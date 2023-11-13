@@ -29,33 +29,17 @@ import com.example.cookbook.database.model.Ingredient;
         }
 )
 public class RecipeIngredientJoin {
-    private final int recipe_id;
-    private final int ingredient_id;
+    public long recipe_id;
+    public long ingredient_id;
 
     /**
      * Construct a new relation between a recipe and an ingredient.
      * @param recipe_id     The unique identifier of the recipe.
      * @param ingredient_id The unique identifier of the ingredient.
      */
-    public RecipeIngredientJoin(int recipe_id, int ingredient_id) {
+    public RecipeIngredientJoin(long recipe_id, long ingredient_id) {
         this.recipe_id = recipe_id;
         this.ingredient_id = ingredient_id;
-    }
-
-    /**
-     * Return the unique identifier of the recipe in this relation.
-     * @return The unique identifier of the recipe.
-     */
-    public int getRecipeID() {
-        return this.recipe_id;
-    }
-
-    /**
-     * Return the unique identifier of the ingredient in this relation.
-     * @return The unique identifier of the ingredient.
-     */
-    public int getIngredientID() {
-        return this.ingredient_id;
     }
 
     @Override

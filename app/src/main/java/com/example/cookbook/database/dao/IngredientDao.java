@@ -23,10 +23,22 @@ import io.reactivex.rxjava3.core.Single;
 @Dao
 public interface IngredientDao {
 	/**
-	 * Insert one or more ingredients into the database.
+	 * Insert a ingredient into the database.
+	 * @param ingredient The recipe to insert.
+	 * @return The `Single` emitting the unique identifier of the inserted ingredient.
+	 * @see Single
 	 */
 	@Insert
-	Completable insert(Ingredient... ingredients);
+	Single<Long> insert(Ingredient ingredient);
+
+	/**
+	 * Insert multiple ingredients into the database.
+	 * @param ingredients The ingredients to insert.
+	 * @return The `Single` emitting the unique identifiers of the inserted ingredients.
+	 * @see Single
+	 */
+	@Insert
+	Single<List<Long>> insert(Ingredient... ingredients);
 
 	/**
 	 * Update the values of one or more ingredients in the database. Only

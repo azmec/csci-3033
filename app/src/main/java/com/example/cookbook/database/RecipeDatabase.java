@@ -2,12 +2,14 @@ package com.example.cookbook.database;
 
 import android.content.Context;
 
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.example.cookbook.database.dao.RecipeIngredientJoinDao;
 import com.example.cookbook.database.model.Category;
 import com.example.cookbook.database.dao.CategoryDao;
 import com.example.cookbook.database.model.CategoryTagJoin;
@@ -18,6 +20,7 @@ import com.example.cookbook.database.model.IngredientTagJoin;
 import com.example.cookbook.database.dao.IngredientTagJoinDao;
 import com.example.cookbook.database.model.Recipe;
 import com.example.cookbook.database.dao.RecipeDao;
+import com.example.cookbook.database.model.RecipeIngredientJoin;
 import com.example.cookbook.database.model.RecipeTagJoin;
 import com.example.cookbook.database.dao.RecipeTagJoinDao;
 import com.example.cookbook.database.model.Tag;
@@ -33,7 +36,7 @@ import java.util.concurrent.Executors;
  * library on compilation.
  */
 @Database(
-	version = 2,
+	version = 3,
 	entities = {
 		Recipe.class,
 		Tag.class,
@@ -41,8 +44,10 @@ import java.util.concurrent.Executors;
 		Ingredient.class,
 		IngredientTagJoin.class,
 		Category.class,
-		CategoryTagJoin.class
-	}
+		CategoryTagJoin.class,
+			RecipeIngredientJoin.class
+	},
+		autoMigrations = { @AutoMigration(from = 2, to = 3)}
 )
 public abstract class RecipeDatabase extends RoomDatabase {
 	private static final String DB_FILENAME = "recipe-database.db";
@@ -219,4 +224,12 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	 * @return The category-to-tag relation DAO.
 	 */
 	public abstract CategoryTagJoinDao getCategoryTagJoinDao();
+
+	/**
+	 * Return a recipe-to-ingredient relation database access object (DAO)
+	 * connected to this database.
+	 *
+	 * @return The recipe-to-ingredient relation DAO.
+	 */
+	public abstract RecipeIngredientJoinDao getRecipeIngredientJoinDao();
 }

@@ -35,14 +35,23 @@ public class IngredientRepository {
 	}
 
 	/**
-	 * Add one or more ingredients to the repository.
-	 *
-	 * @param ingredients The ingredient(s) to add.
+	 * Add a ingredient to the repository.
+	 * @param ingredient The ingredient to add.
+	 * @return The `Single` emitting the ingredient's unique identifier.
+	 * @see Single
 	 */
-	void add(Ingredient... ingredients) {
-		ingredientDao.insert(ingredients)
-				.subscribeOn(SCHEDULER)
-				.subscribe();
+	public Single<Long> add(Ingredient ingredient) {
+		return ingredientDao.insert(ingredient);
+	}
+
+	/**
+	 * Add multiple ingredients to the repository
+	 * @param ingredients The ingredients to add.
+	 * @return The `Single` emitting the ingredients' unique identifiers.
+	 * @see Single
+	 */
+	public Single<List<Long>> add(Ingredient... ingredients) {
+		return ingredientDao.insert(ingredients);
 	}
 
 	/**

@@ -52,35 +52,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        switchMode = findViewById(R.id.switchMode);
-
-        sharedPreferences = getSharedPreferences("MODE", Context.MODE_PRIVATE);
-        nightMode = sharedPreferences.getBoolean("nightMode",false);
-        if(nightMode){
-            switchMode.setChecked(true);
-            /* For some reason, uncommenting and running this line causes the app to crash?
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-             */
-        }
-        switchMode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (nightMode){
-                    Log.d("Night Mode", "Night mode is toggled off");
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                    editor = sharedPreferences.edit();
-                    editor.putBoolean("nightMode", false);
-                }
-                else{
-                    Log.d("Night Mode", "Night mode is toggled on");
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                    editor = sharedPreferences.edit();
-                    editor.putBoolean("nightMode", true);
-                }
-                editor.apply();
-            }
-        });
-
         setSupportActionBar(binding.appBarMain.toolbar);
 //        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
 //            @Override

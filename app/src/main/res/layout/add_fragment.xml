@@ -48,7 +48,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
         android:padding="16dp">
 
@@ -56,26 +56,43 @@
             android:id="@+id/ingredientsLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
 
             <!-- Instruction TextView -->
             <TextView
                 android:id="@+id/textViewInstruction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enter up to 15 ingredients"
-                android:textSize="16sp"
                 android:layout_gravity="center_horizontal"
-                android:paddingBottom="8dp"/>
+                android:paddingBottom="8dp"
+                android:text="Enter up to 15 ingredients"
+                android:textSize="16sp" />
 
             <!-- First Ingredient EditText -->
-            <EditText
-                android:id="@+id/editTextIngredients"
+            <LinearLayout
+                android:id="@+id/ingredientsLayoutHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingredient"
-                android:inputType="text"/>
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editTextQuantity"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:text="Quantity" />
+
+                <EditText
+                    android:id="@+id/editTextIngredients"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Ingredient"
+                    android:inputType="text" />
+            </LinearLayout>
 
             <!-- Other dynamically added ingredient EditText views will be here -->
         </LinearLayout>

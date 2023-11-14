@@ -72,6 +72,7 @@ public class AddFragment extends Fragment {
         // Initialize UI components
         EditText recipeNameEditText = view.findViewById(R.id.editTextRecipeName);
         EditText ingredientEditText = view.findViewById(R.id.editTextIngredients);
+        EditText quantityEditText = view.findViewById(R.id.editTextQuantity);
         EditText recipeDescriptionEditText = view.findViewById(R.id.editTextRecipeDescription);
         LinearLayout ingredientsLayout = view.findViewById(R.id.ingredientsLayout);
         Button addIngredientButton = view.findViewById(R.id.buttonAddIngredient);
@@ -83,17 +84,33 @@ public class AddFragment extends Fragment {
             public void onClick(View v) {
                 // Limit to 15 ingredients
                 if (ingredientsLayout.getChildCount() < 15) {
-                    // Create a new EditText view
+                    // Create a new horizontal layout to put new buttons on
+                    LinearLayout newLinearLayoutHorizontal = new LinearLayout(getContext());
+                    newLinearLayoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
+
+                    EditText newQuantityEditText = new EditText(getContext());
+                    newQuantityEditText.setLayoutParams(new ViewGroup.LayoutParams(
+                            ingredientsLayout.getWidth()/2,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    ));
+                    newQuantityEditText.setHint("Quantity");
+                    newQuantityEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                    // Add the new EditText to the ingredientsLayout
+                    newLinearLayoutHorizontal.addView(newQuantityEditText);
+
                     EditText newIngredientEditText = new EditText(getContext());
                     newIngredientEditText.setLayoutParams(new ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ingredientsLayout.getWidth()/2,
                             ViewGroup.LayoutParams.WRAP_CONTENT
                     ));
                     newIngredientEditText.setHint("Ingredient");
                     newIngredientEditText.setInputType(InputType.TYPE_CLASS_TEXT);
 
                     // Add the new EditText to the ingredientsLayout
-                    ingredientsLayout.addView(newIngredientEditText);
+                    newLinearLayoutHorizontal.addView(newIngredientEditText);
+
+                    ingredientsLayout.addView(newLinearLayoutHorizontal);
                 } else {
                     // Inform the user about the limit
                     Snackbar.make(v, "Maximum 15 ingredients allowed", Snackbar.LENGTH_SHORT).show();
@@ -108,7 +125,6 @@ public class AddFragment extends Fragment {
                 // Create a HashMap to store the recipe data
                 HashMap<String, String> recipeData = new HashMap<>();
                 recipeData.put("Recipe Name", recipeNameEditText.getText().toString());
-                recipeData.put("Ingredient", ingredientEditText.getText().toString());
 
                 // Create recipe and send to the repository
                 String name = recipeNameEditText.getText().toString();
@@ -137,6 +153,13 @@ public class AddFragment extends Fragment {
                                     "First Ingredient: " + recipeData.get("Ingredient");
                             Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
                         });
+                RecipeRepository RecipeRepositoryObj = new RecipeRepository(getContext());
+                RecipeRepositoryObj.add(recipe);
+                IngredientRepository IngredientRepositoryObj = new IngredientRepository(getContext());
+                //... add other ingredients
+                // Display some data back to the user
+                String message = "Recipe Name: " + recipeData.get("Recipe Name");
+                Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
             }
         });
     }

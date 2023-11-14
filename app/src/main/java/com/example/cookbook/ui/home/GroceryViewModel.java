@@ -1,9 +1,16 @@
 package com.example.cookbook.ui.home;
 
-import androidx.lifecycle.ViewModel;
-
-import java.util.ArrayList;
+import android.content.Context;
 import java.util.List;
+import java.util.ArrayList;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.LiveDataReactiveStreams;
+import com.example.cookbook.database.ingredient.Ingredient;
+import com.example.cookbook.database.ingredient.IngredientRepository;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class GroceryViewModel extends ViewModel {
     private List<String> data;
@@ -18,5 +25,11 @@ public class GroceryViewModel extends ViewModel {
     public void setData(List<String> newData) {
         data = newData;
     }
+
+    // Method to transfer item to pantry
+/*    public void transferToPantry(Ingredient ingredient) {
+        ingredient.setInPantry(true);
+        ingredientRepository.update(ingredient);
+    }*/
 }
 

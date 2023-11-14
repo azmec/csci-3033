@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
-import com.example.cookbook.database.ingredient.Ingredient;
-import com.example.cookbook.database.ingredient.IngredientRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;

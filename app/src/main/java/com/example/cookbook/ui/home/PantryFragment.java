@@ -17,10 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cookbook.R;
-import com.example.cookbook.database.ingredient.Ingredient;
-import com.example.cookbook.database.ingredient.IngredientRepository;
-import com.example.cookbook.database.recipe.Recipe;
-import com.example.cookbook.database.recipe.RecipeRepository;
+import com.example.cookbook.database.model.Ingredient;
+import com.example.cookbook.database.repo.IngredientRepository;
 import com.google.android.material.snackbar.Snackbar;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;

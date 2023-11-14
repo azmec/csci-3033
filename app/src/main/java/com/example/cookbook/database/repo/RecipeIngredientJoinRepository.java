@@ -11,9 +11,12 @@ import com.example.cookbook.database.model.RecipeIngredientJoin;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class RecipeIngredientJoinRepository {
+    private static final Scheduler SCHEDULER = Schedulers.io();
     private final RecipeIngredientJoinDao recipeIngredientJoinDao;
 
     public RecipeIngredientJoinRepository(Context context) {
@@ -25,8 +28,10 @@ public class RecipeIngredientJoinRepository {
         return recipeIngredientJoinDao.insert(recipeIngredientJoins);
     }
 
-    public Completable delete(RecipeIngredientJoin... recipeIngredientJoins) {
-        return recipeIngredientJoinDao.delete(recipeIngredientJoins);
+    public void delete(RecipeIngredientJoin... recipeIngredientJoins) {
+        recipeIngredientJoinDao.delete(recipeIngredientJoins)
+                .subscribeOn(SCHEDULER)
+                .subscribe();
     }
 
     public Single<List<Ingredient>> getIngredientsInRecipe(final int recipeID) {

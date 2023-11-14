@@ -1,5 +1,6 @@
 package com.example.cookbook.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.example.cookbook.database.model.Ingredient;
 import com.example.cookbook.database.model.RecipeIngredientJoin;
 import com.example.cookbook.database.repo.IngredientRepository;
 import com.example.cookbook.database.model.Recipe;
+import com.example.cookbook.database.repo.RecipeIngredientJoinRepository;
 import com.example.cookbook.database.repo.RecipeRepository;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -29,6 +31,10 @@ import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AddFragment extends Fragment {
+    private RecipeRepository recipeRepository;
+    private IngredientRepository ingredientRepository;
+    private RecipeIngredientJoinRepository recipeIngredientJoinRepository;
+
     @Override
     public void onResume() {
         super.onResume();
@@ -40,7 +46,10 @@ public class AddFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
     public AddFragment() {
-        // Required empty public constructor
+        Context context = getContext();
+        this.recipeRepository = new RecipeRepository(context);
+        this.ingredientRepository = new IngredientRepository(context);
+        this.recipeIngredientJoinRepository = new RecipeIngredientJoinRepository(context);
     }
 
     @Override
@@ -108,21 +117,14 @@ public class AddFragment extends Fragment {
                 Recipe recipe = new Recipe(name, description);
                 Ingredient ingredient = new Ingredient(ingredientName, 1);
 
-                // Initialize our repositories.
-                RecipeRepository RecipeRepositoryObj = new RecipeRepository(getContext());
-                IngredientRepository IngredientRepositoryObj = new IngredientRepository(getContext());
-
                 // Sequence asynchronous calls to add and relate the recipe and ingrdient.
-                Single<Long> addRecipe = RecipeRepositoryObj.add(recipe);
-                Single<Long> addIngredient = IngredientRepositoryObj.add(ingredient);
+                Single<Long> addRecipe = recipeRepository.add(recipe);
+                Single<Long> addIngredient = ingredientRepository.add(ingredient);
                 Single<Integer> relateRecipeIngredient = addRecipe.concatMap(
                         recipeID -> addIngredient.concatMap(
-                                ingredientID -> {
+                                ingredientID -> { // The lambda must return a `Single<>`, so make a garbage one.
                                     RecipeIngredientJoin relation = new RecipeIngredientJoin(recipeID, ingredientID);
-                                    RecipeIngredientJoinDao joinDao = RecipeDatabase.getInstance(getContext()).getRecipeIngredientJoinDao();
-
-                                    // The lambda must return a `Single<>`, so make a garbage one.
-                                    return joinDao.insert(relation).toSingle(() -> {
+                                    return recipeIngredientJoinRepository.insert(relation).toSingle(() -> {
                                        return 0;
                                     });
                                 }

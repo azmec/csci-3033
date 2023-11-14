@@ -3,6 +3,8 @@ package com.example.cookbook.ui.home;
 import android.content.Context;
 import java.util.List;
 import java.util.ArrayList;
+
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
@@ -15,7 +17,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class IngredientViewModel extends ViewModel {
 
-/*    private List<String> data;
+    private List<String> data;
     public List<String> getData() {
         if (data == null) {
             data = new ArrayList<String>();
@@ -24,7 +26,7 @@ public class IngredientViewModel extends ViewModel {
     }
     public void setData(List<String> newData) {
         data = newData;
-    }*/
+    }
 
     /** TODO: Link grocery list to be able to send to pantry
      *
@@ -32,6 +34,7 @@ public class IngredientViewModel extends ViewModel {
      * */
     private IngredientRepository ingredientRepository;
     private LiveData<List<Ingredient>> allIngredients;
+    private MutableLiveData<List<Ingredient>> pantryIngredients;
 
     public IngredientViewModel() {}
 
@@ -56,13 +59,24 @@ public class IngredientViewModel extends ViewModel {
                         .toFlowable()
         );
     }
-
-    public LiveData<List<Ingredient>> getAllIngredients() {
-        return allIngredients;
-    }
-
     public void insertIngredient(Ingredient ingredient){
         ingredientRepository.add(ingredient);
+    }
+
+    public LiveData<List<Ingredient>> getPantryIngredients() {
+        if (pantryIngredients == null) {
+            pantryIngredients = new MutableLiveData<>();
+            fetchPantryIngredients();
+        }
+        return pantryIngredients;
+    }
+    public void  fetchPantryIngredients() {
+        ingredientRepository.getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ingredients -> {
+                    pantryIngredients.setValue(ingredients);
+                });
     }
 }
 

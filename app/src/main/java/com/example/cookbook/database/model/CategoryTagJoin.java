@@ -31,17 +31,17 @@ public class CategoryTagJoin {
 	/**
 	 * The UID of the related category.
 	 */
-	public int category_id;
+	public long category_id;
 
 	/**
 	 * The UID of the related tag.
 	 */
-	public int tag_id;
+	public long tag_id;
 
 	/**
 	 * Construct a new relation between a category and a tag.
 	 */
-	public CategoryTagJoin(int category_id, int tag_id) {
+	public CategoryTagJoin(long category_id, long tag_id) {
 		this.category_id = category_id;
 		this.tag_id = tag_id;
 	}

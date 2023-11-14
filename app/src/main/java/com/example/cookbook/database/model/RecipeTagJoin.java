@@ -31,17 +31,17 @@ public class RecipeTagJoin {
 	/**
 	 * The UID of the related recipe.
 	 */
-	public int recipe_id;
+	public long recipe_id;
 
 	/**
 	 * The UID of the related tag.
 	 */
-	public int tag_id;
+	public long tag_id;
 
 	/**
 	 * Construct a new relation between a recipe and a tag.
 	 */
-	public RecipeTagJoin(int recipe_id, int tag_id) {
+	public RecipeTagJoin(long recipe_id, long tag_id) {
 		this.recipe_id = recipe_id;
 		this.tag_id = tag_id;
 	}

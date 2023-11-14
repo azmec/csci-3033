@@ -10,7 +10,13 @@ import com.example.cookbook.database.model.RecipeTagJoin;
 import com.example.cookbook.database.model.Tag;
 import com.example.cookbook.database.model.Recipe;
 
+import java.security.Signature;
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Repository or general-purpose store for recipe and tag relations.
@@ -18,6 +24,8 @@ import java.util.List;
  * @author {Carlos Aldana Lira}
  */
 public class RecipeTagJoinRepository {
+
+	private static final Scheduler SCHEDULER = Schedulers.io();
 	private RecipeTagJoinDao recipeTagJoinDao;
 
 	/**
@@ -35,10 +43,8 @@ public class RecipeTagJoinRepository {
 	 *
 	 * @param recipeTagJoin The relation to add.
 	 */
-	void add(RecipeTagJoin recipeTagJoin) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			recipeTagJoinDao.insert(recipeTagJoin);
-		});
+	Single<Long> add(RecipeTagJoin recipeTagJoin) {
+		return recipeTagJoinDao.insert(recipeTagJoin);
 	}
 
 	/**
@@ -46,9 +52,9 @@ public class RecipeTagJoinRepository {
 	 * UID.
 	 *
 	 * @return The list of recipes related to the tag with the given UID.
-	 * @see LiveData
+	 * @see Single
 	 */
-	LiveData<List<Recipe>> getRecipesWIthTag(final int tagUID) {
+	Single<List<Recipe>> getRecipesWIthTag(final int tagUID) {
 		return recipeTagJoinDao.getRecipesWithTag(tagUID);
 	}
 
@@ -58,9 +64,9 @@ public class RecipeTagJoinRepository {
 	 *
 	 * @return The list of tags related to the recipe with the given
 	 *         UID.
-	 * @see LiveData
+	 * @see Single
 	 */
-	LiveData<List<Tag>> getTagsWithRecipe(final int recipeUID) {
+	Single<List<Tag>> getTagsWithRecipe(final int recipeUID) {
 		return recipeTagJoinDao.getTagsWithRecipe(recipeUID);
 	}
 
@@ -70,8 +76,8 @@ public class RecipeTagJoinRepository {
 	 * @param recipeTagJoin The relation to remove.
 	 */
 	void delete(RecipeTagJoin recipeTagJoin) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			recipeTagJoinDao.delete(recipeTagJoin);
-		});
+		recipeTagJoinDao.delete(recipeTagJoin)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 }

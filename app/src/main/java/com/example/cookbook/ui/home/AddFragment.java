@@ -26,6 +26,8 @@ import com.example.cookbook.database.repo.RecipeRepository;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -77,6 +79,8 @@ public class AddFragment extends Fragment {
         LinearLayout ingredientsLayout = view.findViewById(R.id.ingredientsLayout);
         Button addIngredientButton = view.findViewById(R.id.buttonAddIngredient);
         Button submitButton = view.findViewById(R.id.buttonSubmit);
+        List<EditText> listIngredientName = new ArrayList<EditText>();
+        List<EditText> listQuantity = new ArrayList<EditText>();
 
         //Handle the click of the "Add Ingredient" button
         addIngredientButton.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +115,9 @@ public class AddFragment extends Fragment {
                     newLinearLayoutHorizontal.addView(newIngredientEditText);
 
                     ingredientsLayout.addView(newLinearLayoutHorizontal);
+                    listQuantity.add(newQuantityEditText);
+                    listIngredientName.add(newIngredientEditText);
+
                 } else {
                     // Inform the user about the limit
                     Snackbar.make(v, "Maximum 15 ingredients allowed", Snackbar.LENGTH_SHORT).show();
@@ -125,17 +132,29 @@ public class AddFragment extends Fragment {
                 // Create a HashMap to store the recipe data
                 HashMap<String, String> recipeData = new HashMap<>();
                 recipeData.put("Recipe Name", recipeNameEditText.getText().toString());
+                List<Ingredient> ingredientList = new ArrayList<Ingredient>();
 
                 // Create recipe and send to the repository
                 String name = recipeNameEditText.getText().toString();
                 String description = recipeDescriptionEditText.getText().toString();
                 String ingredientName = ingredientEditText.getText().toString();
+                int ingredientQuantity = Integer.parseInt(quantityEditText.getText().toString());
+
                 Recipe recipe = new Recipe(name, description);
-                Ingredient ingredient = new Ingredient(ingredientName, 1);
+                Ingredient ingredient = new Ingredient(ingredientName, ingredientQuantity);
+                ingredientList.add(ingredient);
+
+                for(int j = 0; j < listIngredientName.size(); j++) {
+                    String ingredientName2 = ingredientEditText.getText().toString();
+                    int ingredientQuantity2 = Integer.parseInt(quantityEditText.getText().toString());
+                    Ingredient ingredient2 = new Ingredient(ingredientName, ingredientQuantity);
+                    ingredientList.add(ingredient2);
+                }
 
                 // Sequence asynchronous calls to add and relate the recipe and ingrdient.
                 Single<Long> addRecipe = recipeRepository.add(recipe);
                 Single<Long> addIngredient = ingredientRepository.add(ingredient);
+                //Single<Long> addIngredient = ingredientRepository.add(ingredientList.toArray(new Ingredient[0]));
                 Single<Integer> relateRecipeIngredient = addRecipe.concatMap(
                         recipeID -> addIngredient.concatMap(
                                 ingredientID -> { // The lambda must return a `Single<>`, so make a garbage one.

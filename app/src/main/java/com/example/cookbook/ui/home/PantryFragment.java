@@ -72,38 +72,17 @@ public class PantryFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //initialize view model
+        ingredientViewModel = new ViewModelProvider(this).get(IngredientViewModel.class);
+
+        // Observe changes in the list of ingredients
+        ingredientViewModel.getPantryIngredients().observe(getViewLifecycleOwner(), this::updateIngredientList);
+
         EditText editTextIngredientName = view.findViewById(R.id.editTextIngredientName);
         LinearLayout ingredientsDisplayLayout = view.findViewById(R.id.ingredientsDisplayLayout);
         LinearLayout addIngredientsLayout = view.findViewById(R.id.addIngredientsLayout);
         Button buttonAddToPantry = view.findViewById(R.id.buttonAddToPantry);
         Button buttonSaveIngredient = view.findViewById(R.id.buttonSaveIngredient);
-
-
-        /** Switching view window to 'add' */
-        buttonAddToPantry.setOnClickListener(v -> {
-            addIngredientsLayout.setVisibility(View.VISIBLE);
-        });
-
-        ingredientViewModel = new ViewModelProvider(this).get(IngredientViewModel.class);
-
-        ingredientViewModel.getPantryIngredients().observe(getViewLifecycleOwner(), ingredients -> {
-            ingredientsDisplayLayout.removeAllViews(); // Clear previous views
-
-            for (Ingredient ingredient : ingredients) {
-                TextView textView = new TextView(getContext());
-
-                String displayText = ingredient.name + "(Quantity: " +ingredient.quantity + ")";
-
-                textView.setText(displayText);
-
-                textView.setLayoutParams(new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                ));
-                textView.setPadding(16, 8, 16, 8); // Optional padding for better visual appeal
-                ingredientsDisplayLayout.addView(textView);
-            }
-        });
 
 
         //Save ingredient to list
@@ -114,8 +93,40 @@ public class PantryFragment extends Fragment {
                 Ingredient newIngredient = new Ingredient(ingredientName, 1);
                 ingredientViewModel.insertIngredient(newIngredient);
                 editTextIngredientName.setText(""); // Clear the EditText
+
+                // Fetch the updated list of ingredients and update the UI
+                ingredientViewModel.getPantryIngredients().getValue().add(newIngredient);
+                updateIngredientList(ingredientViewModel.getPantryIngredients().getValue());
             }
             addIngredientsLayout.setVisibility(View.GONE);
         });
+
+        /** Switching view window to 'add' */
+        buttonAddToPantry.setOnClickListener(v -> {
+            if (addIngredientsLayout.getVisibility() == View.VISIBLE) {
+                // If already visible, hide it
+                addIngredientsLayout.setVisibility(View.GONE);
+            } else {
+                // If not visible, make it visible
+                addIngredientsLayout.setVisibility(View.VISIBLE);
+            }
+        });
     }
+
+    private void updateIngredientList(List<Ingredient> ingredients) {
+        LinearLayout ingredientsDisplayLayout = getView().findViewById(R.id.ingredientsDisplayLayout);
+        ingredientsDisplayLayout.removeAllViews(); // Clear the current list
+
+        for (Ingredient ingredient : ingredients) {
+            TextView textView = new TextView(getContext());
+            textView.setText(ingredient.name+ " (Quantity: " + ingredient.quantity + ")"); // Display the name of the ingredient
+            textView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            textView.setPadding(16, 8, 16, 8); // Optional padding for visual appeal
+            ingredientsDisplayLayout.addView(textView);
+        }
+    }
+
 }

@@ -60,7 +60,10 @@ public class IngredientViewModel extends ViewModel {
         );
     }
     public void insertIngredient(Ingredient ingredient){
-        ingredientRepository.add(ingredient);
+        ingredientRepository.add(ingredient)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     public LiveData<List<Ingredient>> getPantryIngredients() {
@@ -77,6 +80,10 @@ public class IngredientViewModel extends ViewModel {
                 .subscribe(ingredients -> {
                     pantryIngredients.setValue(ingredients);
                 });
+    }
+
+    public void removeIngredient(){
+
     }
 }
 

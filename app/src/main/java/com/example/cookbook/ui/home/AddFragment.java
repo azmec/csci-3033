@@ -132,7 +132,7 @@ public class AddFragment extends Fragment {
                 // Create a HashMap to store the recipe data
                 HashMap<String, String> recipeData = new HashMap<>();
                 recipeData.put("Recipe Name", recipeNameEditText.getText().toString());
-                List<Ingredient> ingredientList = new ArrayList<Ingredient>();
+                List<Ingredient> ingredientList = new ArrayList<>();
 
                 // Create recipe and send to the repository
                 String name = recipeNameEditText.getText().toString();
@@ -151,15 +151,18 @@ public class AddFragment extends Fragment {
                     ingredientList.add(ingredient2);
                 }
 
-                // Sequence asynchronous calls to add and relate the recipe and ingrdient.
+                // Sequence asynchronous calls to add and relate the recipe and ingredients.
                 Single<Long> addRecipe = recipeRepository.add(recipe);
-                Single<Long> addIngredient = ingredientRepository.add(ingredient);
-                //Single<Long> addIngredient = ingredientRepository.add(ingredientList.toArray(new Ingredient[0]));
+                Single<List<Long>> addIngredient = ingredientRepository.add(ingredientList.toArray(new Ingredient[0]));
                 Single<Integer> relateRecipeIngredient = addRecipe.concatMap(
                         recipeID -> addIngredient.concatMap(
-                                ingredientID -> { // The lambda must return a `Single<>`, so make a garbage one.
-                                    RecipeIngredientJoin relation = new RecipeIngredientJoin(recipeID, ingredientID);
-                                    return recipeIngredientJoinRepository.insert(relation).toSingle(() -> {
+                                ingredientIDs -> { // The lambda must return a `Single<>`, so make a garbage one.
+                                    ArrayList<RecipeIngredientJoin> relations = new ArrayList<>();
+                                    for (long ingredientID : ingredientIDs) {
+                                        relations.add(new RecipeIngredientJoin(recipeID, ingredientID));
+                                    }
+
+                                    return recipeIngredientJoinRepository.insert(relations.toArray(new RecipeIngredientJoin[0])).toSingle(() -> {
                                        return 0;
                                     });
                                 }
@@ -168,17 +171,9 @@ public class AddFragment extends Fragment {
                 // Execute the asynchronous calls we built up.
                 relateRecipeIngredient.subscribeOn(Schedulers.io())
                         .subscribe((garbageInt) -> {
-                            String message = "Recipe Name: " + recipeData.get("Recipe Name") + "\n" +
-                                    "First Ingredient: " + recipeData.get("Ingredient");
+                            String message = "Recipe Name: " + recipeData.get("Recipe Name");
                             Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
                         });
-                RecipeRepository RecipeRepositoryObj = new RecipeRepository(getContext());
-                RecipeRepositoryObj.add(recipe);
-                IngredientRepository IngredientRepositoryObj = new IngredientRepository(getContext());
-                //... add other ingredients
-                // Display some data back to the user
-                String message = "Recipe Name: " + recipeData.get("Recipe Name");
-                Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
             }
         });
     }

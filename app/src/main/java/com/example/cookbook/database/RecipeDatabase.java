@@ -54,6 +54,8 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	private static volatile RecipeDatabase instance;
 	private static final int NUMBER_OF_THREADS = 4;
 
+	public static final int LIKED_UID = 5;
+
 	/*
 	 * Manual migration from v. 1 to v. 2 of the database.
 	 */
@@ -94,6 +96,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
 				tagDao.insert(new Tag("Holiday")).blockingSubscribe();
 				tagDao.insert(new Tag("Side")).blockingSubscribe();
 				tagDao.insert(new Tag("Desert")).blockingSubscribe();
+				tagDao.insert(new Tag("Liked")).blockingSubscribe();
 
 				RecipeTagJoinDao recipeTagJoinDao = instance.getRecipeTagJoinDao();
 				recipeTagJoinDao.deleteAll();
@@ -104,23 +107,24 @@ public abstract class RecipeDatabase extends RoomDatabase {
 				// the programmer will need to have a reference to the `Recipe` and
 				// `Tag` objects they'd like to associate for their `uid` members.
 				RecipeTagJoin kakikToGuatemalan = new RecipeTagJoin(1, 1);
-				recipeTagJoinDao.insert(kakikToGuatemalan);
+				recipeTagJoinDao.insert(kakikToGuatemalan).blockingSubscribe();
 
-				recipeTagJoinDao.insert(new RecipeTagJoin(2, 1));
-				recipeTagJoinDao.insert(new RecipeTagJoin(3, 1));
-				recipeTagJoinDao.insert(new RecipeTagJoin(4, 1));
-				recipeTagJoinDao.insert(new RecipeTagJoin(5, 1));
-				recipeTagJoinDao.insert(new RecipeTagJoin(6, 1));
-				recipeTagJoinDao.insert(new RecipeTagJoin(7, 1));
-				recipeTagJoinDao.insert(new RecipeTagJoin(8, 1));
+				recipeTagJoinDao.insert(new RecipeTagJoin(2, 1)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(3, 1)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(4, 1)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(5, 1)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(6, 1)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(7, 1)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(8, 1)).blockingSubscribe();
 
-				recipeTagJoinDao.insert(new RecipeTagJoin(1, 2));
-				recipeTagJoinDao.insert(new RecipeTagJoin(2, 2));
+				recipeTagJoinDao.insert(new RecipeTagJoin(1, 2)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(2, 2)).blockingSubscribe();
 
-				recipeTagJoinDao.insert(new RecipeTagJoin(6, 3));
-				recipeTagJoinDao.insert(new RecipeTagJoin(7, 3));
+				recipeTagJoinDao.insert(new RecipeTagJoin(6, 3)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(7, 3)).blockingSubscribe();
 
-				recipeTagJoinDao.insert(new RecipeTagJoin(8, 4));
+				recipeTagJoinDao.insert(new RecipeTagJoin(8, 4)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(8, 5)).blockingSubscribe();
 
 				CategoryDao categoryDao = instance.getCategoryDao();
 				categoryDao.deleteAll();

@@ -83,7 +83,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:inputType="text"
-                    android:text="Quantity" />
+                    android:hint="Quantity" />
 
                 <EditText
                     android:id="@+id/editTextIngredients"

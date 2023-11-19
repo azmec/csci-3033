@@ -2,13 +2,15 @@ package com.example.cookbook.database.repo;
 
 import android.content.Context;
 
-import androidx.lifecycle.LiveData;
-
 import com.example.cookbook.database.RecipeDatabase;
 import com.example.cookbook.database.dao.TagDao;
 import com.example.cookbook.database.model.Tag;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Repository or general-purpose store for recipe tags.
@@ -17,15 +19,17 @@ import java.util.List;
  * @author {Carlos Aldana Lira}
  */
 public class TagRepository {
+
+	private static final Scheduler SCHEDULER = Schedulers.io();
 	private TagDao tagDao;
-	private LiveData<List<Tag>> tags;
+	private Single<List<Tag>> tags;
 
 	/**
 	 * Return a repository connected to the database.
 	 *
 	 * @param appContext The application's current, global context.
 	 */
-	TagRepository(Context appContext) {
+	public TagRepository(Context appContext) {
 		RecipeDatabase db = RecipeDatabase.getInstance(appContext);
 		this.tagDao = db.getTagDao();
 		this.tags = tagDao.getAll();
@@ -36,29 +40,27 @@ public class TagRepository {
 	 *
 	 * @param tag The tag to add.
 	 */
-	void add(Tag tag) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			tagDao.insert(tag);
-		});
+	public Single<Long> add(Tag tag) {
+		return tagDao.insert(tag);
 	}
 
 	/**
 	 * Return the tag with the specified UID.
 	 *
-	 * @see LiveData
-	 * @return The tag with the specified UID in an observable container.
+	 * @see Single
+	 * @return The tag with the specified UID.
 	 */
-	LiveData<Tag> getByUID(int uid) {
+	public Single<Tag> getByUID(int uid) {
 		return tagDao.getByUID(uid);
 	}
 
 	/**
 	 * Return all tags in the repository.
 	 *
-	 * @see LiveData
-	 * @return All tags in the repository in an observable container.
+	 * @see Single
+	 * @return All tags in the repository.
 	 */
-	LiveData<List<Tag>> getAll() {
+	public Single<List<Tag>> getAll() {
 		return tagDao.getAll();
 	}
 
@@ -70,10 +72,10 @@ public class TagRepository {
 	 * @param tag The tag with which to update the tag with the matching
 	 *            UID.
 	 */
-	void update(Tag tag) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			tagDao.update(tag);
-		});
+	public void update(Tag tag) {
+		tagDao.update(tag)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 
 	/**
@@ -83,9 +85,9 @@ public class TagRepository {
 	 * @param tag The tag with which to match UID of the to-be-deleted tag
 	 *            with.
 	 */
-	void delete(Tag tag) {
-		RecipeDatabase.databaseWriteExecutor.execute(() -> {
-			tagDao.delete(tag);
-		});
+	public void delete(Tag tag) {
+		tagDao.delete(tag)
+				.subscribeOn(SCHEDULER)
+				.subscribe();
 	}
 }

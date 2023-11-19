@@ -17,7 +17,7 @@ public class Category {
 	 * assigned by the SQLite database.
 	 */
 	@PrimaryKey(autoGenerate = true)
-	public int uid;
+	public long uid;
 
 	/**
 	 * The name of the category.

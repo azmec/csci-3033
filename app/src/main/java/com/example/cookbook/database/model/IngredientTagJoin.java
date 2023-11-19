@@ -31,17 +31,17 @@ public class IngredientTagJoin {
 	/**
 	 * The UID of the related ingredient.
 	 */
-	public int ingredient_id;
+	public long ingredient_id;
 
 	/**
 	 * The UID of the related tag.
 	 */
-	public int tag_id;
+	public long tag_id;
 
 	/**
 	 * Construct a new relation between a ingredient and a tag.
 	 */
-	public IngredientTagJoin(int ingredient_id, int tag_id) {
+	public IngredientTagJoin(long ingredient_id, long tag_id) {
 		this.ingredient_id = ingredient_id;
 		this.tag_id = tag_id;
 	}

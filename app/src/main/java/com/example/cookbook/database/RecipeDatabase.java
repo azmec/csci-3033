@@ -90,10 +90,10 @@ public abstract class RecipeDatabase extends RoomDatabase {
 				TagDao tagDao = instance.getTagDao();
 				tagDao.deleteAll();
 
-				tagDao.insert(new Tag("Guatemalan"));
-				tagDao.insert(new Tag("Holiday"));
-				tagDao.insert(new Tag("Side"));
-				tagDao.insert(new Tag("Desert"));
+				tagDao.insert(new Tag("Guatemalan")).blockingSubscribe();
+				tagDao.insert(new Tag("Holiday")).blockingSubscribe();
+				tagDao.insert(new Tag("Side")).blockingSubscribe();
+				tagDao.insert(new Tag("Desert")).blockingSubscribe();
 
 				RecipeTagJoinDao recipeTagJoinDao = instance.getRecipeTagJoinDao();
 				recipeTagJoinDao.deleteAll();

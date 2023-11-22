@@ -31,6 +31,9 @@ public class Recipe implements Serializable {
 	@ColumnInfo(name = "description")
 	public String description = "";
 
+	@ColumnInfo(name = "image_url")
+	public String imageUrl;
+
 	/**
 	 * Construct a named recipe.
 	 */

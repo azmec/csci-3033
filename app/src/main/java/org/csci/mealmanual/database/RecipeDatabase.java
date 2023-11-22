@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
  * library on compilation.
  */
 @Database(
-	version = 3,
+	version = 4,
 	entities = {
 		Recipe.class,
 		Tag.class,
@@ -47,7 +47,10 @@ import java.util.concurrent.Executors;
 		CategoryTagJoin.class,
 			RecipeIngredientJoin.class
 	},
-		autoMigrations = { @AutoMigration(from = 2, to = 3)}
+		autoMigrations = {
+				@AutoMigration(from = 2, to = 3),
+				@AutoMigration(from = 3, to = 4)
+	}
 )
 public abstract class RecipeDatabase extends RoomDatabase {
 	private static final String DB_FILENAME = "recipe-database.db";

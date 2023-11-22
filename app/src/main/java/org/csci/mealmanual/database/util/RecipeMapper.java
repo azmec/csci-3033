@@ -20,6 +20,7 @@ public class RecipeMapper {
 	 */
 	static public Recipe mapSpoonacularRecipeToRecipe(SpoonacularRecipe spoonacularRecipe) {
 		Recipe recipe = new Recipe(spoonacularRecipe.getTitle(), "");
+		recipe.imageUrl = spoonacularRecipe.getImageUrl();
 
 		return recipe;
     }

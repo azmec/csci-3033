@@ -2,6 +2,7 @@ package org.csci.mealmanual.database;
 
 import android.content.Context;
 
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
@@ -29,6 +30,7 @@ import java.util.concurrent.Executors;
  * library on compilation.
  */
 @Database(
+		version = 2,
 	entities = {
 		Recipe.class,
 		Tag.class,
@@ -38,7 +40,9 @@ import java.util.concurrent.Executors;
 		Category.class,
 		CategoryTagJoin.class
 	},
-	version = 1
+		autoMigrations = {
+				@AutoMigration(from = 1, to = 2),
+		}
 )
 public abstract class SpoonacularCache extends RoomDatabase {
 	private static volatile SpoonacularCache instance;

@@ -16,11 +16,11 @@ plugins {
 }
 
 android {
-	namespace = "com.example.cookbook"
+	namespace = "org.csci.mealmanual"
 		compileSdk = 33
 
 		defaultConfig {
-			applicationId = "com.example.cookbook"
+			applicationId = "org.csci.mealmanual"
 				minSdk = 24
 				targetSdk = 33
 				versionCode = 1

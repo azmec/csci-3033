@@ -7,32 +7,32 @@
 
     <fragment
         android:id="@+id/RecipeFragment"
-        android:name="com.example.cookbook.ui.home.RecipeFragment"
+        android:name="org.csci.mealmanual.ui.home.RecipeFragment"
     android:label="Recipe"
     tools:layout="@layout/recipe_fragment"
         />
 
     <fragment
         android:id="@+id/GroceryFragment"
-        android:name="com.example.cookbook.ui.home.GroceryFragment"
+        android:name="org.csci.mealmanual.ui.home.GroceryFragment"
     android:label="Grocery"
     tools:layout="@layout/grocery_fragment" />
 
     <fragment
         android:id="@+id/pantryFragment"
-        android:name="com.example.cookbook.ui.home.PantryFragment"
+        android:name="org.csci.mealmanual.ui.home.PantryFragment"
     android:label="Pantry"
     tools:layout="@layout/pantry_fragment" />
 
     <fragment
         android:id="@+id/likedFragment"
-        android:name="com.example.cookbook.ui.home.LikedFragment"
+        android:name="org.csci.mealmanual.ui.home.LikedFragment"
     android:label="Liked"
     tools:layout="@layout/liked_fragment" />
 
     <fragment
         android:id="@+id/addFragment"
-        android:name="com.example.cookbook.ui.home.AddFragment"
+        android:name="org.csci.mealmanual.ui.home.AddFragment"
     android:label="Add"
     tools:layout="@layout/add_fragment" />
 

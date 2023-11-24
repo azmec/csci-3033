@@ -128,51 +128,63 @@ public class AddFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create a HashMap to store the recipe data
-                HashMap<String, String> recipeData = new HashMap<>();
-                recipeData.put("Recipe Name", recipeNameEditText.getText().toString());
-                List<Ingredient> ingredientList = new ArrayList<>();
-
-                // Create recipe and send to the repository
-                String name = recipeNameEditText.getText().toString();
-                String description = recipeDescriptionEditText.getText().toString();
-                String ingredientName = ingredientEditText.getText().toString();
-                int ingredientQuantity = Integer.parseInt(quantityEditText.getText().toString());
-
-                Recipe recipe = new Recipe(name, description);
-                Ingredient ingredient = new Ingredient(ingredientName, ingredientQuantity);
-                ingredientList.add(ingredient);
-
-                for(int j = 0; j < listIngredientName.size(); j++) {
-                    String ingredientName2 = ingredientEditText.getText().toString();
-                    int ingredientQuantity2 = Integer.parseInt(quantityEditText.getText().toString());
-                    Ingredient ingredient2 = new Ingredient(ingredientName, ingredientQuantity);
-                    ingredientList.add(ingredient2);
+                boolean listEmpty = false;
+                for (int j = 0; j < listIngredientName.size(); j++) {
+                    if((ingredientEditText.getText().toString().trim().length() == 0) || (quantityEditText.getText().toString().trim().length() == 0)) {
+                        listEmpty = true;
+                    }
                 }
 
-                // Sequence asynchronous calls to add and relate the recipe and ingredients.
-                Single<Long> addRecipe = recipeRepository.add(recipe);
-                Single<List<Long>> addIngredient = ingredientRepository.add(ingredientList.toArray(new Ingredient[0]));
-                Single<Integer> relateRecipeIngredient = addRecipe.concatMap(
-                        recipeID -> addIngredient.concatMap(
-                                ingredientIDs -> { // The lambda must return a `Single<>`, so make a garbage one.
-                                    ArrayList<RecipeIngredientJoin> relations = new ArrayList<>();
-                                    for (long ingredientID : ingredientIDs) {
-                                        relations.add(new RecipeIngredientJoin(recipeID, ingredientID));
+                if((recipeNameEditText.getText().toString().trim().length() == 0) || (recipeDescriptionEditText.getText().toString().trim().length() == 0) || listEmpty) {
+                    String message = "Please fill out all information for recipe";
+                    Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
+                } else {
+                    // Create a HashMap to store the recipe data
+                    HashMap<String, String> recipeData = new HashMap<>();
+                    recipeData.put("Recipe Name", recipeNameEditText.getText().toString());
+                    List<Ingredient> ingredientList = new ArrayList<>();
+
+                    // Create recipe and send to the repository
+                    String name = recipeNameEditText.getText().toString();
+                    String description = recipeDescriptionEditText.getText().toString();
+                    String ingredientName = ingredientEditText.getText().toString();
+                    int ingredientQuantity = Integer.parseInt(quantityEditText.getText().toString());
+
+                    Recipe recipe = new Recipe(name, description);
+                    Ingredient ingredient = new Ingredient(ingredientName, ingredientQuantity);
+                    ingredientList.add(ingredient);
+
+                    for (int j = 0; j < listIngredientName.size(); j++) {
+                        String ingredientName2 = ingredientEditText.getText().toString();
+                        int ingredientQuantity2 = Integer.parseInt(quantityEditText.getText().toString());
+                        Ingredient ingredient2 = new Ingredient(ingredientName, ingredientQuantity);
+                        ingredientList.add(ingredient2);
+                    }
+
+                    // Sequence asynchronous calls to add and relate the recipe and ingredients.
+                    Single<Long> addRecipe = recipeRepository.add(recipe);
+                    Single<List<Long>> addIngredient = ingredientRepository.add(ingredientList.toArray(new Ingredient[0]));
+                    Single<Integer> relateRecipeIngredient = addRecipe.concatMap(
+                            recipeID -> addIngredient.concatMap(
+                                    ingredientIDs -> { // The lambda must return a `Single<>`, so make a garbage one.
+                                        ArrayList<RecipeIngredientJoin> relations = new ArrayList<>();
+                                        for (long ingredientID : ingredientIDs) {
+                                            relations.add(new RecipeIngredientJoin(recipeID, ingredientID));
+                                        }
+
+                                        return recipeIngredientJoinRepository.insert(relations.toArray(new RecipeIngredientJoin[0])).toSingle(() -> {
+                                            return 0;
+                                        });
                                     }
+                            ));
 
-                                    return recipeIngredientJoinRepository.insert(relations.toArray(new RecipeIngredientJoin[0])).toSingle(() -> {
-                                       return 0;
-                                    });
-                                }
-                ));
-
-                // Execute the asynchronous calls we built up.
-                relateRecipeIngredient.subscribeOn(Schedulers.io())
-                        .subscribe((garbageInt) -> {
-                            String message = "Recipe Name: " + recipeData.get("Recipe Name");
-                            Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
-                        });
+                    // Execute the asynchronous calls we built up.
+                    relateRecipeIngredient.subscribeOn(Schedulers.io())
+                            .subscribe((garbageInt) -> {
+                                String message = "Recipe Name: " + recipeData.get("Recipe Name");
+                                Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
+                            });
+                }
             }
         });
     }

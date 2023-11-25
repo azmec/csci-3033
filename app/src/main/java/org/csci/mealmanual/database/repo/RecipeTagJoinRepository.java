@@ -29,7 +29,7 @@ public class RecipeTagJoinRepository {
 	 *
 	 * @param appContext The application's current, global context.
 	 */
-	RecipeTagJoinRepository(Context appContext) {
+	public RecipeTagJoinRepository(Context appContext) {
 		RecipeDatabase db = RecipeDatabase.getInstance(appContext);
 		this.recipeTagJoinDao = db.getRecipeTagJoinDao();
 	}
@@ -39,8 +39,12 @@ public class RecipeTagJoinRepository {
 	 *
 	 * @param recipeTagJoin The relation to add.
 	 */
-	Single<Long> add(RecipeTagJoin recipeTagJoin) {
+	public Single<Long> add(RecipeTagJoin recipeTagJoin) {
 		return recipeTagJoinDao.insert(recipeTagJoin);
+	}
+
+	public Single<List<Long>> add(RecipeTagJoin... recipeTagJoins) {
+		return recipeTagJoinDao.insert(recipeTagJoins);
 	}
 
 	/**
@@ -50,7 +54,7 @@ public class RecipeTagJoinRepository {
 	 * @return The list of recipes related to the tag with the given UID.
 	 * @see Single
 	 */
-	Single<List<Recipe>> getRecipesWIthTag(final int tagUID) {
+	public Single<List<Recipe>> getRecipesWIthTag(final int tagUID) {
 		return recipeTagJoinDao.getRecipesWithTag(tagUID);
 	}
 
@@ -62,7 +66,7 @@ public class RecipeTagJoinRepository {
 	 *         UID.
 	 * @see Single
 	 */
-	Single<List<Tag>> getTagsWithRecipe(final int recipeUID) {
+	public Single<List<Tag>> getTagsWithRecipe(final int recipeUID) {
 		return recipeTagJoinDao.getTagsWithRecipe(recipeUID);
 	}
 
@@ -71,7 +75,7 @@ public class RecipeTagJoinRepository {
 	 *
 	 * @param recipeTagJoin The relation to remove.
 	 */
-	void delete(RecipeTagJoin recipeTagJoin) {
+	public void delete(RecipeTagJoin recipeTagJoin) {
 		recipeTagJoinDao.delete(recipeTagJoin)
 				.subscribeOn(SCHEDULER)
 				.subscribe();

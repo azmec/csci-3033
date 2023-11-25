@@ -36,6 +36,7 @@
         android:inputType="text"
         android:layout_gravity="center_horizontal"/>
     <!-- Center Content with ScrollView for ingredients -->
+
     <EditText
         android:id="@+id/editTextRecipeDescription"
         android:layout_width="350dp"
@@ -60,6 +61,12 @@
             android:orientation="vertical">
 
             <!-- Instruction TextView -->
+            <ImageButton
+                android:id="@+id/cameraAddButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_menu_camera" />
+
             <TextView
                 android:id="@+id/textViewInstruction"
                 android:layout_width="wrap_content"

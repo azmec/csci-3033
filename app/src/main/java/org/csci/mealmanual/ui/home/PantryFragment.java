@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +21,6 @@ import org.csci.mealmanual.R;
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.repo.IngredientRepository;
 
-import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class PantryFragment extends Fragment {
     IngredientViewModel ingredientViewModel;
     private IngredientRepository ingredientRepository;
     private RecipeAdapter recipeAdapter;
-    private ArrayList<Ingredient> pantryList;
+    private ArrayList<Ingredient> selectedIngredients = new ArrayList<>();
 
     @Override
     public void onResume() {
@@ -79,6 +80,7 @@ public class PantryFragment extends Fragment {
         LinearLayout addIngredientsLayout = view.findViewById(R.id.addIngredientsLayout);
         Button buttonAddToPantry = view.findViewById(R.id.buttonAddToPantry);
         Button buttonSaveIngredient = view.findViewById(R.id.buttonSaveIngredient);
+        Button buttonRemoveIngredient = view.findViewById(R.id.buttonRemove);
 
 
         //Save ingredient to list
@@ -97,7 +99,7 @@ public class PantryFragment extends Fragment {
             addIngredientsLayout.setVisibility(View.GONE);
         });
 
-        /** Switching view window to 'add' */
+        /** Toggle view window to 'add' */
         buttonAddToPantry.setOnClickListener(v -> {
             if (addIngredientsLayout.getVisibility() == View.VISIBLE) {
                 // If already visible, hide it
@@ -107,22 +109,35 @@ public class PantryFragment extends Fragment {
                 addIngredientsLayout.setVisibility(View.VISIBLE);
             }
         });
+
+        buttonRemoveIngredient.setOnClickListener(v -> {
+            ingredientViewModel.removeSelectedIngredients(selectedIngredients);
+            selectedIngredients.clear(); // Clear the selection list
+        });
     }
 
     private void updateIngredientList(List<Ingredient> ingredients) {
         LinearLayout ingredientsDisplayLayout = getView().findViewById(R.id.ingredientsDisplayLayout);
         ingredientsDisplayLayout.removeAllViews(); // Clear the current list
 
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
         for (Ingredient ingredient : ingredients) {
-            TextView textView = new TextView(getContext());
-            textView.setText(ingredient.name+ " (Quantity: " + ingredient.quantity + ")"); // Display the name of the ingredient
-            textView.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            ));
-            textView.setPadding(16, 8, 16, 8); // Optional padding for visual appeal
-            ingredientsDisplayLayout.addView(textView);
+            View itemView = inflater.inflate(R.layout.select_pantry_list, ingredientsDisplayLayout, false);
+            CheckBox checkBox = itemView.findViewById(R.id.checkBoxIngredient);
+            TextView textView = itemView.findViewById(R.id.textViewIngredient);
+
+            textView.setText(ingredient.name); // Display the name of the ingredient
+
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    selectedIngredients.add(ingredient);
+                } else {
+                    selectedIngredients.remove(ingredient);
+                }
+            });
+
+            ingredientsDisplayLayout.addView(itemView);
         }
     }
-
 }

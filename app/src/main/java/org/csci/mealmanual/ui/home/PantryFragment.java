@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.csci.mealmanual.R;
+import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.repo.IngredientRepository;
 
@@ -87,7 +88,7 @@ public class PantryFragment extends Fragment {
 
             if (!ingredientName.isEmpty()) {
                 Ingredient newIngredient = new Ingredient(ingredientName, 1);
-                ingredientViewModel.insertIngredient(newIngredient);
+                ingredientViewModel.insertTaggedIngredient(newIngredient, RecipeDatabase.PANTRY_TAG);
                 editTextIngredientName.setText(""); // Clear the EditText
 
                 // Fetch the updated list of ingredients and update the UI

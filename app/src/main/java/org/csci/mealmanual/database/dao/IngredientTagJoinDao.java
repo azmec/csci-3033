@@ -1,9 +1,9 @@
 package org.csci.mealmanual.database.dao;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import org.csci.mealmanual.database.model.IngredientTagJoin;
@@ -11,6 +11,9 @@ import org.csci.mealmanual.database.model.Tag;
 import org.csci.mealmanual.database.model.Ingredient;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Database access object for relations between ingredients and tags. The
@@ -24,31 +27,52 @@ import java.util.List;
 @Dao
 public interface IngredientTagJoinDao {
 	/**
-	 * Insert one or more relations between a ingredient and tag into the
-	 * database.
+	 * Insert a relation between a ingredient and tag into the database. If the
+	 * relations already exists in the database, it is replaced.
+	 * @param ingredientTagJoin The relation to insert.
+	 * @return The `Single` emitting the row index corresponding to the inserted
+	 *         relation.
+	 * @see Single
 	 */
-	@Insert
-	void insert(IngredientTagJoin... ingredientTagJoins);
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	Single<Long> insert(IngredientTagJoin ingredientTagJoin);
 
 	/**
-	 * Remove one or more relations specified by the given relations.
+	 * Insert one or more relations between a ingredient and tag into the
+	 * database. If one of the relations already exist in the database, it is
+	 * replaced.
+	 * @param ingredientTagJoins The relations to insert.
+	 * @return The `Single` emitting the list of row indices corresponding to
+	 *         the inserted relations.
+	 * @see Single
+	 */
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	Single<List<Long>> insert(IngredientTagJoin... ingredientTagJoins);
+
+	/**
+	 * Remove one or more relations specified by the given relations from the
+	 * database.
+	 * @param ingredientTagJoins The relation(s) to remove.
+	 * @return The `Completable` instance executing the removal.
+	 * @see Completable
 	 */
 	@Delete
-	void delete(IngredientTagJoin... ingredientTagJoins);
+	Completable delete(IngredientTagJoin... ingredientTagJoins);
 
 	/**
-	 * Remove all relations from the database.
+	 * Remove all relations between ingredients and tags from the database.
+	 * @return The `Completable` instance removing all relations.
+	 * @see Completable
 	 */
 	@Query("DELETE FROM ingredient_tag_join")
-	void deleteAll();
+	Completable deleteAll();
 
 	/**
-	 * Return the ingredients related to the tag corresponding to the given
-	 * UID.
-	 *
-	 * @return The list of ingredients related to the tag with the given
-	 *         UID.
-	 * @see LiveData
+	 * Return the unique identifiers of the ingredients associated with the tag
+	 * represented by the given unique identifier.
+	 * @param tagId The unique identifier of the tag in question.
+	 * @return The unique identifiers of the associated ingredients.
+	 * @see List
 	 */
 	@Query(
 		"SELECT * FROM ingredient " +
@@ -56,15 +80,14 @@ public interface IngredientTagJoinDao {
 		" ON ingredient.uid = ingredient_tag_join.ingredient_id " +
 		"WHERE ingredient_tag_join.tag_id = :tagId"
 	)
-	LiveData<List<Ingredient>> getIngredientsWithTag(final int tagId);
+	Single<List<Ingredient>> getIngredientsWithTag(final int tagId);
 
 	/**
-	 * Return the tags related to the ingredient corresponding to the given
-	 * UID.
-	 *
-	 * @return The list of tags related to the ingredient with the given
-	 *         UID.
-	 * @see LiveData
+	 * Return the unique identifiers of the tags associated with the ingredient
+	 * represented by the given unique identifier.
+	 * @param ingredientId The unique identifier of the ingredient in question.
+	 * @return The unique identifiers of the associated tags.
+	 * @see List
 	 */
 	@Query(
 		"SELECT * FROM tag " +
@@ -72,5 +95,5 @@ public interface IngredientTagJoinDao {
 		"ON tag.uid = ingredient_tag_join.tag_id " +
 		"WHERE ingredient_tag_join.ingredient_id = :ingredientId"
 	)
-	LiveData<List<Tag>> getTagsWithIngredient(final int ingredientId);
+	Single<List<Tag>> getTagsWithIngredient(final int ingredientId);
 }

@@ -4,12 +4,19 @@ import android.content.Context;
 
 import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.dao.IngredientDao;
+import org.csci.mealmanual.database.dao.IngredientTagJoinDao;
+import org.csci.mealmanual.database.dao.TagDao;
 import org.csci.mealmanual.database.model.Ingredient;
+import org.csci.mealmanual.database.model.IngredientTagJoin;
+import org.csci.mealmanual.database.model.Tag;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
@@ -21,6 +28,8 @@ public class IngredientRepository {
 
 	private static final Scheduler SCHEDULER = Schedulers.io();
 	private final IngredientDao ingredientDao;
+	private final TagDao tagDao;
+	private final IngredientTagJoinDao ingredientTagJoinDao;
 	private Single<List<Ingredient>> ingredients;
 
 	/**
@@ -31,7 +40,53 @@ public class IngredientRepository {
 	public IngredientRepository(Context appContext) {
 		RecipeDatabase db = RecipeDatabase.getInstance(appContext);
 		this.ingredientDao = db.getIngredientDao();
+		this.tagDao = db.getTagDao();
+		this.ingredientTagJoinDao = db.getIngredientTagJoinDao();
+
 		this.ingredients = ingredientDao.getAll();
+	}
+
+	/**
+	 * Insert the ingredient into the database, relating it with the given tags.
+	 * @param ingredient The ingredient to insert.
+	 * @param tags The tags to associate with the ingredient.
+	 * @return The `Single` emitting the row indices corresponding to the relations corresponing
+	 *         to the given ingredient and tags.
+	 * @see Single
+	 */
+	public Single<List<Long>> addTaggedIngredient(Ingredient ingredient, Tag... tags) {
+		// Ensure the database contains the tags we'd like to associate.
+		Single<List<Long>> insertTags = this.tagDao.insert(tags);
+		Single<Long> insertIngredient = this.ingredientDao.insert(ingredient);
+
+		// Accumulate the `Single`s relating the ingredient with the tags.
+		Single<List<Single<Long>>> relateIngredientTags = Single.zip(insertTags, insertIngredient, (tagIds, ingredientID) -> {
+			ArrayList<Single<Long>> insertRelationsList = new ArrayList<>();
+
+			// Initialize the `Single`s corresponding to relating each tag with the ingredient.
+			for (long tagID : tagIds) {
+				IngredientTagJoin relation = new IngredientTagJoin(ingredientID, tagID);
+				Single<Long> insertRelation = this.ingredientTagJoinDao.insert(relation);
+
+				insertRelationsList.add(insertRelation);
+			}
+
+			return insertRelationsList;
+		});
+
+		// Compress the list of accumulated `Single`s into one `Single`
+		// inserting the tags, inserting the ingredient, and relating the tags
+		// with the ingredient.
+		return relateIngredientTags.flatMap(insertRelationsList -> Single.zipArray(objects -> {
+			// Explicitly cast each individual `Object` into a `long`.
+			List<Long> rowIndices = new ArrayList<>();
+			for (Object object : objects) {
+				long rowIndex = (long)object;
+				rowIndices.add(rowIndex);
+			}
+
+			return rowIndices;
+		}, insertRelationsList.toArray(new Single[0])));
 	}
 
 	/**

@@ -57,18 +57,13 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	private static volatile RecipeDatabase instance;
 	private static final int NUMBER_OF_THREADS = 4;
 
-	/**
-	 * Unique identifier of the "Liked" tag in the database.
-	 */
-	public static final int LIKED_UID = 1;
-	/**
-	 * Unique identifier of the "Grocery" tag in the database.
-	 */
-	public static final int GROCERY_TAG_UID = 2;
-	/**
-	 * Unique identifier of the "Pantry" tag in the database.
-	 */
-	public static final int PANTRY_TAG_UID = 3;
+	private static final String LIKED_TAG_NAME = "Liked";
+	private static final String GROCERY_TAG_NAME = "Grocery";
+	private static final String PANTRY_TAG_NAME = "Pantry";
+
+	public static final Tag LIKED_TAG = new Tag(1, LIKED_TAG_NAME);
+	public static final Tag GROCERY_TAG = new Tag(2, GROCERY_TAG_NAME);
+	public static final Tag PANTRY_TAG = new Tag(3, PANTRY_TAG_NAME);
 
 	/*
 	 * Manual migration from v. 1 to v. 2 of the database.
@@ -111,9 +106,9 @@ public abstract class RecipeDatabase extends RoomDatabase {
 				 * ingredients. Because we clear the database, we guarantee the UIDs are `1`, `2`,
 				 * and `3` for liked recipes, grocery ingredients, and pantry ingredients.
 				 */
-				tagDao.insert(new Tag("Liked")).blockingSubscribe();
-				tagDao.insert(new Tag("Grocery")).blockingSubscribe();
-				tagDao.insert(new Tag("Pantry")).blockingSubscribe();
+				tagDao.insert(new Tag(LIKED_TAG_NAME)).blockingSubscribe();
+				tagDao.insert(new Tag(GROCERY_TAG_NAME)).blockingSubscribe();
+				tagDao.insert(new Tag(PANTRY_TAG_NAME)).blockingSubscribe();
 
 				long guatemalanID = tagDao.insert(new Tag("Guatemalan")).blockingGet();
 				long holidayID = tagDao.insert(new Tag("Holiday")).blockingGet();

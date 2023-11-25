@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import org.csci.mealmanual.database.model.Ingredient;
+import org.csci.mealmanual.database.model.Tag;
 import org.csci.mealmanual.database.repo.IngredientRepository;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -58,8 +59,8 @@ public class IngredientViewModel extends ViewModel {
                         .toFlowable()
         );
     }
-    public void insertIngredient(Ingredient ingredient){
-        ingredientRepository.add(ingredient)
+    public void insertTaggedIngredient(Ingredient ingredient, Tag... tags){
+        ingredientRepository.addTaggedIngredient(ingredient, tags)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();

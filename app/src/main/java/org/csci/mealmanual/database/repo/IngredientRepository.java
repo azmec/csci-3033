@@ -151,7 +151,7 @@ public class IngredientRepository {
 	 * @param ingredient The ingredient with which to match UID of the
 	 *                   to-be-deleted ingredient with.
 	 */
-	void delete(Ingredient ingredient) {
+	public void delete(Ingredient ingredient) {
 		ingredientDao.delete(ingredient)
 				.subscribeOn(SCHEDULER)
 				.subscribe();

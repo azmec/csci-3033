@@ -1,22 +1,25 @@
 package org.csci.mealmanual.ui.home;
 
 import android.content.Context;
-import java.util.List;
-import java.util.ArrayList;
 
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.Tag;
 import org.csci.mealmanual.database.repo.IngredientRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class IngredientViewModel extends ViewModel {
-
+    /**OLD can remove after linking groceryList to repo
+     * */
     private List<String> data;
     public List<String> getData() {
         if (data == null) {
@@ -82,8 +85,12 @@ public class IngredientViewModel extends ViewModel {
                 });
     }
 
-    public void removeIngredient(){
-
+    public void removeSelectedIngredients(List<Ingredient> ingredients) {
+        for (Ingredient ingredient : ingredients) {
+            ingredientRepository.delete(ingredient);
+        }
+        fetchPantryIngredients(); // Fetch the updated list
     }
+
 }
 

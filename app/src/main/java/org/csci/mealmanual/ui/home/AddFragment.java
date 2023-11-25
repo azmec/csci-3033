@@ -75,18 +75,40 @@ public class AddFragment extends Fragment {
         EditText ingredientEditText = view.findViewById(R.id.editTextIngredients);
         EditText quantityEditText = view.findViewById(R.id.editTextQuantity);
         EditText recipeDescriptionEditText = view.findViewById(R.id.editTextRecipeDescription);
+        EditText tagEditText = view.findViewById(R.id.editTextTag);
         LinearLayout ingredientsLayout = view.findViewById(R.id.ingredientsLayout);
+        LinearLayout tagsLayout = view.findViewById(R.id.tagsLayout);
         Button addIngredientButton = view.findViewById(R.id.buttonAddIngredient);
+        Button addTagButton = view.findViewById(R.id.buttonAddTag);
         Button submitButton = view.findViewById(R.id.buttonSubmit);
+        List<EditText> listTag = new ArrayList<EditText>();
+        listTag.add(tagEditText);
         List<EditText> listIngredientName = new ArrayList<EditText>();
         List<EditText> listQuantity = new ArrayList<EditText>();
+        addTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText newTagEditText = new EditText(getContext());
+                newTagEditText.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                ));
+                newTagEditText.setHint("Tag");
+                newTagEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+
+                // Add the new EditText to the ingredientsLayout
+                listTag.add(newTagEditText);
+                tagsLayout.addView(newTagEditText);
+            }
+        });
 
         //Handle the click of the "Add Ingredient" button
         addIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Limit to 15 ingredients
-                if (ingredientsLayout.getChildCount() < 15) {
+                if (ingredientsLayout.getChildCount() < 100) {
                     // Create a new horizontal layout to put new buttons on
                     LinearLayout newLinearLayoutHorizontal = new LinearLayout(getContext());
                     newLinearLayoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
@@ -119,7 +141,7 @@ public class AddFragment extends Fragment {
 
                 } else {
                     // Inform the user about the limit
-                    Snackbar.make(v, "Maximum 15 ingredients allowed", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, "Maximum 100 ingredients allowed", Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

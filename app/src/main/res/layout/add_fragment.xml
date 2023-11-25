@@ -47,6 +47,13 @@
         android:layout_gravity="center_horizontal"
     android:inputType="textMultiLine" />
 
+    <ImageButton
+        android:id="@+id/cameraAddButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@drawable/ic_menu_camera" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -61,11 +68,31 @@
             android:orientation="vertical">
 
             <!-- Instruction TextView -->
-            <ImageButton
-                android:id="@+id/cameraAddButton"
-                android:layout_width="wrap_content"
+
+            <TextView
+                android:id="@+id/textViewInstruction2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_menu_camera" />
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:paddingBottom="8dp"
+                android:text="Enter tags"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:id="@+id/tagsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editTextTag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:hint="Tag" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewInstruction"
@@ -73,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:paddingBottom="8dp"
-                android:text="Enter up to 15 ingredients"
+                android:text="Enter up to 100 ingredients"
                 android:textSize="16sp" />
 
             <!-- First Ingredient EditText -->
@@ -109,9 +136,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:gravity="center"
-        android:padding="16dp">
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <!-- Add Ingredient Button -->
 
@@ -120,14 +147,27 @@
             android:id="@+id/buttonAddIngredient"
             android:layout_width="175dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="0dp"
             android:text="Add Ingredient" />
 
         <Button
-            android:id="@+id/buttonSubmit"
-            android:layout_width="175dp"
+            android:id="@+id/buttonAddTag"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit" />
+            android:layout_weight="1"
+            android:text="ADD TAG" />
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Submit" />
 </LinearLayout>
 

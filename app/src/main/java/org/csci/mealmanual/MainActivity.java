@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment; // Import Fragment class
 
 import org.csci.mealmanual.R;
 
+import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.ui.home.RecipeFragment; // Import your fragment classes
 import org.csci.mealmanual.ui.home.GroceryFragment;
 import org.csci.mealmanual.ui.home.PantryFragment;
@@ -119,5 +120,12 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        RecipeDatabase.getInstance(getApplicationContext()).close();
     }
 }

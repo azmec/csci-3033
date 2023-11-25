@@ -15,7 +15,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class RecipeViewModel extends ViewModel {
     private RecipeRepository recipeRepository;
-    private LiveData<List<Recipe>> allRecipes;
+    private LiveData<List<RecipeRepository.RecipeWithTag>> allRecipes;
 
     /**
      * Default, parameterless constructor.
@@ -52,7 +52,7 @@ public class RecipeViewModel extends ViewModel {
         );
     }
 
-    public LiveData<List<Recipe>> getAllRecipes() {
+    public LiveData<List<RecipeRepository.RecipeWithTag>> getAllRecipes() {
         return allRecipes;
     }
 }

@@ -9,17 +9,19 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 import org.csci.mealmanual.R;
 import org.csci.mealmanual.database.model.Recipe;
+import org.csci.mealmanual.database.model.Tag;
+import org.csci.mealmanual.database.repo.RecipeRepository;
 
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
-    private final List<Recipe> recipeList;
+    private final List<RecipeRepository.RecipeWithTag> recipeList;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    RecipeAdapter(Context context, List<Recipe> recipeList) {
+    RecipeAdapter(Context context, List<RecipeRepository.RecipeWithTag> recipeList) {
         this.mInflater = LayoutInflater.from(context);
         this.recipeList = recipeList;
     }
@@ -34,7 +36,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Recipe recipe = recipeList.get(position);
+        RecipeRepository.RecipeWithTag recipeWithTag = recipeList.get(position);
+        Recipe recipe = recipeWithTag.recipe;
+        List<Tag> tags = recipeWithTag.tags; // TODO: Do something with this
         holder.recipeName.setText(recipe.name);
         holder.itemView.setOnClickListener(v -> {
             if (mClickListener != null) mClickListener.onItemClick(v, recipe);
@@ -58,7 +62,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     }
 
     // convenience method for getting data at click position
-    Recipe getItem(int id) {
+    RecipeRepository.RecipeWithTag getItem(int id) {
         return recipeList.get(id);
     }
 

@@ -2,6 +2,7 @@ package org.csci.mealmanual.database.model;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -31,6 +32,17 @@ public class Tag implements Serializable {
 	 * Construct a named tag.
 	 */
 	public Tag(String tag) {
+		this.tag = tag;
+	}
+
+	/**
+	 * Construct an identified, named tag.
+	 * @param uid The tag's unique identifier.
+	 * @param tag The tag's name.
+	 */
+	@Ignore
+	public Tag(long uid, String tag) {
+		this.uid = uid;
 		this.tag = tag;
 	}
 

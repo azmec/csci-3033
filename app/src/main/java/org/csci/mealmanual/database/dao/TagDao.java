@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -24,21 +25,23 @@ import io.reactivex.rxjava3.core.Single;
 @Dao
 public interface TagDao {
 	/**
-	 * Insert a tag into the database.
+	 * Insert a tag into the database. If the tag already exists in the
+	 * database, it is replaced.
 	 * @param tag The recipe to insert.
 	 * @return The `Single` emitting the unique identifier of the inserted tag.
 	 * @see Single
 	 */
-	@Insert
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	Single<Long> insert(Tag tag);
 
 	/**
-	 * Insert multiple tags into the database.
+	 * Insert multiple tags into the database. If one of the tags already exist
+	 * in the database, it is replaced.
 	 * @param tags The tags to insert.
 	 * @return The `Single` emitting the unique identifiers of the inserted tags.
 	 * @see Single
 	 */
-	@Insert
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
 	Single<List<Long>> insert(Tag... tags);
 
 	/**

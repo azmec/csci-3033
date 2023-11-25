@@ -18,23 +18,31 @@ import org.csci.mealmanual.R;
 
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.RecipeIngredientJoin;
+import org.csci.mealmanual.database.model.RecipeTagJoin;
+import org.csci.mealmanual.database.model.Tag;
 import org.csci.mealmanual.database.repo.IngredientRepository;
 import org.csci.mealmanual.database.model.Recipe;
 import org.csci.mealmanual.database.repo.RecipeIngredientJoinRepository;
 import org.csci.mealmanual.database.repo.RecipeRepository;
+import org.csci.mealmanual.database.repo.RecipeTagJoinRepository;
+import org.csci.mealmanual.database.repo.TagRepository;
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AddFragment extends Fragment {
-    private RecipeRepository recipeRepository;
-    private IngredientRepository ingredientRepository;
-    private RecipeIngredientJoinRepository recipeIngredientJoinRepository;
+    private final RecipeRepository recipeRepository;
+    private final IngredientRepository ingredientRepository;
+    private final TagRepository tagRepository;
+    private final RecipeIngredientJoinRepository recipeIngredientJoinRepository;
+    private final RecipeTagJoinRepository recipeTagJoinRepository;
 
     @Override
     public void onResume() {
@@ -50,7 +58,10 @@ public class AddFragment extends Fragment {
         Context context = getContext();
         this.recipeRepository = new RecipeRepository(context);
         this.ingredientRepository = new IngredientRepository(context);
+        this.tagRepository = new TagRepository(context);
+
         this.recipeIngredientJoinRepository = new RecipeIngredientJoinRepository(context);
+        this.recipeTagJoinRepository = new RecipeTagJoinRepository(context);
     }
 
     @Override
@@ -183,26 +194,37 @@ public class AddFragment extends Fragment {
                         ingredientList.add(ingredient2);
                     }
 
+                    // Accumulate the user's tags.
+                    ArrayList<Tag> recipeTags = new ArrayList<>();
+                    for (EditText tagInput : listTag) {
+                        String tagName = tagInput.getText().toString();
+                        Tag tag = new Tag(tagName);
+                        recipeTags.add(tag);
+                    }
+
                     // Sequence asynchronous calls to add and relate the recipe and ingredients.
                     Single<Long> addRecipe = recipeRepository.add(recipe);
                     Single<List<Long>> addIngredient = ingredientRepository.add(ingredientList.toArray(new Ingredient[0]));
-                    Single<Integer> relateRecipeIngredient = addRecipe.concatMap(
-                            recipeID -> addIngredient.concatMap(
-                                    ingredientIDs -> { // The lambda must return a `Single<>`, so make a garbage one.
-                                        ArrayList<RecipeIngredientJoin> relations = new ArrayList<>();
-                                        for (long ingredientID : ingredientIDs) {
-                                            relations.add(new RecipeIngredientJoin(recipeID, ingredientID));
-                                        }
+                    Single<List<Long>> addTags = tagRepository.add(recipeTags.toArray(new Tag[0]));
+                    Completable completable = Single.zip(addRecipe, addTags, addIngredient, (recipeID, tagIDs, ingredientIDs) -> {
+                        // Associate the added recipe with the tags.
+                        ArrayList<RecipeTagJoin> tagRelations = new ArrayList<>();
+                        for (long tagID : tagIDs)
+                            tagRelations.add(new RecipeTagJoin(recipeID, tagID));
+                        recipeTagJoinRepository.add(tagRelations.toArray(new RecipeTagJoin[0])).blockingSubscribe();
 
-                                        return recipeIngredientJoinRepository.insert(relations.toArray(new RecipeIngredientJoin[0])).toSingle(() -> {
-                                            return 0;
-                                        });
-                                    }
-                            ));
+                        // Associate the added recipe with the ingredients.
+                        ArrayList<RecipeIngredientJoin> ingredientRelations = new ArrayList<>();
+                        for (long ingredientID : ingredientIDs)
+                            ingredientRelations.add(new RecipeIngredientJoin(recipeID, ingredientID));
+                        recipeIngredientJoinRepository.insert(ingredientRelations.toArray(new RecipeIngredientJoin[0])).blockingSubscribe();
+
+                        return 0;
+                    }).ignoreElement();
 
                     // Execute the asynchronous calls we built up.
-                    relateRecipeIngredient.subscribeOn(Schedulers.io())
-                            .subscribe((garbageInt) -> {
+                    completable.subscribeOn(Schedulers.io())
+                            .subscribe(() -> {
                                 String message = "Recipe Name: " + recipeData.get("Recipe Name");
                                 Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
                             });

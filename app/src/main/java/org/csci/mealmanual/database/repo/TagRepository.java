@@ -44,6 +44,10 @@ public class TagRepository {
 		return tagDao.insert(tag);
 	}
 
+	public Single<List<Long>> add(Tag... tags) {
+		return tagDao.insert(tags);
+	}
+
 	/**
 	 * Return the tag with the specified UID.
 	 *

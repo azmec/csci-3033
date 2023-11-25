@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.csci.mealmanual.R;
+import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.model.Ingredient;
 
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class PantryFragment extends Fragment {
 
             if (!ingredientName.isEmpty()) {
                 Ingredient newIngredient = new Ingredient(ingredientName, 1);
-                ingredientViewModel.insertIngredient(newIngredient);
+                ingredientViewModel.insertTaggedIngredient(newIngredient, RecipeDatabase.PANTRY_TAG);
                 editTextIngredientName.setText(""); // Clear the EditText
 
                 // Fetch the updated list of ingredients and update the UI

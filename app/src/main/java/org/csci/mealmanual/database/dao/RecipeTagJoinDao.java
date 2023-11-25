@@ -68,7 +68,7 @@ public interface RecipeTagJoinDao {
 		" ON recipe.uid = recipe_tag_join.recipe_id " +
 		"WHERE recipe_tag_join.tag_id = :tagId"
 	)
-	Single<List<Recipe>> getRecipesWithTag(final int tagId);
+	Single<List<Recipe>> getRecipesWithTag(final long tagId);
 
 	/**
 	 * Return the tags related to the recipe corresponding to the given
@@ -83,5 +83,5 @@ public interface RecipeTagJoinDao {
 		"ON tag.uid = recipe_tag_join.tag_id " +
 		"WHERE recipe_tag_join.recipe_id = :recipeId"
 	)
-	Single<List<Tag>> getTagsWithRecipe(final int recipeId);
+	Single<List<Tag>> getTagsWithRecipe(final long recipeId);
 }

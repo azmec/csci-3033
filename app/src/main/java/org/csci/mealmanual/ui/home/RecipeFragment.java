@@ -23,7 +23,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickL
     private RecipeRepository recipeRepository;
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
-    private ArrayList<Recipe> recipeList;
+    private ArrayList<RecipeRepository.RecipeWithTag> recipeList;
 
     public RecipeFragment() {
         // Required empty public constructor

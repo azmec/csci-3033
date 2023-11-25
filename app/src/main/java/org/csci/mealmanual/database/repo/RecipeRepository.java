@@ -6,7 +6,11 @@ import org.csci.mealmanual.BuildConfig;
 import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.SpoonacularCache;
 import org.csci.mealmanual.database.dao.RecipeDao;
+import org.csci.mealmanual.database.dao.RecipeTagJoinDao;
+import org.csci.mealmanual.database.dao.TagDao;
 import org.csci.mealmanual.database.model.Recipe;
+import org.csci.mealmanual.database.model.RecipeTagJoin;
+import org.csci.mealmanual.database.model.Tag;
 import org.csci.mealmanual.database.util.RecipeMapper;
 import org.csci.mealmanual.network.SpoonacularService;
 import org.csci.mealmanual.network.SpoonacularClient;
@@ -29,6 +33,8 @@ public class RecipeRepository {
 	private static final Scheduler SCHEDULER = Schedulers.io();
 	private final RecipeDao recipeDao;
 	private final RecipeDao cacheRecipeDao;
+	private final TagDao tagDao;
+	private final RecipeTagJoinDao recipeTagJoinDao;
 	private final SpoonacularService api;
 
 	private final String apiKey = BuildConfig.API_KEY;
@@ -46,6 +52,9 @@ public class RecipeRepository {
 		this.recipeDao = db.getRecipeDao();
 		this.cacheRecipeDao = cache.getRecipeDao();
 		this.recipes = recipeDao.getAll();
+
+		this.tagDao = db.getTagDao();
+		this.recipeTagJoinDao = db.getRecipeTagJoinDao();
 
 		SpoonacularClient client = SpoonacularClient.getInstance();
 		this.api = client.getApi();
@@ -69,6 +78,35 @@ public class RecipeRepository {
 	 */
 	public Single<List<Long>> add(Recipe... recipes) {
 		return recipeDao.insert(recipes);
+	}
+
+	public Single<List<Long>> addRecipeWithTags(Recipe recipe, Tag... tags) {
+		Single<List<Long>> insertTags = this.tagDao.insert(tags);
+		Single<Long> insertRecipe = this.recipeDao.insert(recipe);
+
+		// Accumulate the `Single`s relating the ingredient with the tags.
+		Single<List<Single<Long>>> relateRecipeWithTags = Single.zip(insertTags, insertRecipe, (tagIDs, recipeID) -> {
+			ArrayList<Single<Long>> insertRelationsList = new ArrayList<>();
+			for (long tagID : tagIDs) {
+				RecipeTagJoin relation = new RecipeTagJoin(recipeID, tagID);
+				Single<Long> insertRelation = this.recipeTagJoinDao.insert(relation);
+
+				insertRelationsList.add(insertRelation);
+			}
+
+			return insertRelationsList;
+		});
+
+		// Compress the asynchronous operations into one `Single`, returning the result.
+		return relateRecipeWithTags.map(insertRelationsList -> {
+			List<Long> rowIndices = new ArrayList<>();
+			for (Single<Long> insertRelation : insertRelationsList) {
+				long rowIndex = insertRelation.blockingGet();
+				rowIndices.add(rowIndex);
+			}
+
+			return rowIndices;
+		});
 	}
 
 	/**
@@ -109,13 +147,18 @@ public class RecipeRepository {
 		});
 	}
 
+	public class RecipeWithTag {
+		public Recipe recipe;
+		public List<Tag> tags;
+	}
+
 	/**
 	 * Return all recipes held by the repository.
 	 *
 	 * @return All recipes held by the repository.
 	 * @see Single
 	 */
-	public Single<List<Recipe>> getAll() {
+	public Single<List<RecipeWithTag>> getAll() {
 		Single<List<Recipe>> localRecipes = this.recipeDao.getAll();
 		Single<List<Recipe>> cachedRecipes = this.cacheRecipeDao.getAll();
 		//Single<List<Recipe>> webRecipes = getRandomRecipe(5);
@@ -123,11 +166,28 @@ public class RecipeRepository {
 
 		// When all of the above computations complete, compose their results
 		// into a single list of recipes.
-		Single<List<Recipe>> allRecipes = Single.zip(localRecipes, cachedRecipes, webRecipes, (local, cached, web) -> {
-			List<Recipe> recipes = new ArrayList<>();
-			recipes.addAll(local);
-			recipes.addAll(cached);
-			recipes.addAll(web);
+		Single<List<RecipeWithTag>> allRecipes = Single.zip(localRecipes, cachedRecipes, webRecipes, (local, cached, web) -> {
+			List<RecipeWithTag> recipes = new ArrayList<>();
+			for (Recipe recipe : local) {
+				RecipeWithTag recipeWithTag = new RecipeWithTag();
+				List<Tag> tags = this.getTagsWithRecipe(recipe).blockingGet();
+
+				recipeWithTag.recipe = recipe;
+				recipeWithTag.tags = tags;
+
+				recipes.add(recipeWithTag);
+			}
+
+			for (Recipe recipe : cached) {
+				RecipeWithTag recipeWithTag = new RecipeWithTag();
+				recipeWithTag.recipe = recipe;
+				recipes.add(recipeWithTag);
+			}
+			for (Recipe recipe : web) {
+				RecipeWithTag recipeWithTag = new RecipeWithTag();
+				recipeWithTag.recipe = recipe;
+				recipes.add(recipeWithTag);
+			}
 
 			return recipes;
 		});
@@ -167,6 +227,10 @@ public class RecipeRepository {
 	 */
 	public Single<List<Recipe>> getAllCached() {
 		return this.recipes;
+	}
+
+	public Single<List<Tag>> getTagsWithRecipe(Recipe recipe) {
+			return this.recipeTagJoinDao.getTagsWithRecipe(recipe.uid);
 	}
 
 	/**

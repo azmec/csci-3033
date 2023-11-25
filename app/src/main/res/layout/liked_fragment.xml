@@ -15,10 +15,15 @@
         app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Large"
         app:subtitleTextColor="#FFFFFF" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Liked" />
+        android:gravity="center_horizontal"
+        android:text="" />
 
     <!-- Add other UI elements here -->
 

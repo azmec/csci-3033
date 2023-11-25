@@ -17,9 +17,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.csci.mealmanual.R;
 import org.csci.mealmanual.database.model.Ingredient;
-import org.csci.mealmanual.database.repo.IngredientRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,7 @@ import java.util.List;
 
 public class PantryFragment extends Fragment {
     IngredientViewModel ingredientViewModel;
-    private IngredientRepository ingredientRepository;
-    private RecipeAdapter recipeAdapter;
+
     private ArrayList<Ingredient> selectedIngredients = new ArrayList<>();
 
     @Override
@@ -54,8 +54,6 @@ public class PantryFragment extends Fragment {
         //Initialize the repository within the ViewModel
         ingredientViewModel = new ViewModelProvider(this).get(IngredientViewModel.class);
         ingredientViewModel.initRepository(context);
-
-        ingredientRepository = new IngredientRepository(context);
     }
     @Nullable
     @Override
@@ -75,13 +73,13 @@ public class PantryFragment extends Fragment {
         // Observe changes in the list of ingredients
         ingredientViewModel.getPantryIngredients().observe(getViewLifecycleOwner(), this::updateIngredientList);
 
+        //Initialize UI elements
         EditText editTextIngredientName = view.findViewById(R.id.editTextIngredientName);
         LinearLayout ingredientsDisplayLayout = view.findViewById(R.id.ingredientsDisplayLayout);
         LinearLayout addIngredientsLayout = view.findViewById(R.id.addIngredientsLayout);
         Button buttonAddToPantry = view.findViewById(R.id.buttonAddToPantry);
         Button buttonSaveIngredient = view.findViewById(R.id.buttonSaveIngredient);
         Button buttonRemoveIngredient = view.findViewById(R.id.buttonRemove);
-
 
         //Save ingredient to list
         buttonSaveIngredient.setOnClickListener(v -> {
@@ -96,6 +94,7 @@ public class PantryFragment extends Fragment {
                 ingredientViewModel.getPantryIngredients().getValue().add(newIngredient);
                 updateIngredientList(ingredientViewModel.getPantryIngredients().getValue());
             }
+            else {Snackbar.make(v, "Nothing added", Snackbar.LENGTH_SHORT).show();}
             addIngredientsLayout.setVisibility(View.GONE);
         });
 

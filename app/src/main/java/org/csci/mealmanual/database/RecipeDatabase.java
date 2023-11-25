@@ -57,7 +57,18 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	private static volatile RecipeDatabase instance;
 	private static final int NUMBER_OF_THREADS = 4;
 
-	public static final int LIKED_UID = 5;
+	/**
+	 * Unique identifier of the "Liked" tag in the database.
+	 */
+	public static final int LIKED_UID = 1;
+	/**
+	 * Unique identifier of the "Grocery" tag in the database.
+	 */
+	public static final int GROCERY_TAG_UID = 2;
+	/**
+	 * Unique identifier of the "Pantry" tag in the database.
+	 */
+	public static final int PANTRY_TAG_UID = 3;
 
 	/*
 	 * Manual migration from v. 1 to v. 2 of the database.
@@ -83,51 +94,49 @@ public abstract class RecipeDatabase extends RoomDatabase {
 				RecipeDao recipeDao = instance.getRecipeDao();
 				recipeDao.deleteAll();
 
-				recipeDao.insert(new Recipe("Kak'ik", "A Guatemalan soup of Mayan origin.")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Chuchito", "A small, Guatemalan tamale. Often accompanied by salsa and traditional Zacapa cheese.")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Tamalitos de masa", "A small, plain dough tamale.")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Caldo de res", "Beef and vegetable soup.")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Caldo de gallina", "Hen soup.")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Arroz con frijoles", "Rice with black beans.")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Arroz frito", "Fried rice.")).blockingSubscribe();
-				recipeDao.insert(new Recipe("Tortitas de yuca", "A tortilla made of yuca, which is somehow related to Jewish cuisine.")).blockingSubscribe();
+				long kakikID = recipeDao.insert(new Recipe("Kak'ik", "A Guatemalan soup of Mayan origin.")).blockingGet();
+				long chuchitoID = recipeDao.insert(new Recipe("Chuchito", "A small, Guatemalan tamale. Often accompanied by salsa and traditional Zacapa cheese.")).blockingGet();
+				long tamalitosID = recipeDao.insert(new Recipe("Tamalitos de masa", "A small, plain dough tamale.")).blockingGet();
+				long caldoResID = recipeDao.insert(new Recipe("Caldo de res", "Beef and vegetable soup.")).blockingGet();
+				long caldoGallinaID = recipeDao.insert(new Recipe("Caldo de gallina", "Hen soup.")).blockingGet();
+				long arrozFrijolesID = recipeDao.insert(new Recipe("Arroz con frijoles", "Rice with black beans.")).blockingGet();
+				long arrozFritoID = recipeDao.insert(new Recipe("Arroz frito", "Fried rice.")).blockingGet();
+				long tortitasID = recipeDao.insert(new Recipe("Tortitas de yuca", "A tortilla made of yuca, which is somehow related to Jewish cuisine.")).blockingGet();
 
 				TagDao tagDao = instance.getTagDao();
 				tagDao.deleteAll();
 
-				tagDao.insert(new Tag("Guatemalan")).blockingSubscribe();
-				tagDao.insert(new Tag("Holiday")).blockingSubscribe();
-				tagDao.insert(new Tag("Side")).blockingSubscribe();
-				tagDao.insert(new Tag("Desert")).blockingSubscribe();
+				/*
+				 * Insert "tag primitives" for liked recipes, grocery ingredients, and pantry
+				 * ingredients. Because we clear the database, we guarantee the UIDs are `1`, `2`,
+				 * and `3` for liked recipes, grocery ingredients, and pantry ingredients.
+				 */
 				tagDao.insert(new Tag("Liked")).blockingSubscribe();
+				tagDao.insert(new Tag("Grocery")).blockingSubscribe();
+				tagDao.insert(new Tag("Pantry")).blockingSubscribe();
+
+				long guatemalanID = tagDao.insert(new Tag("Guatemalan")).blockingGet();
+				long holidayID = tagDao.insert(new Tag("Holiday")).blockingGet();
+				long sideID = tagDao.insert(new Tag("Side")).blockingGet();
+				long desertID = tagDao.insert(new Tag("Desert")).blockingGet();
 
 				RecipeTagJoinDao recipeTagJoinDao = instance.getRecipeTagJoinDao();
 				recipeTagJoinDao.deleteAll();
 
 				// Recipes and tags are associated by their unique identifiers (UIDs).
-				// Here, I know "Kak'ik" has the UID `1` because it was the first recipe
-				// inserted. Similarly, I know "Guatemalan" has UID `1`. In reality,
-				// the programmer will need to have a reference to the `Recipe` and
-				// `Tag` objects they'd like to associate for their `uid` members.
-				RecipeTagJoin kakikToGuatemalan = new RecipeTagJoin(1, 1);
+				RecipeTagJoin kakikToGuatemalan = new RecipeTagJoin(kakikID, guatemalanID);
 				recipeTagJoinDao.insert(kakikToGuatemalan).blockingSubscribe();
 
-				recipeTagJoinDao.insert(new RecipeTagJoin(2, 1)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(3, 1)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(4, 1)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(5, 1)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(6, 1)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(7, 1)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(8, 1)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(chuchitoID, guatemalanID)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(tamalitosID, guatemalanID)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(caldoResID, guatemalanID)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(caldoGallinaID, guatemalanID)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(arrozFrijolesID, sideID)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(arrozFritoID, sideID)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(tortitasID, sideID)).blockingSubscribe();
 
-				recipeTagJoinDao.insert(new RecipeTagJoin(1, 2)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(2, 2)).blockingSubscribe();
-
-				recipeTagJoinDao.insert(new RecipeTagJoin(6, 3)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(7, 3)).blockingSubscribe();
-
-				recipeTagJoinDao.insert(new RecipeTagJoin(8, 4)).blockingSubscribe();
-				recipeTagJoinDao.insert(new RecipeTagJoin(8, 5)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(chuchitoID, holidayID)).blockingSubscribe();
+				recipeTagJoinDao.insert(new RecipeTagJoin(chuchitoID, desertID)).blockingSubscribe();
 
 				CategoryDao categoryDao = instance.getCategoryDao();
 				categoryDao.deleteAll();

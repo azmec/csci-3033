@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.ViewModel;
 
 import org.csci.mealmanual.database.DomainRecipe;
+import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.repo.RecipeRepository;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class RecipeViewModel extends ViewModel {
     private RecipeRepository recipeRepository;
     private LiveData<List<DomainRecipe>> allRecipes;
+    private LiveData<List<DomainRecipe>> likedRecipe;
 
     /**
      * Default, parameterless constructor.
@@ -55,5 +57,17 @@ public class RecipeViewModel extends ViewModel {
 
     public LiveData<List<DomainRecipe>> getAllRecipes() {
         return allRecipes;
+    }
+
+    /** Getting all recipes with the liked tag
+     * */
+    public LiveData<List<DomainRecipe>> getLikedRecipes(){
+        likedRecipe = LiveDataReactiveStreams.fromPublisher(
+            this.recipeRepository.getRecipesWithTag(RecipeDatabase.LIKED_TAG)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .toFlowable()
+        );
+        return likedRecipe;
     }
 }

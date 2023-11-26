@@ -36,7 +36,7 @@ import java.util.concurrent.Executors;
  * library on compilation.
  */
 @Database(
-	version = 4,
+	version = 5,
 	entities = {
 		Recipe.class,
 		Tag.class,
@@ -49,7 +49,8 @@ import java.util.concurrent.Executors;
 	},
 		autoMigrations = {
 				@AutoMigration(from = 2, to = 3),
-				@AutoMigration(from = 3, to = 4)
+				@AutoMigration(from = 3, to = 4),
+				@AutoMigration(from = 4, to = 5)
 	}
 )
 public abstract class RecipeDatabase extends RoomDatabase {

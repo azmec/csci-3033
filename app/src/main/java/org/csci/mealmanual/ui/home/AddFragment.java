@@ -186,16 +186,17 @@ public class AddFragment extends Fragment {
                     String name = recipeNameEditText.getText().toString();
                     String description = recipeDescriptionEditText.getText().toString();
                     String ingredientName = ingredientEditText.getText().toString();
+                    String ingredientUnit = ""; // TODO: Receive from the user!
                     int ingredientQuantity = Integer.parseInt(quantityEditText.getText().toString());
 
                     Recipe recipe = new Recipe(name, description);
-                    Ingredient ingredient = new Ingredient(ingredientName, ingredientQuantity);
+                    Ingredient ingredient = new Ingredient(ingredientName, ingredientUnit, ingredientQuantity);
                     ingredientList.add(ingredient);
 
                     for (int j = 0; j < listIngredientName.size(); j++) {
                         String ingredientName2 = ingredientEditText.getText().toString();
                         int ingredientQuantity2 = Integer.parseInt(quantityEditText.getText().toString());
-                        Ingredient ingredient2 = new Ingredient(ingredientName, ingredientQuantity);
+                        Ingredient ingredient2 = new Ingredient(ingredientName, ingredientUnit, ingredientQuantity);
                         ingredientList.add(ingredient2);
                     }
 

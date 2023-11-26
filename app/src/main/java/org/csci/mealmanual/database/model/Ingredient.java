@@ -29,6 +29,9 @@ public class Ingredient implements Serializable {
 	@ColumnInfo(name = "name")
 	public final String name;
 
+	@ColumnInfo(name = "unit")
+	public final String unit;
+
 	/**
 	 * The quantity of the ingredient.
 	 */
@@ -38,8 +41,9 @@ public class Ingredient implements Serializable {
 	/**
 	 * Construct a named, quantized ingredient.
 	 */
-	public Ingredient(String name, int quantity) {
+	public Ingredient(String name, String unit, int quantity) {
 		this.name = name;
+		this.unit = unit;
 		this.quantity = quantity;
 	}
 

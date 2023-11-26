@@ -1,6 +1,7 @@
 package org.csci.mealmanual.ui.home;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,20 +9,20 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import org.csci.mealmanual.R;
-import org.csci.mealmanual.database.model.Recipe;
+import org.csci.mealmanual.database.DomainRecipe;
+import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.Tag;
-import org.csci.mealmanual.database.repo.RecipeRepository;
 
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
-    private final List<RecipeRepository.RecipeWithTag> recipeList;
+    private final List<DomainRecipe> recipeList;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    RecipeAdapter(Context context, List<RecipeRepository.RecipeWithTag> recipeList) {
+    RecipeAdapter(Context context, List<DomainRecipe> recipeList) {
         this.mInflater = LayoutInflater.from(context);
         this.recipeList = recipeList;
     }
@@ -36,10 +37,15 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        RecipeRepository.RecipeWithTag recipeWithTag = recipeList.get(position);
-        Recipe recipe = recipeWithTag.recipe;
-        List<Tag> tags = recipeWithTag.tags; // TODO: Do something with this
-        holder.recipeName.setText(recipe.name);
+        DomainRecipe recipe = recipeList.get(position);
+
+        // TODO: Display these pl0x thank you glhf
+        List<Tag> tags = recipe.getTags();
+        List<Ingredient> ingredients = recipe.getIngredients();
+        Log.d("YES", "onBindViewHolder: " + tags);
+        Log.d("YES", "onBindViewHolder: " + ingredients);
+
+        holder.recipeName.setText(recipe.getName());
         holder.itemView.setOnClickListener(v -> {
             if (mClickListener != null) mClickListener.onItemClick(v, recipe);
         });
@@ -62,7 +68,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     }
 
     // convenience method for getting data at click position
-    RecipeRepository.RecipeWithTag getItem(int id) {
+    DomainRecipe getItem(int id) {
         return recipeList.get(id);
     }
 
@@ -73,7 +79,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
 
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
-        void onItemClick(View view, Recipe recipe);
+        void onItemClick(View view, DomainRecipe recipe);
     }
 }
 

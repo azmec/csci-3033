@@ -63,7 +63,7 @@ public interface RecipeIngredientJoinDao {
      * @return The unique identifiers of ingredients in the given recipe.
      * @see Ingredient
      */
-    public Single<List<Ingredient>> getIngredientsInRecipe(final int recipeId);
+    public Single<List<Ingredient>> getIngredientsInRecipe(final long recipeId);
 
     /**
      * Return the unique identifiers of the recipes with the ingredient represented
@@ -78,5 +78,5 @@ public interface RecipeIngredientJoinDao {
                     "ON recipe.uid = recipe_ingredient_join.recipe_id " +
                     "WHERE recipe_ingredient_join.ingredient_id = :ingredientId"
     )
-    public Single<List<Recipe>> getRecipesWithIngredient(final int ingredientId);
+    public Single<List<Recipe>> getRecipesWithIngredient(final long ingredientId);
 }

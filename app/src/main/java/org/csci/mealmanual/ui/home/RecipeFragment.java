@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import org.csci.mealmanual.R;
-import org.csci.mealmanual.database.model.Recipe;
+import org.csci.mealmanual.database.DomainRecipe;
 import org.csci.mealmanual.database.repo.RecipeRepository;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickL
     private RecipeRepository recipeRepository;
     private RecyclerView recyclerView;
     private RecipeAdapter recipeAdapter;
-    private ArrayList<RecipeRepository.RecipeWithTag> recipeList;
+    private ArrayList<DomainRecipe> recipeList;
 
     public RecipeFragment() {
         // Required empty public constructor
@@ -62,7 +62,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickL
     }
 
     @Override
-    public void onItemClick(View view, Recipe recipe) {
+    public void onItemClick(View view, DomainRecipe recipe) {
         // Handle the click event here
         RecipeDetailDialogFragment dialogFragment = RecipeDetailDialogFragment.newInstance(recipe);
         dialogFragment.show(getParentFragmentManager(), "recipe_details");

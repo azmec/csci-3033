@@ -1,21 +1,25 @@
 package org.csci.mealmanual.ui.home;
 
 import android.app.AlertDialog;
-
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import org.csci.mealmanual.R;
+import android.widget.ImageButton;
 import android.widget.TextView;
-import androidx.fragment.app.DialogFragment;
 
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import org.csci.mealmanual.R;
 import org.csci.mealmanual.database.DomainRecipe;
 
 public class RecipeDetailDialogFragment extends DialogFragment {
-
     private static final String ARG_RECIPE = "recipe";
     private DomainRecipe recipe;
+    private ImageButton likeButton;
+    private RecipeViewModel recipeViewModel;
 
     public static RecipeDetailDialogFragment newInstance(DomainRecipe recipe) {
         RecipeDetailDialogFragment fragment = new RecipeDetailDialogFragment();
@@ -27,6 +31,12 @@ public class RecipeDetailDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Context context = getContext();
+        // Initialize the view model.
+        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        recipeViewModel.initRepository(context);
+
+
         if (getArguments() != null) {
             recipe = (DomainRecipe) getArguments().getSerializable(ARG_RECIPE);
         }
@@ -37,6 +47,7 @@ public class RecipeDetailDialogFragment extends DialogFragment {
 
         TextView recipeName = view.findViewById(R.id.popup_recipe_name);
         TextView recipeDescription = view.findViewById(R.id.popup_recipe_description);
+        likeButton = view.findViewById(R.id.button_like_recipe);
 
         recipeName.setText(recipe.getName());
         recipeDescription.setText(recipe.getDescription());
@@ -45,6 +56,9 @@ public class RecipeDetailDialogFragment extends DialogFragment {
                 .setPositiveButton("Close", (dialog, id) -> {
                     // User closes the dialog
                 });
+
+        likeButton.setOnClickListener(v->{
+        });
         return builder.create();
     }
 }

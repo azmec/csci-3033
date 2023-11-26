@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.Tag;
 import org.csci.mealmanual.database.repo.IngredientRepository;
@@ -32,7 +33,8 @@ public class IngredientViewModel extends ViewModel {
     }
 
     /** TODO: Link grocery list to be able to send to pantry
-     *
+     * NOTE: Delete the relations between ingredients and the grocery and add corresponding
+     * relations between ingredients and the pantry - Carlos
      *
      * */
     private IngredientRepository ingredientRepository;
@@ -77,7 +79,7 @@ public class IngredientViewModel extends ViewModel {
         return pantryIngredients;
     }
     public void  fetchPantryIngredients() {
-        ingredientRepository.getAll()
+        ingredientRepository.getIngredientsWithTag(RecipeDatabase.PANTRY_TAG)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ingredients -> {

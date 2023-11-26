@@ -125,6 +125,17 @@ public class IngredientRepository {
 	}
 
 	/**
+	 * Return the ingredients with the given tag. If the tag is not in the
+	 * database, it is added to the database.
+	 * @param tag The tag to select for ingredients by.
+	 * @return The `Single` emitting the list of ingredients associated with the tag.
+	 * @see Single
+	 */
+	public Single<List<Ingredient>> getIngredientsWithTag(Tag tag) {
+		return this.ingredientTagJoinDao.getIngredientsWithTag(tag.uid);
+	}
+
+	/**
 	 * Return all ingredients in the repository.
 	 *
 	 * @see Single

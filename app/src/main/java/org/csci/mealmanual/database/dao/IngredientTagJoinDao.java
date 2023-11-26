@@ -79,7 +79,7 @@ public interface IngredientTagJoinDao {
 		" ON ingredient.uid = ingredient_tag_join.ingredient_id " +
 		"WHERE ingredient_tag_join.tag_id = :tagId"
 	)
-	Single<List<Ingredient>> getIngredientsWithTag(final int tagId);
+	Single<List<Ingredient>> getIngredientsWithTag(final long tagId);
 
 	/**
 	 * Return the unique identifiers of the tags associated with the ingredient
@@ -94,5 +94,5 @@ public interface IngredientTagJoinDao {
 		"ON tag.uid = ingredient_tag_join.tag_id " +
 		"WHERE ingredient_tag_join.ingredient_id = :ingredientId"
 	)
-	Single<List<Tag>> getTagsWithIngredient(final int ingredientId);
+	Single<List<Tag>> getTagsWithIngredient(final long ingredientId);
 }

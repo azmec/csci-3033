@@ -15,16 +15,26 @@
         app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Large"
         app:subtitleTextColor="#FFFFFF" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
+    <!-- RecyclerView to display a list of recipes -->
     <TextView
+        android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="" />
+        android:text="Your Favorites"
+        android:textStyle="bold"
+        android:textSize="26sp"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="5dp"/>
 
-    <!-- Add other UI elements here -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recipeRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:padding="16dp"
+        android:scrollbars="vertical" />
+
+    <!-- You can add more UI elements below if needed -->
 
 </LinearLayout>

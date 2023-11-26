@@ -4,12 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.Spinner;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,8 +16,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import org.csci.mealmanual.R;
+
 import com.google.android.material.button.MaterialButton;
+
+import org.csci.mealmanual.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +63,10 @@ public class GroceryFragment extends Fragment {
         View view = inflater.inflate(R.layout.grocery_fragment, container, false);
         EditText editGroceryName = view.findViewById(R.id.editTextGroceryName);
         LinearLayout addGroceriesLayout = view.findViewById(R.id.addGroceriesLayout);
-        categorySpinner = view.findViewById(R.id.categorySpinner);  // Initialize Spinner
+
+        //categorySpinner = view.findViewById(R.id.categorySpinner);  // Initialize Spinner
         //grocerySearchView = view.findViewById(R.id.grocerySearchView);
+
         groceryRecyclerView = view.findViewById(R.id.groceryRecyclerView);
         addGroceryButton = view.findViewById(R.id.buttonAddGroceries);
         finalizeAddGroceryButton = view.findViewById(R.id.buttonFinalizeAddGroceries);
@@ -79,12 +82,12 @@ public class GroceryFragment extends Fragment {
         groceryRecyclerView.setAdapter(groceryAdapter);
 
         // Initialize Spinner with categories
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+/*        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
                 R.array.grocery_categories, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(adapter);
+        categorySpinner.setAdapter(adapter);*/
 
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+       /* categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 // Filter grocery list by selected category
@@ -95,7 +98,7 @@ public class GroceryFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parentView) {
                 // Do nothing here
             }
-        });
+        });*/
 
         // Setup SearchView
         /*

@@ -8,6 +8,19 @@
     android:background="#FFFFFF"
     android:elevation="8dp">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/button_like_recipe"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/icons8_heart_48_green"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/popup_recipe_name"
         android:layout_width="match_parent"
@@ -28,3 +41,4 @@
         android:gravity="center_horizontal" />
 
 </LinearLayout>
+

@@ -14,16 +14,18 @@
         app:subtitle="Grocery"
         app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Large"
         app:subtitleTextColor="#FFFFFF" />
-    <!-- Spinner for Categories -->
-    <Spinner
-        android:id="@+id/categorySpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="32dp" />
+     <TextView
+         android:id="@+id/textViewTitle"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="Shopping Cart"
+         android:textStyle="bold"
+         android:textSize="26sp"
+         android:layout_gravity="center_horizontal"
+         android:paddingTop="5dp"/>
 
     <!-- SearchView for Groceries -->
     <androidx.appcompat.widget.SearchView
-
      android:id="@+id/grocerySearchView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,15 +45,6 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:padding="16dp">
-
-        <!-- Button to View Groceries -->
-<!--        <Button
-            android:id="@+id/buttonViewGroceries"
-            android:layout_width="1dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="View Groceries" />-->
 
         <!-- Button to Add Groceries -->
         <Button

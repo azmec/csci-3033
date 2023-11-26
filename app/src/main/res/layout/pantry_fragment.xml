@@ -20,9 +20,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Pantry Management"
-        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textSize="26sp"
         android:layout_gravity="center_horizontal"
-        android:padding="16dp"/>
+        android:paddingTop="5dp"/>
 
     <!-- ScrollView for displaying ingredients -->
     <ScrollView

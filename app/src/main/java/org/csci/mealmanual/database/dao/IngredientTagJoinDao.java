@@ -3,7 +3,6 @@ package org.csci.mealmanual.database.dao;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import org.csci.mealmanual.database.model.IngredientTagJoin;
@@ -34,7 +33,7 @@ public interface IngredientTagJoinDao {
 	 *         relation.
 	 * @see Single
 	 */
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert
 	Single<Long> insert(IngredientTagJoin ingredientTagJoin);
 
 	/**
@@ -46,7 +45,7 @@ public interface IngredientTagJoinDao {
 	 *         the inserted relations.
 	 * @see Single
 	 */
-	@Insert(onConflict = OnConflictStrategy.REPLACE)
+	@Insert
 	Single<List<Long>> insert(IngredientTagJoin... ingredientTagJoins);
 
 	/**

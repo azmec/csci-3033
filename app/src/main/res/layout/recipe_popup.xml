@@ -14,8 +14,8 @@
 
         <ImageButton
             android:id="@+id/button_like_recipe"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="40dp"
+            android:layout_height="36dp"
             android:src="@drawable/icons8_heart_48_green"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_alignParentEnd="true"/>

@@ -17,42 +17,9 @@
         app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Large"
         app:subtitleTextColor="#FFFFFF" />
 
-    <TextView
-        android:id="@+id/textViewTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Enter Recipe Information"
-        android:textSize="24sp"
-        android:layout_gravity="center_horizontal"
-        android:padding="16dp"/>
+    <!-- Recipe Name EditText -->
 
-        <!-- Recipe Name EditText -->
-
-    <EditText
-        android:id="@+id/editTextRecipeName"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:hint="Recipe Name"
-        android:inputType="text"
-        android:layout_gravity="center_horizontal"/>
     <!-- Center Content with ScrollView for ingredients -->
-
-    <EditText
-        android:id="@+id/editTextRecipeDescription"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Description"
-        android:gravity="start|top"
-        android:layout_gravity="center_horizontal"
-    android:inputType="textMultiLine" />
-
-    <ImageButton
-        android:id="@+id/cameraAddButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        app:srcCompat="@drawable/ic_menu_camera" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -68,6 +35,46 @@
             android:orientation="vertical">
 
             <!-- Instruction TextView -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textViewTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="Enter Recipe Information"
+                    android:textSize="20sp" />
+
+                <EditText
+                    android:id="@+id/editTextRecipeName"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:hint="Recipe Name"
+                    android:inputType="text" />
+
+                <EditText
+                    android:id="@+id/editTextRecipeDescription"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="Description"
+                    android:inputType="textMultiLine" />
+
+                <ImageButton
+                    android:id="@+id/cameraAddButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    app:srcCompat="@drawable/ic_menu_camera" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewInstruction2"

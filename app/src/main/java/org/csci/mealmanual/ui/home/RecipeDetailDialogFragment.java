@@ -9,15 +9,15 @@ import android.view.View;
 import org.csci.mealmanual.R;
 import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
-import org.csci.mealmanual.database.model.Recipe; // Replace with your actual Recipe class import
 
+import org.csci.mealmanual.database.DomainRecipe;
 
 public class RecipeDetailDialogFragment extends DialogFragment {
 
     private static final String ARG_RECIPE = "recipe";
-    private Recipe recipe;
+    private DomainRecipe recipe;
 
-    public static RecipeDetailDialogFragment newInstance(Recipe recipe) {
+    public static RecipeDetailDialogFragment newInstance(DomainRecipe recipe) {
         RecipeDetailDialogFragment fragment = new RecipeDetailDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_RECIPE, recipe);
@@ -28,7 +28,7 @@ public class RecipeDetailDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         if (getArguments() != null) {
-            recipe = (Recipe) getArguments().getSerializable(ARG_RECIPE);
+            recipe = (DomainRecipe) getArguments().getSerializable(ARG_RECIPE);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -38,8 +38,8 @@ public class RecipeDetailDialogFragment extends DialogFragment {
         TextView recipeName = view.findViewById(R.id.popup_recipe_name);
         TextView recipeDescription = view.findViewById(R.id.popup_recipe_description);
 
-        recipeName.setText(recipe.name);
-        recipeDescription.setText(recipe.description);
+        recipeName.setText(recipe.getName());
+        recipeDescription.setText(recipe.getDescription());
 
         builder.setView(view)
                 .setPositiveButton("Close", (dialog, id) -> {

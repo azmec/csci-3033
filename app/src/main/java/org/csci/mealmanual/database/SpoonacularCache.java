@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
  * library on compilation.
  */
 @Database(
-		version = 2,
+		version = 3,
 	entities = {
 		Recipe.class,
 		Tag.class,
@@ -42,6 +42,7 @@ import java.util.concurrent.Executors;
 	},
 		autoMigrations = {
 				@AutoMigration(from = 1, to = 2),
+				@AutoMigration(from = 2, to = 3),
 		}
 )
 public abstract class SpoonacularCache extends RoomDatabase {

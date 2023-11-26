@@ -3,11 +3,14 @@ package org.csci.mealmanual.database.repo;
 import android.content.Context;
 
 import org.csci.mealmanual.BuildConfig;
+import org.csci.mealmanual.database.DomainRecipe;
 import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.SpoonacularCache;
 import org.csci.mealmanual.database.dao.RecipeDao;
+import org.csci.mealmanual.database.dao.RecipeIngredientJoinDao;
 import org.csci.mealmanual.database.dao.RecipeTagJoinDao;
 import org.csci.mealmanual.database.dao.TagDao;
+import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.Recipe;
 import org.csci.mealmanual.database.model.RecipeTagJoin;
 import org.csci.mealmanual.database.model.Tag;
@@ -35,6 +38,7 @@ public class RecipeRepository {
 	private final RecipeDao cacheRecipeDao;
 	private final TagDao tagDao;
 	private final RecipeTagJoinDao recipeTagJoinDao;
+	private final RecipeIngredientJoinDao recipeIngredientJoinDao;
 	private final SpoonacularService api;
 
 	private final String apiKey = BuildConfig.API_KEY;
@@ -55,6 +59,7 @@ public class RecipeRepository {
 
 		this.tagDao = db.getTagDao();
 		this.recipeTagJoinDao = db.getRecipeTagJoinDao();
+		this.recipeIngredientJoinDao = db.getRecipeIngredientJoinDao();
 
 		SpoonacularClient client = SpoonacularClient.getInstance();
 		this.api = client.getApi();
@@ -80,12 +85,12 @@ public class RecipeRepository {
 		return recipeDao.insert(recipes);
 	}
 
-	public Single<List<Long>> addRecipeWithTags(Recipe recipe, Tag... tags) {
+	public Single<List<Long>> addDomainRecipes(Recipe recipe, Tag... tags) {
 		Single<List<Long>> insertTags = this.tagDao.insert(tags);
 		Single<Long> insertRecipe = this.recipeDao.insert(recipe);
 
 		// Accumulate the `Single`s relating the ingredient with the tags.
-		Single<List<Single<Long>>> relateRecipeWithTags = Single.zip(insertTags, insertRecipe, (tagIDs, recipeID) -> {
+		Single<List<Single<Long>>> relateDomainRecipes = Single.zip(insertTags, insertRecipe, (tagIDs, recipeID) -> {
 			ArrayList<Single<Long>> insertRelationsList = new ArrayList<>();
 			for (long tagID : tagIDs) {
 				RecipeTagJoin relation = new RecipeTagJoin(recipeID, tagID);
@@ -98,7 +103,7 @@ public class RecipeRepository {
 		});
 
 		// Compress the asynchronous operations into one `Single`, returning the result.
-		return relateRecipeWithTags.map(insertRelationsList -> {
+		return relateDomainRecipes.map(insertRelationsList -> {
 			List<Long> rowIndices = new ArrayList<>();
 			for (Single<Long> insertRelation : insertRelationsList) {
 				long rowIndex = insertRelation.blockingGet();
@@ -147,18 +152,13 @@ public class RecipeRepository {
 		});
 	}
 
-	public class RecipeWithTag {
-		public Recipe recipe;
-		public List<Tag> tags;
-	}
-
 	/**
 	 * Return all recipes held by the repository.
 	 *
 	 * @return All recipes held by the repository.
 	 * @see Single
 	 */
-	public Single<List<RecipeWithTag>> getAll() {
+	public Single<List<DomainRecipe>> getAll() {
 		Single<List<Recipe>> localRecipes = this.recipeDao.getAll();
 		Single<List<Recipe>> cachedRecipes = this.cacheRecipeDao.getAll();
 		//Single<List<Recipe>> webRecipes = getRandomRecipe(5);
@@ -166,30 +166,26 @@ public class RecipeRepository {
 
 		// When all of the above computations complete, compose their results
 		// into a single list of recipes.
-		Single<List<RecipeWithTag>> allRecipes = Single.zip(localRecipes, cachedRecipes, webRecipes, (local, cached, web) -> {
-			List<RecipeWithTag> recipes = new ArrayList<>();
+		Single<List<DomainRecipe>> allRecipes = Single.zip(localRecipes, cachedRecipes, webRecipes, (local, cached, web) -> {
+			List<DomainRecipe> domainRecipes = new ArrayList<>();
 			for (Recipe recipe : local) {
-				RecipeWithTag recipeWithTag = new RecipeWithTag();
 				List<Tag> tags = this.getTagsWithRecipe(recipe).blockingGet();
+				List<Ingredient> ingredients = this.getIngredientsInRecipe(recipe).blockingGet();
 
-				recipeWithTag.recipe = recipe;
-				recipeWithTag.tags = tags;
-
-				recipes.add(recipeWithTag);
+				DomainRecipe domainRecipe = new DomainRecipe(recipe, tags, ingredients);
+				domainRecipes.add(domainRecipe);
 			}
 
 			for (Recipe recipe : cached) {
-				RecipeWithTag recipeWithTag = new RecipeWithTag();
-				recipeWithTag.recipe = recipe;
-				recipes.add(recipeWithTag);
+				DomainRecipe domainRecipe = new DomainRecipe(recipe);
+				domainRecipes.add(domainRecipe);
 			}
 			for (Recipe recipe : web) {
-				RecipeWithTag recipeWithTag = new RecipeWithTag();
-				recipeWithTag.recipe = recipe;
-				recipes.add(recipeWithTag);
+				DomainRecipe domainRecipe= new DomainRecipe(recipe);
+				domainRecipes.add(domainRecipe);
 			}
 
-			return recipes;
+			return domainRecipes;
 		});
 
 		return allRecipes;
@@ -229,8 +225,36 @@ public class RecipeRepository {
 		return this.recipes;
 	}
 
+	/**
+	 * Return the recipes with the given tag.
+	 * @param tag The tag by which to select for recipes.
+	 * @return The `Single` emitting the list of recipes associated with the given tag.
+	 * @see Single
+	 */
+	public Single<List<DomainRecipe>> getRecipesWithTag(Tag tag) {
+		Single<List<Recipe>> getTaggedRecipes = this.recipeTagJoinDao.getRecipesWithTag(tag.uid);
+		Single<List<DomainRecipe>> mapTaggedRecipes = getTaggedRecipes.map(taggedRecipes -> {
+			List<DomainRecipe> domainRecipes = new ArrayList<>();
+			for (Recipe recipe : taggedRecipes) {
+				List<Tag> tags = this.getTagsWithRecipe(recipe).blockingGet();
+				List<Ingredient> ingredients = this.getIngredientsInRecipe(recipe).blockingGet();
+
+				DomainRecipe domainRecipe = new DomainRecipe(recipe, tags, ingredients);
+				domainRecipes.add(domainRecipe);
+			}
+
+			return domainRecipes;
+		});
+
+		return mapTaggedRecipes;
+	}
+
 	public Single<List<Tag>> getTagsWithRecipe(Recipe recipe) {
 			return this.recipeTagJoinDao.getTagsWithRecipe(recipe.uid);
+	}
+
+	public Single<List<Ingredient>> getIngredientsInRecipe(Recipe recipe) {
+		return this.recipeIngredientJoinDao.getIngredientsInRecipe(recipe.uid);
 	}
 
 	/**

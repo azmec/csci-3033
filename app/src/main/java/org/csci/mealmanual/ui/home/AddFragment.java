@@ -93,9 +93,9 @@ public class AddFragment extends Fragment {
         Button addTagButton = view.findViewById(R.id.buttonAddTag);
         Button submitButton = view.findViewById(R.id.buttonSubmit);
         List<EditText> listTag = new ArrayList<EditText>();
-        listTag.add(tagEditText);
         List<EditText> listIngredientName = new ArrayList<EditText>();
         List<EditText> listQuantity = new ArrayList<EditText>();
+        List<LinearLayout> listLayoutIngredients = new ArrayList<LinearLayout>();
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +123,7 @@ public class AddFragment extends Fragment {
                     // Create a new horizontal layout to put new buttons on
                     LinearLayout newLinearLayoutHorizontal = new LinearLayout(getContext());
                     newLinearLayoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
-
+                    listLayoutIngredients.add(newLinearLayoutHorizontal);
                     EditText newQuantityEditText = new EditText(getContext());
                     newQuantityEditText.setLayoutParams(new ViewGroup.LayoutParams(
                             ingredientsLayout.getWidth()/2,
@@ -163,12 +163,17 @@ public class AddFragment extends Fragment {
             public void onClick(View v) {
                 boolean listEmpty = false;
                 for (int j = 0; j < listIngredientName.size(); j++) {
-                    if((ingredientEditText.getText().toString().trim().length() == 0) || (quantityEditText.getText().toString().trim().length() == 0)) {
+                    if((listIngredientName.get(j).getText().toString().trim().length() == 0) || (listQuantity.get(j).getText().toString().trim().length() == 0)) {
                         listEmpty = true;
                     }
                 }
 
-                if((recipeNameEditText.getText().toString().trim().length() == 0) || (recipeDescriptionEditText.getText().toString().trim().length() == 0) || listEmpty) {
+                for (int j = 0; j < listTag.size(); j++) {
+                    if(listTag.get(j).getText().toString().trim().length() == 0) {
+                        listEmpty = true;
+                    }
+                }
+                if((recipeNameEditText.getText().toString().trim().length() == 0) || (tagEditText.getText().toString().trim().length() == 0) || (recipeDescriptionEditText.getText().toString().trim().length() == 0) || (ingredientEditText.getText().toString().trim().length() == 0) || (quantityEditText.getText().toString().trim().length() == 0)|| listEmpty) {
                     String message = "Please fill out all information for recipe";
                     Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
                 } else {
@@ -181,21 +186,25 @@ public class AddFragment extends Fragment {
                     String name = recipeNameEditText.getText().toString();
                     String description = recipeDescriptionEditText.getText().toString();
                     String ingredientName = ingredientEditText.getText().toString();
+                    String ingredientUnit = ""; // TODO: Receive from the user!
                     int ingredientQuantity = Integer.parseInt(quantityEditText.getText().toString());
 
                     Recipe recipe = new Recipe(name, description);
-                    Ingredient ingredient = new Ingredient(ingredientName, ingredientQuantity);
+                    Ingredient ingredient = new Ingredient(ingredientName, ingredientUnit, ingredientQuantity);
                     ingredientList.add(ingredient);
 
                     for (int j = 0; j < listIngredientName.size(); j++) {
                         String ingredientName2 = ingredientEditText.getText().toString();
                         int ingredientQuantity2 = Integer.parseInt(quantityEditText.getText().toString());
-                        Ingredient ingredient2 = new Ingredient(ingredientName, ingredientQuantity);
+                        Ingredient ingredient2 = new Ingredient(ingredientName, ingredientUnit, ingredientQuantity);
                         ingredientList.add(ingredient2);
                     }
 
                     // Accumulate the user's tags.
                     ArrayList<Tag> recipeTags = new ArrayList<>();
+                    String tagName1 = tagEditText.getText().toString();
+                    Tag tag1 = new Tag(tagName1);
+                    recipeTags.add(tag1);
                     for (EditText tagInput : listTag) {
                         String tagName = tagInput.getText().toString();
                         Tag tag = new Tag(tagName);
@@ -228,6 +237,19 @@ public class AddFragment extends Fragment {
                                 String message = "Recipe Name: " + recipeData.get("Recipe Name");
                                 Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
                             });
+
+                    for (int j = 0; j < listIngredientName.size(); j++) {
+                        ingredientsLayout.removeView(listLayoutIngredients.get(j));
+                    }
+
+                    for (int j = 0; j < listTag.size(); j++) {
+                        tagsLayout.removeView(listTag.get(j));
+                    }
+                    recipeNameEditText.setText("");
+                    recipeDescriptionEditText.setText("");
+                    ingredientEditText.setText("");
+                    quantityEditText.setText("");
+                    tagEditText.setText("");
                 }
             }
         });

@@ -55,16 +55,21 @@ public class IngredientRepository {
 	 * @see Single
 	 */
 	public Single<List<Long>> addTaggedIngredient(Ingredient ingredient, Tag... tags) {
+		// TODO: Make this not an obvious ad-hoc hack. Replacements invoke cascades.
+		List<Long> tagIds = new ArrayList<>();
+		for (Tag tag : tags)
+			tagIds.add(tag.uid);
+
 		// Ensure the database contains the tags we'd like to associate.
-		Single<List<Long>> insertTags = this.tagDao.insert(tags);
+		Single<List<Long>> insertTags = Single.just(tagIds);
 		Single<Long> insertIngredient = this.ingredientDao.insert(ingredient);
 
 		// Accumulate the `Single`s relating the ingredient with the tags.
-		Single<List<Single<Long>>> relateIngredientTags = Single.zip(insertTags, insertIngredient, (tagIds, ingredientID) -> {
+		Single<List<Single<Long>>> relateIngredientTags = Single.zip(insertTags, insertIngredient, (tagIds2, ingredientID) -> {
 			ArrayList<Single<Long>> insertRelationsList = new ArrayList<>();
 
 			// Initialize the `Single`s corresponding to relating each tag with the ingredient.
-			for (long tagID : tagIds) {
+			for (long tagID : tagIds2) {
 				IngredientTagJoin relation = new IngredientTagJoin(ingredientID, tagID);
 				Single<Long> insertRelation = this.ingredientTagJoinDao.insert(relation);
 
@@ -117,6 +122,17 @@ public class IngredientRepository {
 	 */
 	public Single<Ingredient> getByUID(int uid) {
 		return ingredientDao.getByUID(uid);
+	}
+
+	/**
+	 * Return the ingredients with the given tag. If the tag is not in the
+	 * database, it is added to the database.
+	 * @param tag The tag to select for ingredients by.
+	 * @return The `Single` emitting the list of ingredients associated with the tag.
+	 * @see Single
+	 */
+	public Single<List<Ingredient>> getIngredientsWithTag(Tag tag) {
+		return this.ingredientTagJoinDao.getIngredientsWithTag(tag.uid);
 	}
 
 	/**

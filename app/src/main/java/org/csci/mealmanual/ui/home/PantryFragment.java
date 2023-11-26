@@ -87,7 +87,7 @@ public class PantryFragment extends Fragment {
             String ingredientName = editTextIngredientName.getText().toString();
 
             if (!ingredientName.isEmpty()) {
-                Ingredient newIngredient = new Ingredient(ingredientName, 1);
+                Ingredient newIngredient = new Ingredient(ingredientName, "", 1);
                 ingredientViewModel.insertTaggedIngredient(newIngredient, RecipeDatabase.PANTRY_TAG);
                 editTextIngredientName.setText(""); // Clear the EditText
 

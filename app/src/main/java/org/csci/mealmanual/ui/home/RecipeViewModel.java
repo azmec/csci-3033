@@ -5,7 +5,8 @@ import android.content.Context;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.ViewModel;
-import org.csci.mealmanual.database.model.Recipe;
+
+import org.csci.mealmanual.database.DomainRecipe;
 import org.csci.mealmanual.database.repo.RecipeRepository;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class RecipeViewModel extends ViewModel {
     private RecipeRepository recipeRepository;
-    private LiveData<List<RecipeRepository.RecipeWithTag>> allRecipes;
+    private LiveData<List<DomainRecipe>> allRecipes;
 
     /**
      * Default, parameterless constructor.
@@ -52,7 +53,7 @@ public class RecipeViewModel extends ViewModel {
         );
     }
 
-    public LiveData<List<RecipeRepository.RecipeWithTag>> getAllRecipes() {
+    public LiveData<List<DomainRecipe>> getAllRecipes() {
         return allRecipes;
     }
 }

@@ -225,6 +225,30 @@ public class RecipeRepository {
 		return this.recipes;
 	}
 
+	/**
+	 * Return the recipes with the given tag.
+	 * @param tag The tag by which to select for recipes.
+	 * @return The `Single` emitting the list of recipes associated with the given tag.
+	 * @see Single
+	 */
+	public Single<List<DomainRecipe>> getRecipesWithTag(Tag tag) {
+		Single<List<Recipe>> getTaggedRecipes = this.recipeTagJoinDao.getRecipesWithTag(tag.uid);
+		Single<List<DomainRecipe>> mapTaggedRecipes = getTaggedRecipes.map(taggedRecipes -> {
+			List<DomainRecipe> domainRecipes = new ArrayList<>();
+			for (Recipe recipe : taggedRecipes) {
+				List<Tag> tags = this.getTagsWithRecipe(recipe).blockingGet();
+				List<Ingredient> ingredients = this.getIngredientsInRecipe(recipe).blockingGet();
+
+				DomainRecipe domainRecipe = new DomainRecipe(recipe, tags, ingredients);
+				domainRecipes.add(domainRecipe);
+			}
+
+			return domainRecipes;
+		});
+
+		return mapTaggedRecipes;
+	}
+
 	public Single<List<Tag>> getTagsWithRecipe(Recipe recipe) {
 			return this.recipeTagJoinDao.getTagsWithRecipe(recipe.uid);
 	}

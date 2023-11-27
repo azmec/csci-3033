@@ -14,6 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import org.csci.mealmanual.R;
 import org.csci.mealmanual.database.DomainRecipe;
+import org.csci.mealmanual.database.RecipeDatabase;
+import org.csci.mealmanual.database.model.Tag;
+
+import java.util.List;
 
 public class RecipeDetailDialogFragment extends DialogFragment {
     private static final String ARG_RECIPE = "recipe";
@@ -57,8 +61,20 @@ public class RecipeDetailDialogFragment extends DialogFragment {
                     // User closes the dialog
                 });
 
-        likeButton.setOnClickListener(v->{
+        // If the button is clicked, add the recipe to the "Liked" recipes.
+        likeButton.setOnClickListener(v -> {
+            // If the recipe is already liked, we do not need to add it. So, exit this lambda.
+            // TODO: Cache whether this is liked or not in the recipe itself.
+            List<Tag> recipeTags = recipe.getTags();
+            for (Tag tag : recipeTags) {
+                if (tag.uid == RecipeDatabase.LIKED_TAG.uid) {
+                    return;
+                }
+            }
+
+            this.recipeViewModel.likeRecipe(recipe);
         });
+
         return builder.create();
     }
 }

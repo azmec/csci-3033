@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel;
 
 import org.csci.mealmanual.database.DomainRecipe;
 import org.csci.mealmanual.database.RecipeDatabase;
+import org.csci.mealmanual.database.model.RecipeTagJoin;
 import org.csci.mealmanual.database.repo.RecipeRepository;
+import org.csci.mealmanual.database.repo.RecipeTagJoinRepository;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class RecipeViewModel extends ViewModel {
     private RecipeRepository recipeRepository;
+    private RecipeTagJoinRepository recipeTagJoinRepository;
     private LiveData<List<DomainRecipe>> allRecipes;
     private MutableLiveData<List<DomainRecipe>> likedRecipes;
 
@@ -33,6 +36,8 @@ public class RecipeViewModel extends ViewModel {
      */
     public RecipeViewModel(Context context) {
         recipeRepository = new RecipeRepository(context);
+        recipeTagJoinRepository = new RecipeTagJoinRepository(context);
+
         allRecipes = LiveDataReactiveStreams.fromPublisher(
                 this.recipeRepository.getAll()
                         .subscribeOn(Schedulers.io())
@@ -48,6 +53,8 @@ public class RecipeViewModel extends ViewModel {
      */
     public void initRepository(Context context) {
         this.recipeRepository = new RecipeRepository(context);
+        this.recipeTagJoinRepository = new RecipeTagJoinRepository(context);
+
         allRecipes = LiveDataReactiveStreams.fromPublisher(
                 this.recipeRepository.getAll()
                         .subscribeOn(Schedulers.io())
@@ -58,6 +65,14 @@ public class RecipeViewModel extends ViewModel {
 
     public LiveData<List<DomainRecipe>> getAllRecipes() {
         return allRecipes;
+    }
+
+    public void likeRecipe(DomainRecipe recipe) {
+        RecipeTagJoin relation = new RecipeTagJoin(recipe.getID(), RecipeDatabase.LIKED_TAG.uid);
+        this.recipeTagJoinRepository.add(relation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe();
     }
 
     /** Getting all recipes with the liked tag

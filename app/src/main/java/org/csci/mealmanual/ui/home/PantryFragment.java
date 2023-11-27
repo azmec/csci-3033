@@ -44,9 +44,7 @@ public class PantryFragment extends Fragment {
     }
 
     /** Required empty public constructor */
-    public PantryFragment() {
-
-    }
+    public PantryFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

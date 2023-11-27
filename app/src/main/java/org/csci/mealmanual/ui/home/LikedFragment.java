@@ -1,16 +1,29 @@
 package org.csci.mealmanual.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.csci.mealmanual.R;
+import org.csci.mealmanual.database.DomainRecipe;
+
+import java.util.ArrayList;
 
 public class LikedFragment extends Fragment {
+    private ArrayList<DomainRecipe> likedList;
+    private RecipeViewModel recipeViewModel;
+    private RecipeAdapter recipeAdapter;
+    private RecyclerView recyclerView;
     @Override
     public void onResume() {
         super.onResume();
@@ -21,21 +34,40 @@ public class LikedFragment extends Fragment {
         super.onStop();
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
-    public LikedFragment() {
-        // Required empty public constructor
-    }
+
+    /** Required empty public constructor */
+    public LikedFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Context context = getContext();
+
+        // Initialize the view model.
+        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        recipeViewModel.initRepository(context);
+
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.liked_fragment, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.liked_fragment, container, false);
+
+        // Initialize RecyclerView and Adapter
+        recyclerView = view.findViewById(R.id.likedRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Set up the ViewModel and observe liked recipes
+        recipeViewModel.getLikedRecipes().observe(getViewLifecycleOwner(), likedRecipes -> {
+            // Update the adapter when data changes
+            likedList = new ArrayList<>(likedRecipes);
+            recipeAdapter = new RecipeAdapter(getContext(), likedList);
+            recyclerView.setAdapter(recipeAdapter);
+        });
+
+        return view;
     }
 
     @Override
@@ -43,6 +75,5 @@ public class LikedFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Initialize your UI components here, for example:
-        // TextView likedTitle = view.findViewById(R.id.likedTitle);
     }
 }

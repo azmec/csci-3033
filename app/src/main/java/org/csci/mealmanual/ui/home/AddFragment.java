@@ -138,7 +138,6 @@ public class AddFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Limit to 15 ingredients
-                if (ingredientsLayout.getChildCount() < 100) {
                     // Create a new horizontal layout to put new buttons on
                     LinearLayout newLinearLayoutHorizontal = new LinearLayout(getContext());
                     newLinearLayoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
@@ -168,11 +167,6 @@ public class AddFragment extends Fragment {
                     ingredientsLayout.addView(newLinearLayoutHorizontal);
                     listQuantity.add(newQuantityEditText);
                     listIngredientName.add(newIngredientEditText);
-
-                } else {
-                    // Inform the user about the limit
-                    Snackbar.make(v, "Maximum 100 ingredients allowed", Snackbar.LENGTH_SHORT).show();
-                }
             }
         });
 

@@ -56,10 +56,8 @@ public class RecipeDetailDialogFragment extends DialogFragment {
         recipeName.setText(recipe.getName());
         recipeDescription.setText(recipe.getDescription());
 
-        builder.setView(view)
-                .setPositiveButton("Close", (dialog, id) -> {
-                    // User closes the dialog
-                });
+        // User closes the dialog
+        builder.setView(view).setPositiveButton("Close", (dialog, id) -> {});
 
         // If the button is clicked, add the recipe to the "Liked" recipes.
         likeButton.setOnClickListener(v -> {

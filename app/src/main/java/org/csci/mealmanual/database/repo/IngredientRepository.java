@@ -11,12 +11,11 @@ import org.csci.mealmanual.database.model.IngredientTagJoin;
 import org.csci.mealmanual.database.model.Tag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
-import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
@@ -133,6 +132,16 @@ public class IngredientRepository {
 	 */
 	public Single<List<Ingredient>> getIngredientsWithTag(Tag tag) {
 		return this.ingredientTagJoinDao.getIngredientsWithTag(tag.uid);
+	}
+
+	public Completable removeTagFromIngredient(Ingredient ingredient, Tag tag) {
+		IngredientTagJoin relation = new IngredientTagJoin(ingredient.uid, tag.uid);
+		return this.ingredientTagJoinDao.delete(relation);
+	}
+
+	public Single<Long> addTagToIngredient(Ingredient ingredient, Tag tag) {
+		IngredientTagJoin relation = new IngredientTagJoin(ingredient.uid, tag.uid);
+		return this.ingredientTagJoinDao.insert(relation);
 	}
 
 	/**

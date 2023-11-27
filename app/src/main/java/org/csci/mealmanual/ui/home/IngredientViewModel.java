@@ -44,6 +44,9 @@ public class IngredientViewModel extends ViewModel {
 
     // Initialize the view model's internal data repository.
     public void initRepository(Context context) {
+        this.groceryIngredients = new MutableLiveData<>();
+        this.pantryIngredients = new MutableLiveData<>();
+
         this.ingredientRepository = new IngredientRepository(context);
         allIngredients = LiveDataReactiveStreams.fromPublisher(
                 ingredientRepository.getAll()
@@ -56,38 +59,47 @@ public class IngredientViewModel extends ViewModel {
         ingredientRepository.addTaggedIngredient(ingredient, tags)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
+                .subscribe(indices -> {
+                    this.updateGroceryData();
+                    this.updatePantryData();
+                });
     }
 
-    public LiveData<List<Ingredient>> getGroceryIngredients(){
-        if(groceryIngredients == null){
-            groceryIngredients = new MutableLiveData<>();
-        }
+    public LiveData<List<Ingredient>> getGroceryData() {
+        return this.groceryIngredients;
+    }
+
+    public LiveData<List<Ingredient>> getPantryData() {
+        return this.pantryIngredients;
+    }
+
+    public void updateGroceryData() {
         ingredientRepository.getIngredientsWithTag(RecipeDatabase.GROCERY_TAG)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ingredients -> {
                     groceryIngredients.setValue(ingredients);
                 });
-
-        return groceryIngredients;
     }
-    public LiveData<List<Ingredient>> getPantryIngredients() {
-        if (pantryIngredients == null) {
-            pantryIngredients = new MutableLiveData<>();
-        }
+
+    public void updatePantryData() {
         ingredientRepository.getIngredientsWithTag(RecipeDatabase.PANTRY_TAG)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ingredients -> {
                     pantryIngredients.setValue(ingredients);
                 });
-        return pantryIngredients;
     }
 
     public void removeSelectedIngredients(List<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
-            ingredientRepository.delete(ingredient);
+            ingredientRepository.delete(ingredient)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(() -> {
+                        this.updatePantryData();
+                        this.updateGroceryData();
+                    });
         }
     }
 

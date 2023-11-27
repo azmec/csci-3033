@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -51,6 +52,13 @@ public class GroceryFragment extends Fragment {
         //Initialize the repository within the ViewModel
         ingredientViewModel = new ViewModelProvider(requireActivity()).get(IngredientViewModel.class);
         ingredientViewModel.initRepository(context);
+
+        // Observe changes in the list of ingredients
+        final Observer<List<Ingredient>> observer = ingredients -> {
+            updateIngredientList(ingredients);
+        };
+        ingredientViewModel.getGroceryData().observe(this, observer);
+        ingredientViewModel.updateGroceryData();
     }
 
     @Nullable
@@ -61,9 +69,6 @@ public class GroceryFragment extends Fragment {
     }
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
-
-        // Observe changes in the list of ingredients
-        ingredientViewModel.getGroceryIngredients().observe(getViewLifecycleOwner(), this::updateIngredientList);
 
         //Initialize UI elements
         EditText groceryIngredient = view.findViewById(R.id.editTextGrocery);
@@ -81,10 +86,6 @@ public class GroceryFragment extends Fragment {
                 Ingredient newIngredient = new Ingredient(ingredientName, "", 1);
                 ingredientViewModel.insertTaggedIngredient(newIngredient, RecipeDatabase.GROCERY_TAG);
                 groceryIngredient.setText(""); // Clear the EditText
-
-                // Fetch the updated list of ingredients and update the UI
-                ingredientViewModel.getGroceryIngredients().getValue().add(newIngredient);
-                updateIngredientList(ingredientViewModel.getGroceryIngredients().getValue());
             }
             else {
                 Snackbar.make(v, "Nothing added", Snackbar.LENGTH_SHORT).show();}

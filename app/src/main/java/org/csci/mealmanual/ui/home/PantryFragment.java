@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -53,6 +54,13 @@ public class PantryFragment extends Fragment {
         //Initialize the repository within the ViewModel
         ingredientViewModel = new ViewModelProvider(this).get(IngredientViewModel.class);
         ingredientViewModel.initRepository(context);
+
+        // Observe changes in the list of ingredients
+        final Observer<List<Ingredient>> observer = ingredients -> {
+            updateIngredientList(ingredients);
+        };
+        ingredientViewModel.getPantryData().observe(this, observer);
+        ingredientViewModel.updatePantryData();
     }
     @Nullable
     @Override
@@ -65,12 +73,6 @@ public class PantryFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        //initialize view model
-        ingredientViewModel = new ViewModelProvider(this).get(IngredientViewModel.class);
-
-        // Observe changes in the list of ingredients
-        ingredientViewModel.getPantryIngredients().observe(getViewLifecycleOwner(), this::updateIngredientList);
 
         //Initialize UI elements
         EditText editTextIngredientName = view.findViewById(R.id.editTextIngredientName);
@@ -88,10 +90,6 @@ public class PantryFragment extends Fragment {
                 Ingredient newIngredient = new Ingredient(ingredientName, "", 1);
                 ingredientViewModel.insertTaggedIngredient(newIngredient, RecipeDatabase.PANTRY_TAG);
                 editTextIngredientName.setText(""); // Clear the EditText
-
-                // Fetch the updated list of ingredients and update the UI
-                ingredientViewModel.getPantryIngredients().getValue().add(newIngredient);
-                updateIngredientList(ingredientViewModel.getPantryIngredients().getValue());
             }
             else {Snackbar.make(v, "Nothing added", Snackbar.LENGTH_SHORT).show();}
             addIngredientsLayout.setVisibility(View.GONE);

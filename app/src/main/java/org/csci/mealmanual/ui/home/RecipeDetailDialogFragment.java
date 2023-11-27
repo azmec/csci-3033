@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.csci.mealmanual.R;
 import org.csci.mealmanual.database.DomainRecipe;
 import org.csci.mealmanual.database.RecipeDatabase;
@@ -66,11 +68,15 @@ public class RecipeDetailDialogFragment extends DialogFragment {
             List<Tag> recipeTags = recipe.getTags();
             for (Tag tag : recipeTags) {
                 if (tag.uid == RecipeDatabase.LIKED_TAG.uid) {
+                    this.recipeViewModel.removeLike(recipe);
+                    Snackbar.make(v, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
             }
 
             this.recipeViewModel.likeRecipe(recipe);
+            Snackbar.make(v, "Added Favorite", Snackbar.LENGTH_SHORT).show();
+
         });
 
         return builder.create();

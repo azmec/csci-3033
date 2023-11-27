@@ -3,13 +3,16 @@ package org.csci.mealmanual.ui.home;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -27,6 +30,11 @@ public class RecipeDetailDialogFragment extends DialogFragment {
     private ImageButton likeButton;
     private RecipeViewModel recipeViewModel;
 
+    private Fragment parentFragment;
+
+    private boolean alreadyLiked;
+    private boolean firstClick;
+
     public static RecipeDetailDialogFragment newInstance(DomainRecipe recipe) {
         RecipeDetailDialogFragment fragment = new RecipeDetailDialogFragment();
         Bundle args = new Bundle();
@@ -42,6 +50,8 @@ public class RecipeDetailDialogFragment extends DialogFragment {
         recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
         recipeViewModel.initRepository(context);
 
+        alreadyLiked = false;
+        firstClick = true;
 
         if (getArguments() != null) {
             recipe = (DomainRecipe) getArguments().getSerializable(ARG_RECIPE);
@@ -59,7 +69,10 @@ public class RecipeDetailDialogFragment extends DialogFragment {
         recipeDescription.setText(recipe.getDescription());
 
         // User closes the dialog
-        builder.setView(view).setPositiveButton("Close", (dialog, id) -> {});
+        builder.setView(view).setPositiveButton("Close", (dialog, id) -> {
+            dialog.dismiss();
+        });
+
 
         // If the button is clicked, add the recipe to the "Liked" recipes.
         likeButton.setOnClickListener(v -> {
@@ -67,18 +80,59 @@ public class RecipeDetailDialogFragment extends DialogFragment {
             // TODO: Cache whether this is liked or not in the recipe itself.
             List<Tag> recipeTags = recipe.getTags();
             for (Tag tag : recipeTags) {
-                if (tag.uid == RecipeDatabase.LIKED_TAG.uid) {
+                if (tag.uid == RecipeDatabase.LIKED_TAG.uid && firstClick) {
                     this.recipeViewModel.removeLike(recipe);
                     Snackbar.make(v, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
+
+                    firstClick = false;
+                    return;
+                } else if (tag.uid == RecipeDatabase.LIKED_TAG.uid) {
+                    if (alreadyLiked) {
+                        this.recipeViewModel.removeLike(recipe);
+                        alreadyLiked = false;
+
+                        Snackbar.make(v, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
+                    } else {
+                        this.recipeViewModel.likeRecipe(recipe);
+                        alreadyLiked = true;
+                        Snackbar.make(v, "Added Favorite", Snackbar.LENGTH_SHORT).show();
+                    }
+
                     return;
                 }
             }
 
-            this.recipeViewModel.likeRecipe(recipe);
-            Snackbar.make(v, "Added Favorite", Snackbar.LENGTH_SHORT).show();
+            // It is possible we've already liked this recipe w/o closing the dialogue. This means
+            // the in-memory `domainRecipe`'s tags do not reflect those in the database, so the
+            // the above check will fail. This internal boolean will prevent us from double-liking
+            // the recipe in this case.
+            if (alreadyLiked) {
+                this.recipeViewModel.removeLike(recipe);
+                alreadyLiked = false;
 
+                Snackbar.make(v, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
+            } else {
+                this.recipeViewModel.likeRecipe(recipe);
+                alreadyLiked = true;
+                Snackbar.make(v, "Added Favorite", Snackbar.LENGTH_SHORT).show();
+            }
+
+            firstClick = false;
         });
 
         return builder.create();
+    }
+
+    public void setParentFragment(Fragment fragment) {
+        this.parentFragment = fragment;
+    }
+
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+
+        if (this.parentFragment instanceof DialogInterface.OnDismissListener) {
+            ((DialogInterface.OnDismissListener) parentFragment).onDismiss(dialog);
+        }
     }
 }

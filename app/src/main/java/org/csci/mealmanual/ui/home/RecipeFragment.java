@@ -1,6 +1,7 @@
 package org.csci.mealmanual.ui.home;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,7 @@ import org.csci.mealmanual.database.repo.RecipeRepository;
 
 import java.util.ArrayList;
 
-public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickListener {
+public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickListener, DialogInterface.OnDismissListener {
 
     private RecipeViewModel recipeViewModel;
     private RecipeRepository recipeRepository;
@@ -51,7 +52,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickL
         recyclerView = view.findViewById(R.id.recipeRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        recipeViewModel.getAllRecipes().observe(getViewLifecycleOwner(), recipes -> {
+        recipeViewModel.getRecipeData().observe(getViewLifecycleOwner(), recipes -> {
             recipeList = new ArrayList<>(recipes);
             recipeAdapter = new RecipeAdapter(getContext(), recipeList);
             recipeAdapter.setClickListener(this); // Set the click listener
@@ -65,6 +66,12 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickL
     public void onItemClick(View view, DomainRecipe recipe) {
         // Handle the click event here
         RecipeDetailDialogFragment dialogFragment = RecipeDetailDialogFragment.newInstance(recipe);
+        dialogFragment.setParentFragment(this);
         dialogFragment.show(getParentFragmentManager(), "recipe_details");
+    }
+
+    @Override
+    public void onDismiss(final DialogInterface dialogInterface) {
+        this.recipeViewModel.updateRecipeData();
     }
 }

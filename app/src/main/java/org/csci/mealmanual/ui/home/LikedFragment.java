@@ -1,6 +1,7 @@
 package org.csci.mealmanual.ui.home;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,7 @@ import org.csci.mealmanual.database.DomainRecipe;
 
 import java.util.ArrayList;
 
-public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickListener {
+public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickListener, DialogInterface.OnDismissListener {
     private ArrayList<DomainRecipe> likedList;
     private RecipeViewModel recipeViewModel;
     private RecipeAdapter recipeAdapter;
@@ -60,7 +61,7 @@ public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickLi
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Set up the ViewModel and observe liked recipes
-        recipeViewModel.getLikedRecipes().observe(getViewLifecycleOwner(), likedRecipes -> {
+        recipeViewModel.getLikedRecipeData().observe(getViewLifecycleOwner(), likedRecipes -> {
             // Update the adapter when data changes
             likedList = new ArrayList<>(likedRecipes);
             recipeAdapter = new RecipeAdapter(getContext(), likedList);
@@ -74,6 +75,12 @@ public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickLi
     public void onItemClick(View view, DomainRecipe recipe) {
         // Handle the click event here
         RecipeDetailDialogFragment dialogFragment = RecipeDetailDialogFragment.newInstance(recipe);
+        dialogFragment.setParentFragment(this);
         dialogFragment.show(getParentFragmentManager(), "recipe_details");
+    }
+
+    @Override
+    public void onDismiss(final DialogInterface dialogInterface) {
+        this.recipeViewModel.updateLikedRecipeData();
     }
 }

@@ -21,7 +21,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class RecipeViewModel extends ViewModel {
     private RecipeRepository recipeRepository;
     private RecipeTagJoinRepository recipeTagJoinRepository;
-    private LiveData<List<DomainRecipe>> allRecipes;
+
+    private MutableLiveData<List<DomainRecipe>> recipes;
     private MutableLiveData<List<DomainRecipe>> likedRecipes;
 
     /**
@@ -38,12 +39,10 @@ public class RecipeViewModel extends ViewModel {
         recipeRepository = new RecipeRepository(context);
         recipeTagJoinRepository = new RecipeTagJoinRepository(context);
 
-        allRecipes = LiveDataReactiveStreams.fromPublisher(
-                this.recipeRepository.getAll()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .toFlowable()
-        );
+        this.recipes = new MutableLiveData<>();
+        this.likedRecipes = new MutableLiveData<>();
+
+        this.updateRecipeData();
     }
 
     /**
@@ -55,16 +54,28 @@ public class RecipeViewModel extends ViewModel {
         this.recipeRepository = new RecipeRepository(context);
         this.recipeTagJoinRepository = new RecipeTagJoinRepository(context);
 
-        allRecipes = LiveDataReactiveStreams.fromPublisher(
-                this.recipeRepository.getAll()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .toFlowable()
-        );
+        this.recipes = new MutableLiveData<>();
+        this.likedRecipes = new MutableLiveData<>();
+
+        this.updateRecipeData();
+        this.updateLikedRecipeData();
     }
 
-    public LiveData<List<DomainRecipe>> getAllRecipes() {
-        return allRecipes;
+    public LiveData<List<DomainRecipe>> getRecipeData() {
+        return this.recipes;
+    }
+
+    public LiveData<List<DomainRecipe>> getLikedRecipeData() {
+        return this.likedRecipes;
+    }
+
+    public void updateRecipeData() {
+        this.recipeRepository.getAll()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(recipeList -> {
+                    this.recipes.setValue(recipeList);
+                });
     }
 
     public void likeRecipe(DomainRecipe recipe) {
@@ -82,16 +93,12 @@ public class RecipeViewModel extends ViewModel {
 
     /** Getting all recipes with the liked tag
      * */
-    public LiveData<List<DomainRecipe>> getLikedRecipes() {
-        if (likedRecipes == null) {
-            likedRecipes = new MutableLiveData<>();
-        }
-        recipeRepository.getRecipesWithTag(RecipeDatabase.LIKED_TAG)
+    public void updateLikedRecipeData() {
+        this.recipeRepository.getRecipesWithTag(RecipeDatabase.LIKED_TAG)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ingredients -> {
-                    likedRecipes.setValue(ingredients);
+                .subscribe(recipeList -> {
+                    this.likedRecipes.setValue(recipeList);
                 });
-        return likedRecipes;
     }
 }

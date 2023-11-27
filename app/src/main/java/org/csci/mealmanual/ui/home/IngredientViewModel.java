@@ -12,25 +12,12 @@ import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.Tag;
 import org.csci.mealmanual.database.repo.IngredientRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class IngredientViewModel extends ViewModel {
-    /**OLD can remove after linking groceryList to repo
-     * */
-    private List<String> data;
-    public List<String> getData() {
-        if (data == null) {
-            data = new ArrayList<String>();
-        }
-        return data;
-    }
-    public void setData(List<String> newData) {
-        data = newData;
-    }
 
     /** TODO: Link grocery list to be able to send to pantry
      * NOTE: Delete the relations between ingredients and the grocery and add corresponding
@@ -40,6 +27,7 @@ public class IngredientViewModel extends ViewModel {
     private IngredientRepository ingredientRepository;
     private LiveData<List<Ingredient>> allIngredients;
     private MutableLiveData<List<Ingredient>> pantryIngredients;
+    private MutableLiveData<List<Ingredient>> groceryIngredients;
 
     public IngredientViewModel() {}
 
@@ -71,27 +59,36 @@ public class IngredientViewModel extends ViewModel {
                 .subscribe();
     }
 
+    public LiveData<List<Ingredient>> getGroceryIngredients(){
+        if(groceryIngredients == null){
+            groceryIngredients = new MutableLiveData<>();
+        }
+        ingredientRepository.getIngredientsWithTag(RecipeDatabase.GROCERY_TAG)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ingredients -> {
+                    groceryIngredients.setValue(ingredients);
+                });
+
+        return groceryIngredients;
+    }
     public LiveData<List<Ingredient>> getPantryIngredients() {
         if (pantryIngredients == null) {
             pantryIngredients = new MutableLiveData<>();
-            fetchPantryIngredients();
         }
-        return pantryIngredients;
-    }
-    public void  fetchPantryIngredients() {
         ingredientRepository.getIngredientsWithTag(RecipeDatabase.PANTRY_TAG)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ingredients -> {
                     pantryIngredients.setValue(ingredients);
                 });
+        return pantryIngredients;
     }
 
     public void removeSelectedIngredients(List<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
             ingredientRepository.delete(ingredient);
         }
-        fetchPantryIngredients(); // Fetch the updated list
     }
 
 }

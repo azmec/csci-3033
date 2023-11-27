@@ -106,14 +106,24 @@ public class IngredientViewModel extends ViewModel {
     }
 
     public void transferToPantry(List<Ingredient> ingredients){
-        //change tags from grocery to pantry for each ingredient
+        // Change tags from grocery to pantry for each ingredient.
+        // TODO: Ideally, we compress all these asyncs to a single `Completable` and subscribe only
+        // to that, but having a callback for each individual meme works too.
         for(Ingredient ingredient: ingredients){
             ingredientRepository.removeTagFromIngredient(ingredient, RecipeDatabase.GROCERY_TAG)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe();
-            ingredientRepository.addTagToIngredient(ingredient, RecipeDatabase.PANTRY_TAG).
-                    subscribeOn(Schedulers.io()).subscribe();
+                    .subscribe(() -> {
+                        this.updatePantryData();
+                        this.updateGroceryData();
+                    });
+            ingredientRepository.addTagToIngredient(ingredient, RecipeDatabase.PANTRY_TAG)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(indices -> {
+                        this.updatePantryData();
+                        this.updateGroceryData();
+                    });
         }
     }
 }

@@ -95,8 +95,6 @@ public class GroceryFragment extends Fragment {
         buttonTransfer.setOnClickListener(v->{
             ingredientViewModel.transferToPantry(selectedIngredients);
             selectedIngredients.clear();
-
-            updateIngredientList(ingredientViewModel.getGroceryIngredients().getValue());
         });
 
         /** Toggle view window to 'add' */
@@ -113,8 +111,6 @@ public class GroceryFragment extends Fragment {
         buttonRemoveIngredient.setOnClickListener(v->{
             ingredientViewModel.removeSelectedIngredients(selectedIngredients);
             selectedIngredients.clear();
-
-            updateIngredientList(ingredientViewModel.getGroceryIngredients().getValue());
         });
     }
 

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Button;
 import androidx.annotation.NonNull;
@@ -37,6 +38,12 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.provider.MediaStore;
+import android.net.Uri;
+import android.app.AlertDialog;
+
 public class AddFragment extends Fragment {
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
@@ -44,6 +51,10 @@ public class AddFragment extends Fragment {
     private final RecipeIngredientJoinRepository recipeIngredientJoinRepository;
     private final RecipeTagJoinRepository recipeTagJoinRepository;
 
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_PICK_IMAGE = 2;
+
+    Uri imageRecipe;
     @Override
     public void onResume() {
         super.onResume();
@@ -92,10 +103,18 @@ public class AddFragment extends Fragment {
         Button addIngredientButton = view.findViewById(R.id.buttonAddIngredient);
         Button addTagButton = view.findViewById(R.id.buttonAddTag);
         Button submitButton = view.findViewById(R.id.buttonSubmit);
+        ImageButton cameraButton = view.findViewById(R.id.cameraAddButton);
         List<EditText> listTag = new ArrayList<EditText>();
         List<EditText> listIngredientName = new ArrayList<EditText>();
         List<EditText> listQuantity = new ArrayList<EditText>();
         List<LinearLayout> listLayoutIngredients = new ArrayList<LinearLayout>();
+
+        cameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseCameraOrCameraRollPopup();
+            }
+        });
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -253,5 +272,48 @@ public class AddFragment extends Fragment {
                 }
             }
         });
+    }
+    private void chooseCameraOrCameraRollPopup() {
+        String[] options = {"Take Photo", "Choose from Gallery"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        builder.setTitle("Choose an option");
+        builder.setItems(options, (dialog, which) -> {
+            switch (which) {
+                case 0:
+                    takePictureIntent();
+                    break;
+                case 1:
+                    cameraRollIntent();
+                    break;
+            }
+        });
+
+        builder.show();
+    }
+
+    private void takePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    private void cameraRollIntent() {
+        Intent pickImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(pickImageIntent, REQUEST_PICK_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                imageRecipe = data.getData();
+            } else if (requestCode == REQUEST_PICK_IMAGE) {
+                if (data != null && data.getData() != null) {
+                    imageRecipe = data.getData();
+                }
+            }
+        }
     }
 }

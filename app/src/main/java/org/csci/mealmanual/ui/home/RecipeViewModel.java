@@ -75,6 +75,11 @@ public class RecipeViewModel extends ViewModel {
                 .subscribe();
     }
 
+    public void removeLike(DomainRecipe recipe){
+        RecipeTagJoin relation = new RecipeTagJoin(recipe.getID(), RecipeDatabase.LIKED_TAG.uid);
+        this.recipeTagJoinRepository.delete(relation);
+    }
+
     /** Getting all recipes with the liked tag
      * */
     public LiveData<List<DomainRecipe>> getLikedRecipes() {

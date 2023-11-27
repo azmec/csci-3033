@@ -19,7 +19,7 @@ import org.csci.mealmanual.database.DomainRecipe;
 
 import java.util.ArrayList;
 
-public class LikedFragment extends Fragment {
+public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickListener {
     private ArrayList<DomainRecipe> likedList;
     private RecipeViewModel recipeViewModel;
     private RecipeAdapter recipeAdapter;
@@ -41,7 +41,6 @@ public class LikedFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Context context = getContext();
 
         // Initialize the view model.
@@ -52,7 +51,8 @@ public class LikedFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,@Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.liked_fragment, container, false);
 
         // Initialize RecyclerView and Adapter
@@ -64,16 +64,16 @@ public class LikedFragment extends Fragment {
             // Update the adapter when data changes
             likedList = new ArrayList<>(likedRecipes);
             recipeAdapter = new RecipeAdapter(getContext(), likedList);
+            recipeAdapter.setClickListener(this);
             recyclerView.setAdapter(recipeAdapter);
         });
 
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        // Initialize your UI components here, for example:
+    public void onItemClick(View view, DomainRecipe recipe) {
+        // Handle the click event here
+        RecipeDetailDialogFragment dialogFragment = RecipeDetailDialogFragment.newInstance(recipe);
+        dialogFragment.show(getParentFragmentManager(), "recipe_details");
     }
 }

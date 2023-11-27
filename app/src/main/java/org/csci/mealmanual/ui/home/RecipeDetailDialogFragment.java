@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import org.csci.mealmanual.R;
 import org.csci.mealmanual.database.DomainRecipe;
 import org.csci.mealmanual.database.RecipeDatabase;
@@ -56,10 +58,8 @@ public class RecipeDetailDialogFragment extends DialogFragment {
         recipeName.setText(recipe.getName());
         recipeDescription.setText(recipe.getDescription());
 
-        builder.setView(view)
-                .setPositiveButton("Close", (dialog, id) -> {
-                    // User closes the dialog
-                });
+        // User closes the dialog
+        builder.setView(view).setPositiveButton("Close", (dialog, id) -> {});
 
         // If the button is clicked, add the recipe to the "Liked" recipes.
         likeButton.setOnClickListener(v -> {
@@ -68,11 +68,15 @@ public class RecipeDetailDialogFragment extends DialogFragment {
             List<Tag> recipeTags = recipe.getTags();
             for (Tag tag : recipeTags) {
                 if (tag.uid == RecipeDatabase.LIKED_TAG.uid) {
+                    this.recipeViewModel.removeLike(recipe);
+                    Snackbar.make(v, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
                     return;
                 }
             }
 
             this.recipeViewModel.likeRecipe(recipe);
+            Snackbar.make(v, "Added Favorite", Snackbar.LENGTH_SHORT).show();
+
         });
 
         return builder.create();

@@ -22,7 +22,8 @@
          android:layout_height="wrap_content"
          android:text="Shopping Cart"
          android:textStyle="bold"
-         android:textSize="26sp"
+         android:textSize="30sp"
+         android:textColor="#054908"
          android:layout_gravity="center_horizontal"
          android:paddingTop="5dp"/>
 
@@ -31,7 +32,8 @@
          android:layout_width="match_parent"
          android:layout_height="0dp"
          android:layout_weight="1"
-         android:padding="16dp">
+         android:padding="16dp"
+         android:background="@drawable/roundedrecipecorner">
 
          <LinearLayout
              android:id="@+id/ingredientsDisplayLayout"

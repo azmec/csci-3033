@@ -161,8 +161,7 @@ public class RecipeRepository {
 	public Single<List<DomainRecipe>> getAll() {
 		Single<List<Recipe>> localRecipes = this.recipeDao.getAll();
 		Single<List<Recipe>> cachedRecipes = this.cacheRecipeDao.getAll();
-		//Single<List<Recipe>> webRecipes = getRandomRecipe(5);
-		Single<List<Recipe>> webRecipes = Single.just(new ArrayList<>());
+		Single<List<Recipe>> webRecipes = getRandomRecipe(5);
 
 		// When all of the above computations complete, compose their results
 		// into a single list of recipes.

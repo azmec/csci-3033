@@ -5,6 +5,7 @@ import org.csci.mealmanual.database.model.Recipe;
 import org.csci.mealmanual.database.model.Tag;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,11 +33,11 @@ public class DomainRecipe implements Serializable {
     /**
      * The tags associated with the recipe.
      */
-    private List<Tag> tags;
+    private final List<Tag> tags;
     /**
      * The ingredients in the recipe.
      */
-    private List<Ingredient> ingredients;
+    private final List<Ingredient> ingredients;
 
     /**
      * Construct a new, initialized recipe.
@@ -62,6 +63,9 @@ public class DomainRecipe implements Serializable {
         this.name = recipe.name;
         this.description = recipe.description;
         this.imageURI = recipe.imageUrl;
+
+        this.tags = new ArrayList<>();
+        this.ingredients = new ArrayList<>();
     }
 
     public long getID() {

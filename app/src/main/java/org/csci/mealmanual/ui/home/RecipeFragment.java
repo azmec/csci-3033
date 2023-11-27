@@ -52,11 +52,15 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickL
         recyclerView = view.findViewById(R.id.recipeRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        Context context = getContext();
+        recipeAdapter = new RecipeAdapter(context, new ArrayList<>());
+        recyclerView.setAdapter(recipeAdapter);
+
         recipeViewModel.getRecipeData().observe(getViewLifecycleOwner(), recipes -> {
             recipeList = new ArrayList<>(recipes);
-            recipeAdapter = new RecipeAdapter(getContext(), recipeList);
+            recipeAdapter.setRecipeList(recipeList);
             recipeAdapter.setClickListener(this); // Set the click listener
-            recyclerView.setAdapter(recipeAdapter);
+            recipeAdapter.notifyDataSetChanged();
         });
 
         return view;

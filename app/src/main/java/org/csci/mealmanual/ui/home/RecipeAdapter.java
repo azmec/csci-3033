@@ -17,7 +17,7 @@ import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
-    private final List<DomainRecipe> recipeList;
+    private List<DomainRecipe> recipeList;
     private final LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
@@ -55,6 +55,10 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return recipeList.size();
+    }
+
+    public void setRecipeList(List<DomainRecipe> recipes) {
+        this.recipeList = recipes;
     }
 
     // stores and recycles views as they are scrolled off screen

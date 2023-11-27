@@ -52,13 +52,14 @@ public class IngredientViewModel extends ViewModel {
                         .toFlowable()
         );
     }
+    public LiveData<List<Ingredient>> getAllIngredients(){return allIngredients;}
+
     public void insertTaggedIngredient(Ingredient ingredient, Tag... tags){
         ingredientRepository.addTaggedIngredient(ingredient, tags)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }
-
     public LiveData<List<Ingredient>> getGroceryIngredients(){
         if(groceryIngredients == null){
             groceryIngredients = new MutableLiveData<>();
@@ -91,5 +92,11 @@ public class IngredientViewModel extends ViewModel {
         }
     }
 
+    public void transferToPantry(List<Ingredient> ingredients){
+        //change tags from grocery to pantry for each ingredient
+        for(Ingredient ingredient: ingredients){
+            ingredientRepository.removeTagFromIngredient(ingredient, RecipeDatabase.GROCERY_TAG);
+            ingredientRepository.addTagToIngredient(ingredient, RecipeDatabase.PANTRY_TAG);
+        }
+    }
 }
-

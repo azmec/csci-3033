@@ -111,6 +111,8 @@ public class PantryFragment extends Fragment {
         buttonRemoveIngredient.setOnClickListener(v -> {
             ingredientViewModel.removeSelectedIngredients(selectedIngredients);
             selectedIngredients.clear(); // Clear the selection list
+
+            updateIngredientList(ingredientViewModel.getPantryIngredients().getValue());
         });
     }
 

@@ -121,7 +121,7 @@ public class PantryFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
         for (Ingredient ingredient : ingredients) {
-            View itemView = inflater.inflate(R.layout.select_pantry_list, ingredientsDisplayLayout, false);
+            View itemView = inflater.inflate(R.layout.select_ingredient_list, ingredientsDisplayLayout, false);
             CheckBox checkBox = itemView.findViewById(R.id.checkBoxIngredient);
             TextView textView = itemView.findViewById(R.id.textViewIngredient);
 

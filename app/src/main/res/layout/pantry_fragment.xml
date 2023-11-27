@@ -41,6 +41,30 @@
         </LinearLayout>
     </ScrollView>
 
+    <!-- Buttons at the bottom -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="5dp">
+
+        <!-- Button to Add Ingredients to Pantry -->
+        <Button
+            android:id="@+id/buttonAddToPantry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:text="Add Ingredient" />
+
+        <!-- Button to remove selected Ingredients -->
+        <Button
+            android:id="@+id/buttonRemove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Remove Selected" />
+    </LinearLayout>
+
     <!-- Add Ingredients Layout -->
     <LinearLayout
         android:id="@+id/addIngredientsLayout"
@@ -57,36 +81,10 @@
             android:hint="Ingredient Name"
             android:inputType="text" />
 
-        <!-- Add more fields if needed, like quantity, etc. -->
-
         <Button
             android:id="@+id/buttonSaveIngredient"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Save Ingredient" />
-    </LinearLayout>
-
-    <!-- Buttons at the bottom -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:padding="16dp">
-
-        <!-- Button to Add Ingredients to Pantry -->
-        <Button
-            android:id="@+id/buttonAddToPantry"
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="Add Ingredient" />
-
-        <!-- Button to remove selected Ingredients -->
-        <Button
-            android:id="@+id/buttonRemove"
-            android:layout_width="175dp"
-            android:layout_height="wrap_content"
-            android:text="Remove Selected Items" />
     </LinearLayout>
 </LinearLayout>

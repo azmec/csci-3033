@@ -1,31 +1,35 @@
 package org.csci.mealmanual.ui.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.SearchView;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.csci.mealmanual.R;
+import org.csci.mealmanual.database.RecipeDatabase;
+import org.csci.mealmanual.database.model.Ingredient;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroceryFragment extends Fragment {
-    GroceryViewModel groceryViewModel;
+    IngredientViewModel ingredientViewModel;
+    private ArrayList<Ingredient> selectedIngredients = new ArrayList<>();
+
     @Override
     public void onResume() {
         super.onResume();
@@ -36,156 +40,100 @@ public class GroceryFragment extends Fragment {
         super.onStop();
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
-    private RecyclerView groceryRecyclerView;
-    private SearchView grocerySearchView;
-    private MaterialButton addGroceryButton;
-    private MaterialButton finalizeAddGroceryButton;
-    private MaterialButton pantryTransferButton;
-    private Spinner categorySpinner;  // New Spinner for category selection
 
-    private GroceryAdapter groceryAdapter;
-    private List<String> groceryList; // Replace String with your Grocery model if you have one
-
-    public GroceryFragment() {
-        // Required empty public constructor
-    }
+    /** Required empty public constructor */
+    public GroceryFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        groceryViewModel = new ViewModelProvider(requireActivity()).get(GroceryViewModel.class);
+        Context context = getContext();
+        //Initialize the repository within the ViewModel
+        ingredientViewModel = new ViewModelProvider(requireActivity()).get(IngredientViewModel.class);
+        ingredientViewModel.initRepository(context);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.grocery_fragment, container, false);
-        EditText editGroceryName = view.findViewById(R.id.editTextGroceryName);
+        return inflater.inflate(R.layout.grocery_fragment, container, false);
+    }
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+
+        // Observe changes in the list of ingredients
+        ingredientViewModel.getGroceryIngredients().observe(getViewLifecycleOwner(), this::updateIngredientList);
+
+        //Initialize UI elements
+        EditText groceryIngredient = view.findViewById(R.id.editTextGrocery);
         LinearLayout addGroceriesLayout = view.findViewById(R.id.addGroceriesLayout);
 
-        //categorySpinner = view.findViewById(R.id.categorySpinner);  // Initialize Spinner
-        //grocerySearchView = view.findViewById(R.id.grocerySearchView);
+        Button buttonTransfer = view.findViewById(R.id.buttonTransferToPantry);
+        Button buttonAddToGrocery = view.findViewById(R.id.buttonAddGroceries);
+        Button buttonSaveIngredient = view.findViewById(R.id.buttonSaveGroceries);
+        Button buttonRemoveIngredient = view.findViewById(R.id.buttonRemove);
 
-        groceryRecyclerView = view.findViewById(R.id.groceryRecyclerView);
-        addGroceryButton = view.findViewById(R.id.buttonAddGroceries);
-        finalizeAddGroceryButton = view.findViewById(R.id.buttonFinalizeAddGroceries);
-        pantryTransferButton = view.findViewById(R.id.buttonTransferToPantry);
+        buttonSaveIngredient.setOnClickListener(v->{
+            String ingredientName = groceryIngredient.getText().toString();
 
-        // Initialize grocery list
-        groceryList = new ArrayList<>(); // Populate this list with your data
-        groceryList = groceryViewModel.getData();
+            if (!ingredientName.isEmpty()) {
+                Ingredient newIngredient = new Ingredient(ingredientName, "", 1);
+                ingredientViewModel.insertTaggedIngredient(newIngredient, RecipeDatabase.GROCERY_TAG);
+                groceryIngredient.setText(""); // Clear the EditText
 
-        // Setup RecyclerView and Adapter
-        groceryAdapter = new GroceryAdapter(groceryList);
-        groceryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        groceryRecyclerView.setAdapter(groceryAdapter);
-
-        // Initialize Spinner with categories
-/*        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.grocery_categories, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(adapter);*/
-
-       /* categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // Filter grocery list by selected category
-                // You can call a function to update the RecyclerView based on the selected category
+                // Fetch the updated list of ingredients and update the UI
+                ingredientViewModel.getGroceryIngredients().getValue().add(newIngredient);
+                updateIngredientList(ingredientViewModel.getGroceryIngredients().getValue());
             }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Do nothing here
-            }
-        });*/
-
-        // Setup SearchView
-        /*
-        grocerySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                // Handle search submit
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Handle text change
-                return false;
-            }
+            else {
+                Snackbar.make(v, "Nothing added", Snackbar.LENGTH_SHORT).show();}
+            addGroceriesLayout.setVisibility(View.GONE);
         });
-        */
-        // Setup FloatingActionButton
-        addGroceryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle add grocery
-                // For example, open a dialog to add a new grocery item
-                addGroceriesLayout.setVisibility(View.VISIBLE);
 
-            }
+        buttonTransfer.setOnClickListener(v->{
+
         });
-        finalizeAddGroceryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Retrieve the grocery from EditText
-                String grocery = editGroceryName.getText().toString();
-                //Add to GroceryList list
-                groceryList.add(grocery);
-                //Update the view model
-                groceryViewModel.setData(groceryList);
 
-                //Add the grocery to the recycler view and then disable the visibility
-                editGroceryName.setText("");
+        /** Toggle view window to 'add' */
+        buttonAddToGrocery.setOnClickListener(v -> {
+            if (addGroceriesLayout.getVisibility() == View.VISIBLE) {
+                // If already visible, hide it
                 addGroceriesLayout.setVisibility(View.GONE);
+            } else {
+                // If not visible, make it visible
+                addGroceriesLayout.setVisibility(View.VISIBLE);
             }
         });
-        pantryTransferButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Import the pantry view model to be updated
-                IngredientViewModel ingredientViewModel =  new ViewModelProvider(requireActivity()).get(IngredientViewModel.class);
-                //Updated pantry with groceries
-                List<String> newPantry = ingredientViewModel.getData();
-                //Groceries to be transferred
-                List<String> toBeTransferred = groceryViewModel.getData();
 
-                //Transfer groceries to the pantry
-                for(int i = 0; i < toBeTransferred.size(); i++){
-                    newPantry.add(toBeTransferred.get(i));
+        buttonRemoveIngredient.setOnClickListener(v->{
+            ingredientViewModel.removeSelectedIngredients(selectedIngredients);
+            selectedIngredients.clear();
+        });
+    }
+
+    private void updateIngredientList(List<Ingredient> ingredients) {
+        LinearLayout ingredientsDisplayLayout = getView().findViewById(R.id.ingredientsDisplayLayout);
+        ingredientsDisplayLayout.removeAllViews();
+
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        for (Ingredient ingredient: ingredients){
+            View itemView = inflater.inflate(R.layout.select_ingredient_list, ingredientsDisplayLayout, false);
+            CheckBox checkBox = itemView.findViewById(R.id.checkBoxIngredient);
+            TextView textView = itemView.findViewById(R.id.textViewIngredient);
+
+            textView.setText(ingredient.name); // Display the name of the ingredient
+
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    selectedIngredients.add(ingredient);
+                } else {
+                    selectedIngredients.remove(ingredient);
                 }
+            });
 
-                //Update the pantry to include these groceries
-                ingredientViewModel.setData(newPantry);
-
-                // Show the confirmation dialog
-                ConfirmTransferDialogFragment dialogFragment = new ConfirmTransferDialogFragment();
-                dialogFragment.show(getParentFragmentManager(), "ConfirmTransferDialog");
-                /*MaterialButton buttonKeep = view.findViewById(R.id.buttonKeep);
-                MaterialButton buttonClear = view.findViewById(R.id.buttonClear);
-                buttonKeep.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // User wants to keep the groceries, handle the action
-                        dialogFragment.dismiss(); // Close the dialog
-                    }
-                });
-
-                buttonClear.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // User wants to clear the groceries, handle the action
-                        List<String> emptyList = new ArrayList<String>();
-                        groceryViewModel.setData(emptyList);
-                        dialogFragment.dismiss(); // Close the dialog
-                    }
-                });*/
-
-            }
-        });
-        //
-        return view;
-
+            ingredientsDisplayLayout.addView(itemView);
+        }
     }
 }

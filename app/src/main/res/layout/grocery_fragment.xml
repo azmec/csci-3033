@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar3"
         android:layout_width="match_parent"
@@ -14,6 +15,7 @@
         app:subtitle="Grocery"
         app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Large"
         app:subtitleTextColor="#FFFFFF" />
+
      <TextView
          android:id="@+id/textViewTitle"
          android:layout_width="wrap_content"
@@ -24,19 +26,21 @@
          android:layout_gravity="center_horizontal"
          android:paddingTop="5dp"/>
 
-    <!-- SearchView for Groceries -->
-    <androidx.appcompat.widget.SearchView
-     android:id="@+id/grocerySearchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:queryHint="Search for groceries" />
+     <!-- ScrollView for displaying ingredients -->
+     <ScrollView
+         android:layout_width="match_parent"
+         android:layout_height="0dp"
+         android:layout_weight="1"
+         android:padding="16dp">
 
-    <!-- RecyclerView for Groceries -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/groceryRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+         <LinearLayout
+             android:id="@+id/ingredientsDisplayLayout"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="vertical">
+             <!-- This will dynamically display the list of current ingredients. -->
+         </LinearLayout>
+     </ScrollView>
 
     <!-- Buttons at the bottom -->
     <LinearLayout
@@ -44,7 +48,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:padding="16dp">
+        android:padding="5dp">
 
         <!-- Button to Add Groceries -->
         <Button
@@ -55,6 +59,15 @@
             android:layout_marginEnd="5dp"
             android:text="Add Groceries" />
 
+        <!-- Button to Remove Ingredients -->
+        <Button
+            android:id="@+id/buttonRemove"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="Remove Selected" />
+
         <!-- Button to Transfer to Pantry -->
         <Button
             android:id="@+id/buttonTransferToPantry"
@@ -62,7 +75,6 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Transfer to Pantry" />
-
     </LinearLayout>
      <!-- Add Groceries Layout -->
      <LinearLayout
@@ -74,17 +86,17 @@
          android:visibility="gone">
 
          <EditText
-             android:id="@+id/editTextGroceryName"
+             android:id="@+id/editTextGrocery"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:hint="Grocery Name"
              android:inputType="text" />
 
          <Button
-             android:id="@+id/buttonFinalizeAddGroceries"
+             android:id="@+id/buttonSaveGroceries"
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
-             android:text="Add Grocery" />
+             android:text="Save Grocery Item" />
      </LinearLayout>
 </LinearLayout>
 

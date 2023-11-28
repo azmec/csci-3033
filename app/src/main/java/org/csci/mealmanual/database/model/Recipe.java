@@ -51,6 +51,10 @@ public class Recipe implements Serializable {
 		this.description = description;
 	}
 
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("{ id: %d, name: \"%s\", description: \"%s\" }", uid, name, description);

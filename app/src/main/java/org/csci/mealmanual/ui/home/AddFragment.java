@@ -14,6 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.csci.mealmanual.R;
 
@@ -51,6 +58,8 @@ public class AddFragment extends Fragment {
     private final RecipeIngredientJoinRepository recipeIngredientJoinRepository;
     private final RecipeTagJoinRepository recipeTagJoinRepository;
 
+    private static final int REQUEST_CAMERA_PERMISSION = 1;
+
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_PICK_IMAGE = 2;
 
@@ -84,10 +93,36 @@ public class AddFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            // Permission not granted, request it
+            requestCameraPermission();
+        } else {
+            // Permission already granted, proceed with your logic
+            // For example, initialize your camera here
+        }
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.add_fragment, container, false);
     }
 
+    private void requestCameraPermission() {
+        ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            // Check if the permission has been granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, proceed with your logic
+                // For example, initialize your camera here
+            } else {
+                // Permission denied, handle accordingly (e.g., show a message or disable camera functionality)
+            }
+        }
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -203,6 +238,12 @@ public class AddFragment extends Fragment {
                     int ingredientQuantity = Integer.parseInt(quantityEditText.getText().toString());
 
                     Recipe recipe = new Recipe(name, description);
+
+                    if(imageRecipe != null) {
+                        String imageRecipeString = imageRecipe.toString();
+                        recipe.setImageUrl(imageRecipeString);
+                    }
+
                     Ingredient ingredient = new Ingredient(ingredientName, ingredientUnit, ingredientQuantity);
                     ingredientList.add(ingredient);
 
@@ -302,7 +343,14 @@ public class AddFragment extends Fragment {
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                imageRecipe = data.getData();
+                    ContentResolver contentResolver = requireContext().getContentResolver();
+
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.DISPLAY_NAME, "JPEG_" + System.currentTimeMillis() + ".jpg");
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+
+                    // Insert an empty image into the MediaStore, which will return a content URI
+                    imageRecipe = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             } else if (requestCode == REQUEST_PICK_IMAGE) {
                 if (data != null && data.getData() != null) {
                     imageRecipe = data.getData();

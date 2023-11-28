@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null; // Use the generic Fragment type
             int id = item.getItemId();
 

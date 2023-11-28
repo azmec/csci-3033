@@ -304,6 +304,7 @@ public class AddFragment extends Fragment {
                     ingredientEditText.setText("");
                     quantityEditText.setText("");
                     tagEditText.setText("");
+                    imageRecipe = null;
                 }
             }
         });

@@ -55,28 +55,28 @@
         <!-- Button to Add Groceries -->
         <Button
             android:id="@+id/buttonAddGroceries"
-            android:layout_width="1dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="0"
+            android:layout_height="match_parent"
             android:layout_marginEnd="5dp"
-            android:text="Add Groceries" />
+            android:text="Add Item" />
 
         <!-- Button to Remove Ingredients -->
         <Button
             android:id="@+id/buttonRemove"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_weight="4"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
+            android:layout_marginEnd="4dp"
             android:text="Remove Selected" />
 
         <!-- Button to Transfer to Pantry -->
         <Button
             android:id="@+id/buttonTransferToPantry"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_weight="4"
             android:layout_height="wrap_content"
-            android:text="Transfer to Pantry" />
+            android:text="Transfer Selected" />
     </LinearLayout>
      <!-- Add Groceries Layout -->
      <LinearLayout

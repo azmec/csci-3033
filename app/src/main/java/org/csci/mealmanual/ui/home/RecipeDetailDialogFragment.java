@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.csci.mealmanual.R;
 import org.csci.mealmanual.database.DomainRecipe;
 import org.csci.mealmanual.database.RecipeDatabase;
+import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.Tag;
 
 import java.util.List;
@@ -63,10 +64,44 @@ public class RecipeDetailDialogFragment extends DialogFragment {
 
         TextView recipeName = view.findViewById(R.id.popup_recipe_name);
         TextView recipeDescription = view.findViewById(R.id.popup_recipe_description);
+        TextView recipeIngredients = view.findViewById(R.id.popup_recipe_ingredients);
+        TextView recipeTagsLabel = view.findViewById(R.id.popup_recipe_tags);
         likeButton = view.findViewById(R.id.button_like_recipe);
+
+        StringBuilder recipeTagString = new StringBuilder();
+        List<Tag> recipeTagList = recipe.getTags();
+        int numTags = recipeTagList.size();
+        if (numTags > 0) {
+            recipeTagString.append("Tags: ");
+            for (int i = 0; i < numTags - 1; i++) {
+                Tag tag = recipeTagList.get(i);
+                recipeTagString.append(tag.tag);
+                recipeTagString.append(", ");
+            }
+            recipeTagString.append(recipeTagList.get(numTags - 1).tag);
+        } else {
+            recipeTagString.append("No tags are associated.");
+        }
+
+        StringBuilder recipeIngredientString = new StringBuilder();
+        List<Ingredient> recipeIngredientList = recipe.getIngredients();
+        int numIngredients = recipeIngredientList.size();
+        if (numIngredients > 0) {
+            recipeIngredientString.append("Ingredients: ");
+            for (int i = 0; i < numIngredients - 1; i++) {
+                Ingredient ingredient = recipeIngredientList.get(i);
+                recipeIngredientString.append(ingredient.name);
+                recipeIngredientString.append(", ");
+            }
+            recipeIngredientString.append(recipeIngredientList.get(numIngredients - 1).name);
+        } else {
+            recipeIngredientString.append("No ingredients are associated.");
+        }
 
         recipeName.setText(recipe.getName());
         recipeDescription.setText(recipe.getDescription());
+        recipeIngredients.setText(recipeIngredientString);
+        recipeTagsLabel.setText(recipeTagString);
 
         // User closes the dialog
         builder.setView(view).setPositiveButton("Close", (dialog, id) -> {

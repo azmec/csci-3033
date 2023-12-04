@@ -2,6 +2,7 @@ package org.csci.mealmanual.database;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
@@ -10,10 +11,6 @@ import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.csci.mealmanual.database.dao.RecipeIngredientJoinDao;
-import org.csci.mealmanual.database.model.Category;
-import org.csci.mealmanual.database.dao.CategoryDao;
-import org.csci.mealmanual.database.model.CategoryTagJoin;
-import org.csci.mealmanual.database.dao.CategoryTagJoinDao;
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.dao.IngredientDao;
 import org.csci.mealmanual.database.model.IngredientTagJoin;
@@ -36,15 +33,13 @@ import java.util.concurrent.Executors;
  * library on compilation.
  */
 @Database(
-	version = 5,
+	version = 6,
 	entities = {
 		Recipe.class,
 		Tag.class,
 		RecipeTagJoin.class,
 		Ingredient.class,
 		IngredientTagJoin.class,
-		Category.class,
-		CategoryTagJoin.class,
 			RecipeIngredientJoin.class
 	},
 		autoMigrations = {
@@ -76,6 +71,18 @@ public abstract class RecipeDatabase extends RoomDatabase {
 				"ALTER TABLE recipe " +
 				"ADD COLUMN description TEXT"
 			);
+		}
+	};
+
+	/*
+	 * Manual migration from v. 5 to v. 6 of the database. Drops the category
+	 * and category tag join tables.
+	 */
+	public static final Migration MIGRATION_5_6 = new Migration(5, 6) {
+		@Override
+		public void migrate(@NonNull SupportSQLiteDatabase db) {
+			db.execSQL("DROP TABLE category");
+			db.execSQL("DROP TABLE category_tag_join");
 		}
 	};
 
@@ -133,17 +140,6 @@ public abstract class RecipeDatabase extends RoomDatabase {
 
 				recipeTagJoinDao.insert(new RecipeTagJoin(chuchitoID, holidayID)).blockingSubscribe();
 				recipeTagJoinDao.insert(new RecipeTagJoin(chuchitoID, desertID)).blockingSubscribe();
-
-				CategoryDao categoryDao = instance.getCategoryDao();
-				categoryDao.deleteAll();
-
-				categoryDao.insert(new Category("Ethnicity"));
-
-				CategoryTagJoinDao categoryTagJoinDao = instance.getCategoryTagJoinDao();
-				categoryTagJoinDao.deleteAll();
-
-				// Relate "Ethnicity" and "Guatemalan".
-				categoryTagJoinDao.insert(new CategoryTagJoin(1, 1));
 			});
 		}
 	};
@@ -179,7 +175,7 @@ public abstract class RecipeDatabase extends RoomDatabase {
 			RecipeDatabase.class,
 			DB_FILENAME
 			).addCallback(sRoomDatabaseCallback)
-			.addMigrations(MIGRATION_1_2)
+			.addMigrations(MIGRATION_1_2, MIGRATION_5_6)
 			.build();
 	}
 
@@ -220,22 +216,6 @@ public abstract class RecipeDatabase extends RoomDatabase {
 	 * @return The ingredient-to-tag relation DAO.
 	 */
 	public abstract IngredientTagJoinDao getIngredientTagJoinDao();
-
-	/**
-	 * Return a category database access object (DAO) connected to this
-	 * database.
-	 *
-	 * @return The category DAO.
-	 */
-	public abstract CategoryDao getCategoryDao();
-
-	/**
-	 * Return a category-to-tag relation database access object (DAO)
-	 * connected to this database.
-	 *
-	 * @return The category-to-tag relation DAO.
-	 */
-	public abstract CategoryTagJoinDao getCategoryTagJoinDao();
 
 	/**
 	 * Return a recipe-to-ingredient relation database access object (DAO)

@@ -2,15 +2,14 @@ package org.csci.mealmanual.database;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import org.csci.mealmanual.database.model.Category;
-import org.csci.mealmanual.database.dao.CategoryDao;
-import org.csci.mealmanual.database.model.CategoryTagJoin;
-import org.csci.mealmanual.database.dao.CategoryTagJoinDao;
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.dao.IngredientDao;
 import org.csci.mealmanual.database.model.IngredientTagJoin;
@@ -30,15 +29,13 @@ import java.util.concurrent.Executors;
  * library on compilation.
  */
 @Database(
-		version = 3,
+		version = 4,
 	entities = {
 		Recipe.class,
 		Tag.class,
 		RecipeTagJoin.class,
 		Ingredient.class,
 		IngredientTagJoin.class,
-		Category.class,
-		CategoryTagJoin.class
 	},
 		autoMigrations = {
 				@AutoMigration(from = 1, to = 2),
@@ -48,6 +45,18 @@ import java.util.concurrent.Executors;
 public abstract class SpoonacularCache extends RoomDatabase {
 	private static volatile SpoonacularCache instance;
 	private static final int NUMBER_OF_THREADS = 4;
+
+	/*
+	 * Manual migration from v. 3 to v. 4 of the database. Drops the category
+	 * and category tag join tables.
+	 */
+	public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+		@Override
+		public void migrate(@NonNull SupportSQLiteDatabase db) {
+			db.execSQL("DROP TABLE category");
+			db.execSQL("DROP TABLE category_tag_join");
+		}
+	};
 
 	/**
 	 * Thread-pool responsible for writing to the database.
@@ -78,7 +87,8 @@ public abstract class SpoonacularCache extends RoomDatabase {
 		return Room.inMemoryDatabaseBuilder(
 			appContext,
 			SpoonacularCache.class
-			).build();
+				).addMigrations(MIGRATION_3_4)
+				.build();
 	}
 
 	/**
@@ -118,21 +128,5 @@ public abstract class SpoonacularCache extends RoomDatabase {
 	 * @return The ingredient-to-tag relation DAO.
 	 */
 	public abstract IngredientTagJoinDao getIngredientTagJoinDao();
-
-	/**
-	 * Return a category database access object (DAO) connected to this
-	 * database.
-	 *
-	 * @return The category DAO.
-	 */
-	public abstract CategoryDao getCategoryDao();
-
-	/**
-	 * Return a category-to-tag relation database access object (DAO)
-	 * connected to this database.
-	 *
-	 * @return The category-to-tag relation DAO.
-	 */
-	public abstract CategoryTagJoinDao getCategoryTagJoinDao();
 }
 

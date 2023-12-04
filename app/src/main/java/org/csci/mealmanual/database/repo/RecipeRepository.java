@@ -3,7 +3,7 @@ package org.csci.mealmanual.database.repo;
 import android.content.Context;
 
 import org.csci.mealmanual.BuildConfig;
-import org.csci.mealmanual.database.DomainRecipe;
+import org.csci.mealmanual.database.business.DomainRecipe;
 import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.SpoonacularCache;
 import org.csci.mealmanual.database.dao.RecipeDao;

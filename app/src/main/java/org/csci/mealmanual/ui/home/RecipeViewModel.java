@@ -3,11 +3,10 @@ package org.csci.mealmanual.ui.home;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import org.csci.mealmanual.database.DomainRecipe;
+import org.csci.mealmanual.database.business.DomainRecipe;
 import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.model.RecipeTagJoin;
 import org.csci.mealmanual.database.repo.RecipeRepository;

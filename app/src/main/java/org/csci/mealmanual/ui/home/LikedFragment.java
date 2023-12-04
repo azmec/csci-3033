@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.csci.mealmanual.R;
-import org.csci.mealmanual.database.DomainRecipe;
+import org.csci.mealmanual.database.business.DomainRecipe;
 
 import java.util.ArrayList;
 

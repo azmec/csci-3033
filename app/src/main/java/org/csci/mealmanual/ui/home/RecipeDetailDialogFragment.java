@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.csci.mealmanual.R;
-import org.csci.mealmanual.database.DomainRecipe;
+import org.csci.mealmanual.database.business.DomainRecipe;
 import org.csci.mealmanual.database.RecipeDatabase;
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.Tag;

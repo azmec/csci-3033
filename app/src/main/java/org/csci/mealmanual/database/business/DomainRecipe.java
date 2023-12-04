@@ -1,4 +1,4 @@
-package org.csci.mealmanual.database;
+package org.csci.mealmanual.database.business;
 
 import org.csci.mealmanual.database.model.Ingredient;
 import org.csci.mealmanual.database.model.Recipe;

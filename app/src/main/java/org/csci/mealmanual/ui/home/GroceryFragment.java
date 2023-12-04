@@ -50,7 +50,7 @@ public class GroceryFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Context context = getContext();
         //Initialize the repository within the ViewModel
-        ingredientViewModel = new ViewModelProvider(requireActivity()).get(IngredientViewModel.class);
+        ingredientViewModel = new ViewModelProvider(this).get(IngredientViewModel.class);
         ingredientViewModel.initRepository(context);
 
         // Observe changes in the list of ingredients

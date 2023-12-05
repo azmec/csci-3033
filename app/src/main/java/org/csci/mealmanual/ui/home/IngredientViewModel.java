@@ -18,17 +18,12 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class IngredientViewModel extends ViewModel {
-
-    /** TODO: Link grocery list to be able to send to pantry
-     * NOTE: Delete the relations between ingredients and the grocery and add corresponding
-     * relations between ingredients and the pantry - Carlos
-     *
-     * */
     private IngredientRepository ingredientRepository;
     private LiveData<List<Ingredient>> allIngredients;
     private MutableLiveData<List<Ingredient>> pantryIngredients;
     private MutableLiveData<List<Ingredient>> groceryIngredients;
 
+    /** Required empty public constructor */
     public IngredientViewModel() {}
 
     // Construct and return a view model with an initialized data repository.
@@ -42,7 +37,7 @@ public class IngredientViewModel extends ViewModel {
         );
     }
 
-    // Initialize the view model's internal data repository.
+    // Initialize the view model's internal data repository and the two corresponding lists
     public void initRepository(Context context) {
         this.groceryIngredients = new MutableLiveData<>();
         this.pantryIngredients = new MutableLiveData<>();
@@ -57,6 +52,8 @@ public class IngredientViewModel extends ViewModel {
     }
     public LiveData<List<Ingredient>> getAllIngredients(){return allIngredients;}
 
+    //Takes an ingredient name and a tag for which list the ingredient belongs to
+    // and adds the ingredient into the repository
     public void insertTaggedIngredient(Ingredient ingredient, Tag... tags){
         ingredientRepository.addTaggedIngredient(ingredient, tags)
                 .subscribeOn(Schedulers.io())
@@ -75,6 +72,7 @@ public class IngredientViewModel extends ViewModel {
         return this.pantryIngredients;
     }
 
+    //Updates the list of ingredients that have the grocery tag
     public void updateGroceryData() {
         ingredientRepository.getIngredientsWithTag(RecipeDatabase.GROCERY_TAG)
                 .subscribeOn(Schedulers.io())
@@ -84,6 +82,7 @@ public class IngredientViewModel extends ViewModel {
                 });
     }
 
+    //Updates the list of ingredients that have the pantry tag
     public void updatePantryData() {
         ingredientRepository.getIngredientsWithTag(RecipeDatabase.PANTRY_TAG)
                 .subscribeOn(Schedulers.io())
@@ -93,6 +92,7 @@ public class IngredientViewModel extends ViewModel {
                 });
     }
 
+    //Takes a list of ingredients and removes them from the repository
     public void removeSelectedIngredients(List<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
             ingredientRepository.delete(ingredient)
@@ -105,8 +105,8 @@ public class IngredientViewModel extends ViewModel {
         }
     }
 
+    // Change tags from grocery to pantry for each ingredient.
     public void transferToPantry(List<Ingredient> ingredients){
-        // Change tags from grocery to pantry for each ingredient.
         // TODO: Ideally, we compress all these asyncs to a single `Completable` and subscribe only
         // to that, but having a callback for each individual meme works too.
         for(Ingredient ingredient: ingredients){

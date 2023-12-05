@@ -44,10 +44,9 @@ public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickLi
         super.onCreate(savedInstanceState);
         Context context = getContext();
 
-        // Initialize the view model.
+        // Initialize the recipe ViewModel
         recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
         recipeViewModel.initRepository(context);
-
     }
 
     @Nullable
@@ -73,7 +72,7 @@ public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickLi
     }
 
     public void onItemClick(View view, DomainRecipe recipe) {
-        // Handle the click event here
+        // Inflate the Popup when a recipe is clicked within the liked fragment
         RecipeDetailDialogFragment dialogFragment = RecipeDetailDialogFragment.newInstance(recipe);
         dialogFragment.setParentFragment(this);
         dialogFragment.show(getParentFragmentManager(), "recipe_details");

@@ -89,6 +89,7 @@ public class AddFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    // Request permission from user to use camera
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -109,6 +110,7 @@ public class AddFragment extends Fragment {
         ActivityCompat.requestPermissions(requireActivity(), new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
     }
 
+    // Check useer permissions
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -128,80 +130,102 @@ public class AddFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Initialize UI components
+        // Edit texts
         EditText recipeNameEditText = view.findViewById(R.id.editTextRecipeName);
         EditText ingredientEditText = view.findViewById(R.id.editTextIngredients);
         EditText quantityEditText = view.findViewById(R.id.editTextQuantity);
         EditText recipeDescriptionEditText = view.findViewById(R.id.editTextRecipeDescription);
         EditText tagEditText = view.findViewById(R.id.editTextTag);
+
+        // Layouts
         LinearLayout ingredientsLayout = view.findViewById(R.id.ingredientsLayout);
         LinearLayout tagsLayout = view.findViewById(R.id.tagsLayout);
+
+        // Buttons
         Button addIngredientButton = view.findViewById(R.id.buttonAddIngredient);
         Button addTagButton = view.findViewById(R.id.buttonAddTag);
         Button submitButton = view.findViewById(R.id.buttonSubmit);
         ImageButton cameraButton = view.findViewById(R.id.cameraAddButton);
+
+        // Lists
         List<EditText> listTag = new ArrayList<EditText>();
         List<EditText> listIngredientName = new ArrayList<EditText>();
         List<EditText> listQuantity = new ArrayList<EditText>();
         List<LinearLayout> listLayoutIngredients = new ArrayList<LinearLayout>();
 
+        // Camera button, which will call the choice prompt method
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseCameraOrCameraRollPopup();
             }
         });
+
+        // Add another tag to the recipe button
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Create a new edit text for user input
                 EditText newTagEditText = new EditText(getContext());
                 newTagEditText.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                 ));
+                // Label the edit text and set input type
                 newTagEditText.setHint("Tag");
                 newTagEditText.setInputType(InputType.TYPE_CLASS_TEXT);
 
-                // Add the new EditText to the ingredientsLayout
+                // Add the new EditText to the list of tags to read later when saving info to recipe
                 listTag.add(newTagEditText);
+
+                // Add the new EditText to the ingredientsLayout to appear on UI
                 tagsLayout.addView(newTagEditText);
             }
         });
 
-        //Handle the click of the "Add Ingredient" button
+        // Handle the click of the "Add Ingredient" button
         addIngredientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Limit to 15 ingredients
-                    // Create a new horizontal layout to put new buttons on
-                    LinearLayout newLinearLayoutHorizontal = new LinearLayout(getContext());
-                    newLinearLayoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
-                    listLayoutIngredients.add(newLinearLayoutHorizontal);
-                    EditText newQuantityEditText = new EditText(getContext());
+                // Create a new horizontal layout in for quantity edit text and ingredient edit text
+                LinearLayout newLinearLayoutHorizontal = new LinearLayout(getContext());
+                newLinearLayoutHorizontal.setOrientation(LinearLayout.HORIZONTAL);
+
+                // Add the horizontal layout to layout list, so we can later delete this when recipe successfully submits
+                listLayoutIngredients.add(newLinearLayoutHorizontal);
+
+                // Create a new edit text for user input for quantity
+                EditText newQuantityEditText = new EditText(getContext());
                     newQuantityEditText.setLayoutParams(new ViewGroup.LayoutParams(
                             ingredientsLayout.getWidth()/2,
                             ViewGroup.LayoutParams.WRAP_CONTENT
                     ));
-                    newQuantityEditText.setHint("Quantity");
-                    newQuantityEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+                // Label the edit text and set input type
+                newQuantityEditText.setHint("Quantity");
+                newQuantityEditText.setInputType(InputType.TYPE_CLASS_TEXT);
 
-                    // Add the new EditText to the ingredientsLayout
-                    newLinearLayoutHorizontal.addView(newQuantityEditText);
+                // Add the new EditText to the horizontal layout
+                newLinearLayoutHorizontal.addView(newQuantityEditText);
 
-                    EditText newIngredientEditText = new EditText(getContext());
-                    newIngredientEditText.setLayoutParams(new ViewGroup.LayoutParams(
-                            ingredientsLayout.getWidth()/2,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                    ));
-                    newIngredientEditText.setHint("Ingredient");
-                    newIngredientEditText.setInputType(InputType.TYPE_CLASS_TEXT);
+                // Create a new edit text for user input for ingredient
+                EditText newIngredientEditText = new EditText(getContext());
+                newIngredientEditText.setLayoutParams(new ViewGroup.LayoutParams(
+                        ingredientsLayout.getWidth()/2,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                ));
+                // Label the edit text and set input type
+                newIngredientEditText.setHint("Ingredient");
+                newIngredientEditText.setInputType(InputType.TYPE_CLASS_TEXT);
 
-                    // Add the new EditText to the ingredientsLayout
-                    newLinearLayoutHorizontal.addView(newIngredientEditText);
+                // Add the new EditText to the horizontal layout
+                newLinearLayoutHorizontal.addView(newIngredientEditText);
 
-                    ingredientsLayout.addView(newLinearLayoutHorizontal);
-                    listQuantity.add(newQuantityEditText);
-                    listIngredientName.add(newIngredientEditText);
+                // Add the horizontal layout containing the two edit texts to the ingredients layout so it shows on UI
+                ingredientsLayout.addView(newLinearLayoutHorizontal);
+
+                // Add the two edit texts to respective lists, to add to recipe information
+                listQuantity.add(newQuantityEditText);
+                listIngredientName.add(newIngredientEditText);
             }
         });
 
@@ -209,49 +233,58 @@ public class AddFragment extends Fragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Check if all information is filled out before submitting recipe to the repository
+
+                // flag if any of the lists of tags, quantities, or ingredients is empty
                 boolean listEmpty = false;
+
+                // Loop to check if any value in ingredients or quantity are empty
                 for (int j = 0; j < listIngredientName.size(); j++) {
                     if((listIngredientName.get(j).getText().toString().trim().length() == 0) || (listQuantity.get(j).getText().toString().trim().length() == 0)) {
                         listEmpty = true;
                     }
                 }
 
+                // Loop to check if any value in tags are empty
                 for (int j = 0; j < listTag.size(); j++) {
                     if(listTag.get(j).getText().toString().trim().length() == 0) {
                         listEmpty = true;
                     }
                 }
+
+                // Check flag and if other fields are empty
                 if((recipeNameEditText.getText().toString().trim().length() == 0) || (tagEditText.getText().toString().trim().length() == 0) || (recipeDescriptionEditText.getText().toString().trim().length() == 0) || (ingredientEditText.getText().toString().trim().length() == 0) || (quantityEditText.getText().toString().trim().length() == 0)|| listEmpty) {
+                    // Print out message prompting user to fill everything out
                     String message = "Please fill out all information for recipe";
                     Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
-                } else {
-                    // Create a HashMap to store the recipe data
-                    HashMap<String, String> recipeData = new HashMap<>();
-                    recipeData.put("Recipe Name", recipeNameEditText.getText().toString());
-                    List<Ingredient> ingredientList = new ArrayList<>();
+                } else { // If user has everything filled out, proceed with storing information and sending recipe to the repository
 
-                    // Create recipe and send to the repository
+                    // Get information from respective edit texts
                     String name = recipeNameEditText.getText().toString();
                     String description = recipeDescriptionEditText.getText().toString();
-                    String ingredientName = ingredientEditText.getText().toString();
-                    String ingredientUnit = ""; // TODO: Receive from the user!
-                    int ingredientQuantity = Integer.parseInt(quantityEditText.getText().toString());
 
+                    // Create an instance of recipe in order to send it to the repository
                     Recipe recipe = new Recipe(name, description);
 
+                    // Images are optional; save image if necessary
                     if(imageRecipe != null) {
                         String imageRecipeString = imageRecipe.toString();
                         recipe.setImageUrl(imageRecipeString);
                     }
 
-                    Ingredient ingredient = new Ingredient(ingredientName, ingredientUnit, ingredientQuantity);
-                    ingredientList.add(ingredient);
-
+                    // Accumulate the user's ingredients.
+                    ArrayList<Ingredient> recipeIngredients = new ArrayList<>();
+                    String ingredientName1 = ingredientEditText.getText().toString();
+                    String ingredientUnit1 = ""; // TODO: Receive from the user!
+                    int ingredientQuantity1 = Integer.parseInt(quantityEditText.getText().toString());
+                    Ingredient ingredient1 = new Ingredient(ingredientName1, ingredientUnit1, ingredientQuantity1);
+                    recipeIngredients.add(ingredient1);
                     for (int j = 0; j < listIngredientName.size(); j++) {
-                        String ingredientName2 = ingredientEditText.getText().toString();
-                        int ingredientQuantity2 = Integer.parseInt(quantityEditText.getText().toString());
-                        Ingredient ingredient2 = new Ingredient(ingredientName, ingredientUnit, ingredientQuantity);
-                        ingredientList.add(ingredient2);
+                        String ingredientName2 = listIngredientName.get(j).getText().toString();
+                        String ingredientUnit2 = ""; // TODO: Receive from the user!
+                        int ingredientQuantity2 = Integer.parseInt(listQuantity.get(j).getText().toString());
+                        Ingredient ingredient2 = new Ingredient(ingredientName2, ingredientUnit2, ingredientQuantity2);
+                        recipeIngredients.add(ingredient2);
                     }
 
                     // Accumulate the user's tags.
@@ -267,7 +300,7 @@ public class AddFragment extends Fragment {
 
                     // Sequence asynchronous calls to add and relate the recipe and ingredients.
                     Single<Long> addRecipe = recipeRepository.add(recipe);
-                    Single<List<Long>> addIngredient = ingredientRepository.add(ingredientList.toArray(new Ingredient[0]));
+                    Single<List<Long>> addIngredient = ingredientRepository.add(recipeIngredients.toArray(new Ingredient[0]));
                     Single<List<Long>> addTags = tagRepository.add(recipeTags.toArray(new Tag[0]));
                     Completable completable = Single.zip(addRecipe, addTags, addIngredient, (recipeID, tagIDs, ingredientIDs) -> {
                         // Associate the added recipe with the tags.
@@ -288,17 +321,22 @@ public class AddFragment extends Fragment {
                     // Execute the asynchronous calls we built up.
                     completable.subscribeOn(Schedulers.io())
                             .subscribe(() -> {
-                                String message = "Recipe Name: " + recipeData.get("Recipe Name");
+                                String message = "Recipe Name: " + recipeNameEditText.getText().toString();
                                 Snackbar.make(v, message, Snackbar.LENGTH_LONG).show();
                             });
 
+                    // Clear everything out the fragment to make a clean slate for new recipes
+                    // Remove all ingredient edit texts excluding the first one
                     for (int j = 0; j < listIngredientName.size(); j++) {
                         ingredientsLayout.removeView(listLayoutIngredients.get(j));
                     }
 
+                    // Remove all tag edit texts excluding the first one
                     for (int j = 0; j < listTag.size(); j++) {
                         tagsLayout.removeView(listTag.get(j));
                     }
+
+                    // Clear all default text boxes
                     recipeNameEditText.setText("");
                     recipeDescriptionEditText.setText("");
                     ingredientEditText.setText("");
@@ -309,6 +347,8 @@ public class AddFragment extends Fragment {
             }
         });
     }
+
+    // Method for dialog box to let user choose action
     private void chooseCameraOrCameraRollPopup() {
         String[] options = {"Take Photo", "Choose from Gallery"};
 
@@ -317,9 +357,11 @@ public class AddFragment extends Fragment {
         builder.setItems(options, (dialog, which) -> {
             switch (which) {
                 case 0:
+                    // Call take picture method
                     takePictureIntent();
                     break;
                 case 1:
+                    // Call camera roll method
                     cameraRollIntent();
                     break;
             }
@@ -328,16 +370,19 @@ public class AddFragment extends Fragment {
         builder.show();
     }
 
+    // Method to send action for taking picture
     private void takePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
     }
 
+    // Method to send action for opening camera roll
     private void cameraRollIntent() {
         Intent pickImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickImageIntent, REQUEST_PICK_IMAGE);
     }
 
+    // Method for action and saving data from the action
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

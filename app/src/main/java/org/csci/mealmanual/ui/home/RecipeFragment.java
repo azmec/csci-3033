@@ -36,7 +36,7 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickL
         Context context = getContext();
 
         // Initialize the view model.
-        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
+        recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
         recipeViewModel.initRepository(context);
 
         // Initialize our repository.

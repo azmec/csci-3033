@@ -22,6 +22,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -31,6 +32,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.csci.mealmanual.databinding.ActivityMainBinding;
+import org.csci.mealmanual.ui.home.RecipeViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     LikedFragment likedFragment;
     AddFragment addFragment;
 
+    private RecipeViewModel recipeViewModel;
+
     SwitchCompat switchMode;
     boolean nightMode;
     SharedPreferences sharedPreferences;
@@ -51,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize the application-wide view-models.
+        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

@@ -45,12 +45,15 @@ public class RecipeDetailDialogFragment extends DialogFragment {
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Context context = getContext();
-        // Initialize the view model.
-        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
-        recipeViewModel.initRepository(context);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
 
+        // Initialize the view model.
+        recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         alreadyLiked = false;
         firstClick = true;
 

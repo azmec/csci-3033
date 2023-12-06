@@ -44,11 +44,9 @@ public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Context context = getContext();
 
         // Initialize the recipe ViewModel
-        recipeViewModel = new ViewModelProvider(this).get(RecipeViewModel.class);
-        recipeViewModel.initRepository(context);
+        recipeViewModel = new ViewModelProvider(requireActivity()).get(RecipeViewModel.class);
     }
 
     @Nullable

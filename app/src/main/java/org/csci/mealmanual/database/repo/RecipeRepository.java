@@ -1,6 +1,7 @@
 package org.csci.mealmanual.database.repo;
 
 import android.content.Context;
+import android.util.Log;
 
 import org.csci.mealmanual.BuildConfig;
 import org.csci.mealmanual.database.business.DomainRecipe;
@@ -43,6 +44,8 @@ public class RecipeRepository {
 
 	private final String apiKey = BuildConfig.API_KEY;
 	private Single<List<Recipe>> recipes;
+
+	private Boolean firstQuery = true;
 
 	/**
 	 * Return a repository connected to the database.
@@ -160,13 +163,11 @@ public class RecipeRepository {
 	 */
 	public Single<List<DomainRecipe>> getAll() {
 		Single<List<Recipe>> localRecipes = this.recipeDao.getAll();
-		Single<List<Recipe>> cachedRecipes = this.cacheRecipeDao.getAll();
-		//Single<List<Recipe>> webRecipes = getRandomRecipe(5);
-		Single<List<Recipe>> webRecipes = Single.just(new ArrayList<>());
+		Single<List<Recipe>> webRecipes = this.getWebRecipes();
 
 		// When all of the above computations complete, compose their results
 		// into a single list of recipes.
-		Single<List<DomainRecipe>> allRecipes = Single.zip(localRecipes, cachedRecipes, webRecipes, (local, cached, web) -> {
+		Single<List<DomainRecipe>> allRecipes = Single.zip(localRecipes, webRecipes, (local, web) -> {
 			List<DomainRecipe> domainRecipes = new ArrayList<>();
 			for (Recipe recipe : local) {
 				List<Tag> tags = this.getTagsWithRecipe(recipe).blockingGet();
@@ -176,10 +177,6 @@ public class RecipeRepository {
 				domainRecipes.add(domainRecipe);
 			}
 
-			for (Recipe recipe : cached) {
-				DomainRecipe domainRecipe = new DomainRecipe(recipe);
-				domainRecipes.add(domainRecipe);
-			}
 			for (Recipe recipe : web) {
 				DomainRecipe domainRecipe= new DomainRecipe(recipe);
 				domainRecipes.add(domainRecipe);
@@ -189,6 +186,23 @@ public class RecipeRepository {
 		});
 
 		return allRecipes;
+	}
+
+	private Single<List<Recipe>> getWebRecipes() {
+		if (firstQuery) {
+			firstQuery = false;
+
+			Log.d("FOO", "getWebRecipes: querying the web!");
+			return this.getRandomRecipe(1).map(web -> {
+				this.cacheRecipeDao.insert(web.toArray(new Recipe[0]))
+						.blockingGet();
+
+				return web;
+			});
+		}
+
+		Log.d("FOO", "getWebRecipes: serving the cache!");
+		return this.cacheRecipeDao.getAll();
 	}
 
 	/**

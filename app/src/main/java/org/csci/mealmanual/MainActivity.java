@@ -20,8 +20,11 @@ import org.csci.mealmanual.ui.home.AddFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -34,52 +37,61 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
+    RecipeFragment recipeFragment;
+    GroceryFragment groceryFragment;
+    PantryFragment pantryFragment;
+    LikedFragment likedFragment;
+    AddFragment addFragment;
+
     SwitchCompat switchMode;
     boolean nightMode;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
-    //AppCompatDelegate appCompatDelegate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setSupportActionBar(binding.appBarMain.toolbar);
-//        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        int fragmentContainerID = R.id.nav_host_fragment_content_main;
+
+        this.recipeFragment = new RecipeFragment();
+        this.groceryFragment = new GroceryFragment();
+        this.pantryFragment = new PantryFragment();
+        this.likedFragment = new LikedFragment();
+        this.addFragment = new AddFragment();
 
         // Initialize BottomNavigationView
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
-
+        bottomNavigationView.setSelectedItemId(R.id.action_recipe_list);
         bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null; // Use the generic Fragment type
             int id = item.getItemId();
 
             if (id == R.id.action_recipe_list) {
-                selectedFragment = new RecipeFragment();
+                selectedFragment = recipeFragment;
             } else if (id == R.id.action_grocery_list) {
-                selectedFragment = new GroceryFragment();
+                selectedFragment = groceryFragment;
             } else if (id == R.id.action_pantry_list) {
-                selectedFragment = new PantryFragment();
+                selectedFragment = pantryFragment;
             } else if (id == R.id.action_liked_recipes) {
-                selectedFragment = new LikedFragment();
+                selectedFragment = likedFragment;
             } else if (id == R.id.action_add_recipes) {
-                selectedFragment = new AddFragment();
+                selectedFragment = addFragment;
             }
 
             if (selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_content_main, selectedFragment).commit();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(fragmentContainerID, selectedFragment);
+                transaction.setReorderingAllowed(true);
+                transaction.addToBackStack(null);
+                transaction.commit();
             }
 
             return true;
@@ -88,8 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Load the default fragment
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.nav_host_fragment_content_main,  new RecipeFragment()).commit();
-            bottomNavigationView.setSelectedItemId(R.id.action_recipe_list);
+            fragmentManager.beginTransaction().replace(fragmentContainerID,  recipeFragment).commit();
         }
 
         // Passing each menu ID as a set of Ids because each
@@ -98,7 +109,9 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_cuisine)
                 .setOpenableLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+        NavHostFragment navHostFragment = (NavHostFragment) fragmentManager.findFragmentById(fragmentContainerID);
+        NavController navController = navHostFragment.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }

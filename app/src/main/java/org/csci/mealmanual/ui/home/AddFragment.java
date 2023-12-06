@@ -52,11 +52,11 @@ import android.net.Uri;
 import android.app.AlertDialog;
 
 public class AddFragment extends Fragment {
-    private final RecipeRepository recipeRepository;
-    private final IngredientRepository ingredientRepository;
-    private final TagRepository tagRepository;
-    private final RecipeIngredientJoinRepository recipeIngredientJoinRepository;
-    private final RecipeTagJoinRepository recipeTagJoinRepository;
+    private RecipeRepository recipeRepository;
+    private IngredientRepository ingredientRepository;
+    private TagRepository tagRepository;
+    private RecipeIngredientJoinRepository recipeIngredientJoinRepository;
+    private RecipeTagJoinRepository recipeTagJoinRepository;
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
 
@@ -75,6 +75,12 @@ public class AddFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().show();
     }
     public AddFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         Context context = getContext();
         this.recipeRepository = new RecipeRepository(context);
         this.ingredientRepository = new IngredientRepository(context);
@@ -82,11 +88,6 @@ public class AddFragment extends Fragment {
 
         this.recipeIngredientJoinRepository = new RecipeIngredientJoinRepository(context);
         this.recipeTagJoinRepository = new RecipeTagJoinRepository(context);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Nullable

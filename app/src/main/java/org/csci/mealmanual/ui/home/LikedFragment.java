@@ -29,6 +29,8 @@ public class LikedFragment extends Fragment implements RecipeAdapter.ItemClickLi
     public void onResume() {
         super.onResume();
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+
+        recipeViewModel.updateLikedRecipeData();
     }
     @Override
     public void onStop() {

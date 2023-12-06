@@ -37,6 +37,8 @@ public class PantryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+
+        ingredientViewModel.updatePantryData();
     }
     @Override
     public void onStop() {

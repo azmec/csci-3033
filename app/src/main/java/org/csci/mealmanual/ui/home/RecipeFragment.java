@@ -67,6 +67,12 @@ public class RecipeFragment extends Fragment implements RecipeAdapter.ItemClickL
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        recipeViewModel.updateRecipeData();
+    }
+
+    @Override
     public void onItemClick(View view, DomainRecipe recipe) {
         // Handle the click event here
         RecipeDetailDialogFragment dialogFragment = RecipeDetailDialogFragment.newInstance(recipe);

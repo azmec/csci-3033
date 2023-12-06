@@ -35,6 +35,8 @@ public class GroceryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+
+        ingredientViewModel.updateGroceryData();
     }
     @Override
     public void onStop() {

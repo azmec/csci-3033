@@ -75,15 +75,16 @@ public class GroceryFragment extends Fragment {
         //Initialize UI elements
         EditText groceryIngredient = view.findViewById(R.id.editTextGrocery);
         LinearLayout addGroceriesLayout = view.findViewById(R.id.addGroceriesLayout);
-
         Button buttonTransfer = view.findViewById(R.id.buttonTransferToPantry);
         Button buttonAddToGrocery = view.findViewById(R.id.buttonAddGroceries);
         Button buttonSaveIngredient = view.findViewById(R.id.buttonSaveGroceries);
         Button buttonRemoveIngredient = view.findViewById(R.id.buttonRemove);
 
+        //Save ingredient to repository
         buttonSaveIngredient.setOnClickListener(v->{
             String ingredientName = groceryIngredient.getText().toString();
 
+            //check for valid input
             if (!ingredientName.isEmpty()) {
                 Ingredient newIngredient = new Ingredient(ingredientName, "", 1);
                 ingredientViewModel.insertTaggedIngredient(newIngredient, RecipeDatabase.GROCERY_TAG);
@@ -94,6 +95,7 @@ public class GroceryFragment extends Fragment {
             addGroceriesLayout.setVisibility(View.GONE);
         });
 
+        //Change the corresponding tag of the selected ingredients from grocery to pantry
         buttonTransfer.setOnClickListener(v->{
             ingredientViewModel.transferToPantry(selectedIngredients);
             selectedIngredients.clear();
@@ -110,18 +112,20 @@ public class GroceryFragment extends Fragment {
             }
         });
 
+        //delete selected ingredient from the repository
         buttonRemoveIngredient.setOnClickListener(v->{
             ingredientViewModel.removeSelectedIngredients(selectedIngredients);
             selectedIngredients.clear();
         });
     }
-
+    //Update the list of visible ingredients based on any changes
     private void updateIngredientList(List<Ingredient> ingredients) {
         LinearLayout ingredientsDisplayLayout = getView().findViewById(R.id.ingredientsDisplayLayout);
-        ingredientsDisplayLayout.removeAllViews();
+        ingredientsDisplayLayout.removeAllViews(); // Clear the current list
 
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
+        //for every ingredient to display create a Text view with a check box
         for (Ingredient ingredient: ingredients){
             View itemView = inflater.inflate(R.layout.select_ingredient_list, ingredientsDisplayLayout, false);
             CheckBox checkBox = itemView.findViewById(R.id.checkBoxIngredient);
@@ -129,6 +133,7 @@ public class GroceryFragment extends Fragment {
 
             textView.setText(ingredient.name); // Display the name of the ingredient
 
+            //If an item is checked, add it to the list of selected
             checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) {
                     selectedIngredients.add(ingredient);

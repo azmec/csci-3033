@@ -66,12 +66,33 @@ public class RecipeDetailDialogFragment extends DialogFragment {
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.recipe_popup, null);
 
+        // Configure the recipe's labels.
+        configureTextViews(view);
+
+        // If the button is clicked, add the recipe to the "Liked" recipes.
+        likeButton.setOnClickListener(this::handleLikeEvent);
+
+        // If the user presses the button, dismiss the dialogue.
+        builder.setView(view).setPositiveButton("Close", (dialog, id) -> {
+            dialog.dismiss();
+        });
+
+        return builder.create();
+    }
+
+    /**
+     * Configure the labels corresponding to the recipe's values.
+     * @param view The `View` the `TextView` objects are in.
+     */
+    private void configureTextViews(View view) {
+        // Retrieve references to the text views.
         TextView recipeName = view.findViewById(R.id.popup_recipe_name);
         TextView recipeDescription = view.findViewById(R.id.popup_recipe_description);
         TextView recipeIngredients = view.findViewById(R.id.popup_recipe_ingredients);
         TextView recipeTagsLabel = view.findViewById(R.id.popup_recipe_tags);
         likeButton = view.findViewById(R.id.button_like_recipe);
 
+        // Create a commented list for tags.
         StringBuilder recipeTagString = new StringBuilder();
         List<Tag> recipeTagList = recipe.getTags();
         int numTags = recipeTagList.size();
@@ -87,6 +108,7 @@ public class RecipeDetailDialogFragment extends DialogFragment {
             recipeTagString.append("No tags are associated.");
         }
 
+        // Create a commented list for ingredients.
         StringBuilder recipeIngredientString = new StringBuilder();
         List<Ingredient> recipeIngredientList = recipe.getIngredients();
         int numIngredients = recipeIngredientList.size();
@@ -102,64 +124,62 @@ public class RecipeDetailDialogFragment extends DialogFragment {
             recipeIngredientString.append("No ingredients are associated.");
         }
 
+        // Set the text values for the `TextView`s.
         recipeName.setText(recipe.getName());
         recipeDescription.setText(Html.fromHtml(recipe.getDescription(), Html.FROM_HTML_MODE_COMPACT));
         recipeIngredients.setText(recipeIngredientString);
         recipeTagsLabel.setText(recipeTagString);
+    }
 
-        // User closes the dialog
-        builder.setView(view).setPositiveButton("Close", (dialog, id) -> {
-            dialog.dismiss();
-        });
+    /**
+     * Handle the case where the "like" button is pressed.
+     * @param view The `View` the like button is in.
+     */
+    private void handleLikeEvent(View view) {
+        List<Tag> recipeTags = recipe.getTags();
 
-
-        // If the button is clicked, add the recipe to the "Liked" recipes.
-        likeButton.setOnClickListener(v -> {
-            // If the recipe is already liked, we do not need to add it. So, exit this lambda.
-            // TODO: Cache whether this is liked or not in the recipe itself.
-            List<Tag> recipeTags = recipe.getTags();
-            for (Tag tag : recipeTags) {
-                if (tag.uid == RecipeDatabase.LIKED_TAG.uid && firstClick) {
-                    this.recipeViewModel.removeLike(recipe);
-                    Snackbar.make(v, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
-
-                    firstClick = false;
-                    return;
-                } else if (tag.uid == RecipeDatabase.LIKED_TAG.uid) {
-                    if (alreadyLiked) {
-                        this.recipeViewModel.removeLike(recipe);
-                        alreadyLiked = false;
-
-                        Snackbar.make(v, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
-                    } else {
-                        this.recipeViewModel.likeRecipe(recipe);
-                        alreadyLiked = true;
-                        Snackbar.make(v, "Added Favorite", Snackbar.LENGTH_SHORT).show();
-                    }
-
-                    return;
-                }
-            }
-
-            // It is possible we've already liked this recipe w/o closing the dialogue. This means
-            // the in-memory `domainRecipe`'s tags do not reflect those in the database, so the
-            // the above check will fail. This internal boolean will prevent us from double-liking
-            // the recipe in this case.
-            if (alreadyLiked) {
+        // Determine if this recipe has the like tag in-memory. Because we cannot immediately update
+        // whether this recipe has the tag in-memory, we flip a flag to determine whether we should
+        // like it.
+        for (Tag tag : recipeTags) {
+            if (tag.uid == RecipeDatabase.LIKED_TAG.uid && firstClick) { // First interaction, so unlike.
                 this.recipeViewModel.removeLike(recipe);
-                alreadyLiked = false;
+                Snackbar.make(view, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
 
-                Snackbar.make(v, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
-            } else {
-                this.recipeViewModel.likeRecipe(recipe);
-                alreadyLiked = true;
-                Snackbar.make(v, "Added Favorite", Snackbar.LENGTH_SHORT).show();
+                firstClick = false;
+                return;
+            } else if (tag.uid == RecipeDatabase.LIKED_TAG.uid) { // Already interacted with, so toggle the like.
+                if (alreadyLiked) {
+                    this.recipeViewModel.removeLike(recipe);
+                    alreadyLiked = false;
+
+                    Snackbar.make(view, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    this.recipeViewModel.likeRecipe(recipe);
+                    alreadyLiked = true;
+                    Snackbar.make(view, "Added Favorite", Snackbar.LENGTH_SHORT).show();
+                }
+
+                return;
             }
+        }
 
-            firstClick = false;
-        });
+        // It is possible we've already liked this recipe w/o closing the dialogue. This means
+        // the in-memory `domainRecipe`'s tags do not reflect those in the database, so the
+        // the above check will fail. This internal boolean will prevent us from double-liking
+        // the recipe in this case.
+        if (alreadyLiked) {
+            this.recipeViewModel.removeLike(recipe);
+            alreadyLiked = false;
 
-        return builder.create();
+            Snackbar.make(view, "Removed Favorite", Snackbar.LENGTH_SHORT).show();
+        } else {
+            this.recipeViewModel.likeRecipe(recipe);
+            alreadyLiked = true;
+            Snackbar.make(view, "Added Favorite", Snackbar.LENGTH_SHORT).show();
+        }
+
+        firstClick = false;
     }
 
     public void setParentFragment(Fragment fragment) {

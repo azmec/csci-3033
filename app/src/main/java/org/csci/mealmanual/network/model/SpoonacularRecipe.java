@@ -22,6 +22,12 @@ public class SpoonacularRecipe {
 	private String title;
 
 	/**
+	 * The description of the recipe in the spoonacular database.
+	 */
+	@SerializedName("summary")
+	private String description;
+
+	/**
 	 * The URL to the image of the recipe in the spoonacular database.
 	 */
 	@SerializedName("image")
@@ -44,6 +50,13 @@ public class SpoonacularRecipe {
 	public String getTitle() {
 		return this.title;
 	}
+
+	/**
+	 * Return the recipe's description.
+	 *
+	 * @return The recipe's description.
+	 */
+	public String getDescription() { return this.description; }
 
 	/**
 	 * Return the URL to the recipe's image.

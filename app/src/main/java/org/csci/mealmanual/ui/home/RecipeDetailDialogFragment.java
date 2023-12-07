@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -102,7 +103,7 @@ public class RecipeDetailDialogFragment extends DialogFragment {
         }
 
         recipeName.setText(recipe.getName());
-        recipeDescription.setText(recipe.getDescription());
+        recipeDescription.setText(Html.fromHtml(recipe.getDescription(), Html.FROM_HTML_MODE_COMPACT));
         recipeIngredients.setText(recipeIngredientString);
         recipeTagsLabel.setText(recipeTagString);
 

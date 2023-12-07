@@ -1,7 +1,6 @@
 package org.csci.mealmanual.database.repo;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.csci.mealmanual.BuildConfig;
 import org.csci.mealmanual.database.business.DomainRecipe;
@@ -43,7 +42,6 @@ public class RecipeRepository {
 	private final SpoonacularService api;
 
 	private final String apiKey = BuildConfig.API_KEY;
-	private Single<List<Recipe>> recipes;
 
 	private Boolean firstQuery = true;
 
@@ -58,7 +56,6 @@ public class RecipeRepository {
 
 		this.recipeDao = db.getRecipeDao();
 		this.cacheRecipeDao = cache.getRecipeDao();
-		this.recipes = recipeDao.getAll();
 
 		this.tagDao = db.getTagDao();
 		this.recipeTagJoinDao = db.getRecipeTagJoinDao();
@@ -125,34 +122,6 @@ public class RecipeRepository {
 	 */
 	public Single<Recipe> getByUID(int uid) {
 		return recipeDao.getByUID(uid);
-	}
-
-	/**
-	 * Return all recipes belonging to one or more of the given cuisines.
-	 *
-	 * @param number   The number of recipes to return.
-	 * @param cuisines The list of cuisines.
-	 * @return         The list recipes belonging to one more of the given cuisines.
-	 * @see Single
-	 */
-	public Single<List<Recipe>> getAll(int number, String... cuisines) {
-		// The foregoing complex search requires a list of cuisines but
-		// cannot itself convert a list of cuisines to a string. So, we
-		// do it ourselves.
-		StringBuilder cuisineList = new StringBuilder();
-		for (String cuisine : cuisines)
-			cuisineList.append(cuisine + ",");
-
-		return this.api.getComplexSearch(apiKey, cuisineList.toString(), number).map(response -> {
-			List<SpoonacularRecipe> spoonacularRecipeList = response.getResults();
-			List<Recipe> recipeList = new ArrayList<>();
-			for (SpoonacularRecipe spoonacularRecipe : spoonacularRecipeList) {
-				Recipe recipe = RecipeMapper.mapSpoonacularRecipeToRecipe(spoonacularRecipe);
-				recipeList.add(recipe);
-			}
-
-			return recipeList;
-		});
 	}
 
 	/**
@@ -232,16 +201,6 @@ public class RecipeRepository {
 
 			return recipeList;
 		});
-	}
-
-	/**
-	 * Return all recipes cached in the repository.
-	 * 
-	 * @return All recipes in this repository.
-	 * @see Single
-	 */
-	public Single<List<Recipe>> getAllCached() {
-		return this.recipes;
 	}
 
 	/**

@@ -188,12 +188,17 @@ public class RecipeRepository {
 		return allRecipes;
 	}
 
+	/**
+	 * Return a list of recipes from the web-server.
+	 * @return The `Single` emitting the list of recipes from the web-server.
+	 * @see Single
+	 */
 	private Single<List<Recipe>> getWebRecipes() {
-		if (firstQuery) {
+		if (firstQuery) { // Cache is empty, so ping the server.
 			firstQuery = false;
 
-			Log.d("FOO", "getWebRecipes: querying the web!");
 			return this.getRandomRecipe(1).map(web -> {
+				// When the web content is retrieved, cache it.
 				this.cacheRecipeDao.insert(web.toArray(new Recipe[0]))
 						.blockingGet();
 
@@ -201,7 +206,7 @@ public class RecipeRepository {
 			});
 		}
 
-		Log.d("FOO", "getWebRecipes: serving the cache!");
+		// Cache should have content from the server, so no need to ping it.
 		return this.cacheRecipeDao.getAll();
 	}
 
@@ -263,10 +268,22 @@ public class RecipeRepository {
 		return mapTaggedRecipes;
 	}
 
+	/**
+	 * Return the list of tags associated with the given recipe.
+	 * @param recipe The recipe whose tags to retrieve.
+	 * @return The `Single` emitting the list of tags associated with the recipe.
+	 * @see Single
+	 */
 	public Single<List<Tag>> getTagsWithRecipe(Recipe recipe) {
 			return this.recipeTagJoinDao.getTagsWithRecipe(recipe.uid);
 	}
 
+	/**
+	 * Return the list of ingredients associated with the given recipe.
+	 * @param recipe The recipe whose ingredients to retrieve.
+	 * @return The `Single` emitting the list of ingredients associated with the recipe.
+	 * @see Single
+	 */
 	public Single<List<Ingredient>> getIngredientsInRecipe(Recipe recipe) {
 		return this.recipeIngredientJoinDao.getIngredientsInRecipe(recipe.uid);
 	}

@@ -166,12 +166,13 @@ public class RecipeRepository {
 		if (firstQuery) { // Cache is empty, so ping the server.
 			firstQuery = false;
 
-			return this.getRandomRecipe(1).map(web -> {
-				// When the web content is retrieved, cache it.
-				this.cacheRecipeDao.insert(web.toArray(new Recipe[0])).blockingSubscribe();
-
-				return web;
-			});
+			return this.getRandomRecipe(1)
+					.onErrorResumeNext(throwable -> Single.just(new ArrayList<>()))
+					.map(web -> {
+						// When the web content is retrieved, cache it.
+						this.cacheRecipeDao.insert(web.toArray(new Recipe[0])).blockingSubscribe();
+						return web;
+					});
 		}
 
 		// Cache should have content from the server, so no need to ping it.

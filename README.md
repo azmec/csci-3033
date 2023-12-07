@@ -29,7 +29,8 @@ recipes. This project was developed to fulfill the course requirements of CSCI
    ```
 
    Where `$KEY` is replaced with the API key you were provided _or_ an API key
-   of your own.
+   of your own. _Note that you can provide any string of characters instead, but all web queries
+   will silently fail._
 4. Select `File` and `Sync Project with Gradle Files` to continue the
    initialization process.
 5. Select `Build` and `Make Project` to build the project.

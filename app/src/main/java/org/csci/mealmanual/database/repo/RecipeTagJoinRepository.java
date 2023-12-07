@@ -1,8 +1,13 @@
 package org.csci.mealmanual.database.repo;
 
 import android.content.Context;
+import android.util.Log;
+
+import androidx.room.rxjava3.EmptyResultSetException;
 
 import org.csci.mealmanual.database.RecipeDatabase;
+import org.csci.mealmanual.database.SpoonacularCache;
+import org.csci.mealmanual.database.dao.RecipeDao;
 import org.csci.mealmanual.database.dao.RecipeTagJoinDao;
 import org.csci.mealmanual.database.model.RecipeTagJoin;
 import org.csci.mealmanual.database.model.Tag;
@@ -23,6 +28,9 @@ public class RecipeTagJoinRepository {
 
 	private static final Scheduler SCHEDULER = Schedulers.io();
 	private RecipeTagJoinDao recipeTagJoinDao;
+	private RecipeDao recipeDao;
+
+	private RecipeDao cacheRecipeDao;
 
 	/**
 	 * Return a repository connected to the database.
@@ -32,6 +40,10 @@ public class RecipeTagJoinRepository {
 	public RecipeTagJoinRepository(Context appContext) {
 		RecipeDatabase db = RecipeDatabase.getInstance(appContext);
 		this.recipeTagJoinDao = db.getRecipeTagJoinDao();
+		this.recipeDao = db.getRecipeDao();
+
+		SpoonacularCache cache = SpoonacularCache.getInstance(appContext);
+		this.cacheRecipeDao = cache.getRecipeDao();
 	}
 
 	/**
@@ -40,7 +52,26 @@ public class RecipeTagJoinRepository {
 	 * @param recipeTagJoin The relation to add.
 	 */
 	public Single<Long> add(RecipeTagJoin recipeTagJoin) {
-		return recipeTagJoinDao.insert(recipeTagJoin);
+		// If the recipe is not in the database, insert it.
+		Single<Long> insertRecipeIfNew = recipeDao.getByUID((int) recipeTagJoin.recipe_id)
+				.flatMap(recipe -> Single.just(recipe.uid)) // Happy path: DB had recipe!
+				.onErrorResumeNext(error -> { // Unhappy path: we have to insert the recipe and fetch it.
+					if (error instanceof EmptyResultSetException) {
+						// Fetch the recipe, delete it from cache, and insert it into disk DB.
+						return cacheRecipeDao.getByUID((int) recipeTagJoin.recipe_id)
+								.flatMap(cacheRecipe -> cacheRecipeDao.delete(cacheRecipe).toSingleDefault(cacheRecipe))
+								.flatMap(cacheRecipe -> recipeDao.insert(cacheRecipe));
+
+					} else {
+						throw error;
+					}
+				});
+
+		// Insert the relationship.
+		return insertRecipeIfNew.flatMap(recipeID -> {
+			RecipeTagJoin relation = new RecipeTagJoin(recipeID, recipeTagJoin.tag_id);
+			return recipeTagJoinDao.insert(relation);
+		});
 	}
 
 	public Single<List<Long>> add(RecipeTagJoin... recipeTagJoins) {

@@ -168,8 +168,7 @@ public class RecipeRepository {
 
 			return this.getRandomRecipe(1).map(web -> {
 				// When the web content is retrieved, cache it.
-				this.cacheRecipeDao.insert(web.toArray(new Recipe[0]))
-						.blockingGet();
+				this.cacheRecipeDao.insert(web.toArray(new Recipe[0])).blockingSubscribe();
 
 				return web;
 			});
@@ -186,6 +185,9 @@ public class RecipeRepository {
 	 * @see Single
 	 */
 	public Single<List<Recipe>> getRandomRecipe(int number) {
+		if (number == 0)
+			return Single.just(new ArrayList<>());
+
 		return this.api.getRandomRecipes(apiKey, number).map(response -> {
 			List<SpoonacularRecipe> spoonacularRecipeList = response.getRecipeList();
 			List<Recipe> recipeList = new ArrayList<>();

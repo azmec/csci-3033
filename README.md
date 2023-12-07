@@ -49,6 +49,7 @@ recipes. This project was developed to fulfill the course requirements of CSCI
        attempt to run the application again.
     3. If neither of the above work, shut down the AVD and wipe the user data
        from the emulator. Attempt to run the application again.
-4. The application should open on the "Recipe" page. The bottom of the screen
-   should display a toolbar exposing the remaining "Grocery", "Pantry",
-   "Liked", and "Add Recipes" pages. The application is now free to demo.
+4. The application should open on the "Recipe" page, filled with on-disk recipes and random recipes
+   queried from the web API. The bottom of the screen should display a toolbar exposing the
+   remaining "Grocery", "Pantry", "Liked", and "Add Recipes" pages. The application is now free to
+   demo.

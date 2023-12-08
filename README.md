@@ -52,4 +52,5 @@ recipes. This project was developed to fulfill the course requirements of CSCI
 4. The application should open on the "Recipe" page, filled with on-disk recipes and random recipes
    queried from the web API. The bottom of the screen should display a toolbar exposing the
    remaining "Grocery", "Pantry", "Liked", and "Add Recipes" pages. The application is now free to
-   demo.
+   demo. _Note that on-disk recipes may not be initial displayed the first time the application is
+   launched due to inconsistent behavior in the AVD._

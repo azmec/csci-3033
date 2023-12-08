@@ -166,7 +166,7 @@ public class RecipeRepository {
 		if (firstQuery) { // Cache is empty, so ping the server.
 			firstQuery = false;
 
-			return this.getRandomRecipe(1)
+			return this.getRandomRecipe(5)
 					.onErrorResumeNext(throwable -> Single.just(new ArrayList<>()))
 					.map(web -> {
 						// When the web content is retrieved, cache it.
